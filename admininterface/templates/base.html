@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+{% load staticfiles %}
+
+<title>Sampling Admin</title>
+
+<link href="{% static 'inspinia_admin/css/morris.css' %}" rel="stylesheet">
+<link href="{% static 'inspinia_admin/css/bootstrap.min.css' %}" rel="stylesheet">
+<link href="{% static 'inspinia_admin/css/components.css' %}" rel="stylesheet">
+<link href="{% static 'inspinia_admin/font-awesome/css/font-awesome.css' %}" rel="stylesheet">
+<link href="{% static 'inspinia_admin/js/plugins/fancybox/jquery.fancybox.css' %}" rel="stylesheet">
+<link href="{% static 'inspinia_admin/css/animate.css' %}" rel="stylesheet">
+<link href="{% static 'inspinia_admin/css/plugins/summernote/summernote.css' %}" rel="stylesheet">
+<link href="{% static 'inspinia_admin/css/plugins/summernote/summernote-bs3.css' %}" rel="stylesheet">
+<link href="{% static 'inspinia_admin/css/style.css' %}" rel="stylesheet">
+<link href="{% static 'inspinia_admin/css/custom.css' %}" rel="stylesheet">
+
+<script src="{% static 'inspinia_admin/js/jquery-1.10.2.js' %}"></script>
+<!-- Jquery Validate -->
+<script src="{% static 'inspinia_admin/js/plugins/validate/jquery.validate.min.js' %}"></script>
+
+<!-- datepicker 
+    	<script src="{% static 'inspinia_admin/datepicker/jquery.datetimepicker.js' %}"></script>
+    	<link href="{% static 'inspinia_admin/datepicker/jquery.datetimepicker.css' %}" rel="stylesheet">-->
+
+<!-- datepicker -->
+<script src="{% static 'inspinia_admin/js/plugins/datapicker/bootstrap-datepicker.js' %}"></script>
+<link href="{% static 'inspinia_admin/css/plugins/datapicker/datepicker3.css' %}" rel="stylesheet">
+
+</head>
+<body>
+<div id="sLoading"><img
+	src="{% static 'inspinia_admin/img/loading1.gif' %}"></div>
+
+<!--  ---------------------------------   -->
+<!--                SIDEBAR               -->
+<!--  ---------------------------------   -->
+
+<nav class="navbar-default navbar-static-side" role="navigation">
+<div class="sidebar-collapse">
+<ul class="nav" id="side-menu">
+	<li class="nav-header">
+
+	<div class="profile-element"><img
+		src="{% static 'inspinia_admin/img/logo/apptoplogo.png' %}">
+	</div>
+	<div class="logo-element">FSA</div>
+	</li>
+
+	<li <?php if ($side_menu == 'eventresult' || $side_menu == 'eventtable') echo "class=\"active\""; ?>>
+		<a href="#"><i class="fa fa-home"></i> <span class="nav-label">Dashboard</span><span class="fa arrow"></span> </a>
+		<ul class="nav nav-second-level">
+			<li <?php if ($side_menu == 'eventresult') echo "class=\"active\""; ?>><a
+				href="<?php echo site_url("home/"); ?>">Result</a></li>
+			<li <?php if ($side_menu == 'eventtable') echo "class=\"active\""; ?>><a
+				href="<?php echo site_url("home/analysis/0"); ?>">Analysis</a></li>
+		</ul>
+	</li>
+
+	<?php if ($this->session->userdata('permissionflag')) { ?>
+	<li <?php if ($side_menu == 'events' || $side_menu == 'addevent' || $side_menu == 'editevent') echo "class=\"active\""; ?>>
+		<a href="<?php echo site_url("event/events/0"); ?>"><i class="fa fa-clipboard"></i>
+		<span class="nav-label">Events</span></a>
+	</li>
+	
+	<li <?php if ($side_menu == 'admins' || $side_menu == 'users') echo "class=\"active\""; ?>>
+		<a href="#"><i class="fa fa-users"></i> <span class="nav-label">Users</span><span class="fa arrow"></span> </a>
+		<ul class="nav nav-second-level">
+			<li <?php if ($side_menu == 'admins') echo "class=\"active\""; ?>><a
+				href="<?php echo site_url("admin/admins/0"); ?>">Admin Users</a></li>
+			<li <?php if ($side_menu == 'users') echo "class=\"active\""; ?>><a
+				href="<?php echo site_url("manage/users/0"); ?>">Event Users</a></li>
+		</ul>
+	</li>
+	<?php } ?>
+	<li <?php if ($side_menu == 'changepwd') echo "class=\"active\""; ?>>
+		<a href="<?php echo site_url("settings/changepwd"); ?>"><i class="fa fa-cogs"></i>
+		<span class="nav-label">Change Password</span></a>
+	</li>
+</ul>
+
+</div>
+</nav>
+
+
+<!--  ---------------------------------   -->
+<!--                FOOTER                -->
+<!--  ---------------------------------   -->
+
+<!-- Mainly scripts -->
+
+<script src="{% static 'inspinia_admin/js/bootstrap.min.js' %}"></script>
+<script	src="{% static 'inspinia_admin/js/plugins/metisMenu/jquery.metisMenu.js' %}"></script>
+
+<!-- Peity -->
+<script	src="{% static 'inspinia_admin/js/plugins/peity/jquery.peity.min.js' %}"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="{% static 'inspinia_admin/js/inspinia.js' %}"></script>
+<script src="{% static 'inspinia_admin/js/plugins/pace/pace.min.js' %}"></script>
+
+<script src="{% static 'inspinia_admin/js/plugins/fancybox/jquery.fancybox.js' %}"></script>
+
+<!-- SUMMERNOTE -->
+<script	src="{% static 'inspinia_admin/js/plugins/summernote/summernote.js' %}"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.fancybox').fancybox({
+            openEffect	: 'elastic',
+            closeEffect	: 'elastic'
+        });
+    });
+    function show_loading( bShow )
+    {
+    	jQuery("#sLoading").css( "width", jQuery(document).width() );
+    	jQuery("#sLoading").css( "height", jQuery(document).height() );
+    	
+    	$img = jQuery("#sLoading img");
+    	$w = $h = 100;
+    	$img.css( { "width": $w + "px" }, { "height": $h + "px" } );
+    	jQuery("#sLoading img").css( "left", jQuery(window).width() / 2 - $w / 2 );
+    	jQuery("#sLoading img").css( "top", jQuery(window).height() / 2 - $h / 2 + window.scrollY );
+    	if ( bShow )
+    	{
+    		jQuery("#sLoading").css( "display", "inline" );
+    	}
+    	else
+    	{
+    		jQuery("#sLoading").css( "display", "none" );
+    	}
+    }
+</script>
+
+</body>
+
+</html>

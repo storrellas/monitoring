@@ -1,0 +1,156 @@
+.logo-super {
+	color: #18a689;
+}
+
+.logo-sub {
+	color: #26d7d9;
+	text-align: right;
+	font-weight: normal;
+}
+
+.logo-element {
+	color: #01b7ff;
+}
+
+/* Card Box */
+.card-box {
+  padding: 20px;
+  border: 1px solid rgba(54, 64, 74, 0.05);
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  background-clip: padding-box;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+}
+
+.profile-element img {
+	width: 120px;
+	margin-left: 20px;
+}
+
+.form-control {
+	padding-left: 5px;
+	padding-right: 5px;
+	margin-bottom: 10px;
+	width: 100%;
+}
+
+.btn-action {
+	margin-bottom: 0px !important;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.btn-action img {
+	width: 20px;
+	height: 20px;
+}
+
+b.required {
+	color: red;
+	font-size: 14px;
+	font-family: "arial";
+	margin-right: 5px;
+}
+
+/***********************************************************************************************************************
+*
+* Home
+*
+***********************************************************************************************************************/
+#users_table tbody {
+	
+}
+
+#users_table th {
+	text-align: center;
+}
+
+#users_table td {
+	vertical-align: middle;
+}
+
+@media ( min-width : 1200px) {
+	.search_field {
+		padding-left: 0px;
+		margin-left: -10px;
+	}
+	.order_field {
+		padding-left: 0px;
+		margin-left: -10px;
+	}
+	.search_btn {
+		padding-left: 0px;
+		margin-left: -10px;
+	}
+}
+
+/***********************************************************************************************************************
+*
+* Flagged Photo
+*
+***********************************************************************************************************************/
+.photo_table_wrapper {
+	
+}
+
+#photo_table {
+	
+}
+
+#photo_table tbody {
+	
+}
+
+table th {
+	text-align: center;
+}
+
+table tr td {
+	vertical-align: middle;
+	text-align: center;
+	padding: 5px;
+}
+
+/***********************************************************************************************************************
+*
+* SummerEditor
+*
+***********************************************************************************************************************/
+.note-editor {
+	min-height: 250px;
+}
+
+/***********************************************************************************************************************
+*
+* Validator
+*
+***********************************************************************************************************************/
+label.error {
+	color: #8a1f11;
+	display: inline-block;
+	margin-left: 1.5em;
+}
+
+input.error,textarea.error {
+	background: #fbe3e4;
+	border: 1px solid #fbc2c4;
+	color: #8a1f11;
+}
+
+/********loading bar**********/
+body #sLoading {
+	background: white;
+	opacity: 0.6;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
+	width: 50px;
+	height: 50px;
+	position: absolute;
+	z-index: 2000;
+	display: none;
+}
+
+body #sLoading img {
+	position: absolute;
+}
