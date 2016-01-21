@@ -61,7 +61,8 @@ $('document').ready(function(){
     	
         $.ajax({
             async: true,
-            url: "<?php echo site_url('ajaxprocess/login') ?>",
+            //url: "<?php echo site_url('ajaxprocess/login') ?>",
+			url: "{% url 'api-login' %}",
             dataType: "json",
             type: "POST",
             data: {
@@ -69,17 +70,21 @@ $('document').ready(function(){
                 password: $('#password').val()
             },
             success: function(json) {
+            	location.href = "{% url 'home' %}";
+            	/*
             	if (json['result'] > 0)
                 {
-                   location.href = "<?php echo site_url('home/') ?>";
+                   location.href = "<?php echo site_url('home/') ?>";                               		
                 }
                 else
                 {
                     location.href = location.href;
                 }
+            	/**/
             },
             error: function(xhr, errStr) {
                 //    alert(errStr);
+            	location.href = location.href;
             }
         });
     }

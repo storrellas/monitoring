@@ -7,11 +7,7 @@ urlpatterns = [
     # Examples:
     # url(r'^$', 'samplingcontrol.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
+    url(r'^login/', 'rest_framework_jwt.views.obtain_jwt_token', name='api-login'),       
+    url(r'^docs/', include('rest_framework_swagger.urls'),       name='api-docs'),
+]
 
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^', include('admininterface.urls')),
-    url(r'^api/', include('api.urls')),
-        
-] + \
-static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + \
-static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

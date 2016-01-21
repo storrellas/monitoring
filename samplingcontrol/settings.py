@@ -33,8 +33,11 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'admininterface'
+    'django.contrib.staticfiles',    
+    'rest_framework',
+    'rest_framework_swagger',
+    'admininterface',
+    'api'
     
 )
 
@@ -120,3 +123,94 @@ MEDIA_URL  = '/media/'
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
+# Rest framework configuration
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    ),
+}
+
+# Configure Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue'
+        }
+    },
+    'formatters': {
+        'main_formatter': {
+            'format': '%(levelname)s | %(name)s@%(lineno)d | %(message)s ',
+            'datefmt': "%Y-%m-%d %H:%M:%S",
+        },
+    },
+    'handlers': {
+#        'mail_admins': {
+#            'level': 'ERROR',
+#            'filters': ['require_debug_false'],
+#            'class': 'django.utils.log.AdminEmailHandler'
+#        },
+        'console': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'main_formatter',
+        },
+#        'production_file': {
+#            'level': 'INFO',
+#            'class': 'logging.handlers.RotatingFileHandler',
+#            'filename': 'logs/main.log',
+#            'maxBytes': 1024 * 1024 * 5,  # 5 MB
+#            'backupCount': 7,
+#            'formatter': 'main_formatter',
+#            'filters': ['require_debug_false'],
+#        },
+#        'debug_file': {
+#            'level': 'DEBUG',
+#            'class': 'logging.handlers.RotatingFileHandler',
+#            'filename': 'logs/main_debug.log',
+#            'maxBytes': 1024 * 1024 * 5,  # 5 MB
+#            'backupCount': 7,
+#            'formatter': 'main_formatter',
+#            'filters': ['require_debug_true'],
+#        },
+        'null': {
+            "class": 'logging.NullHandler',            
+        }
+    },
+    'loggers': {
+#        'django.request': {
+#            'handlers': ['mail_admins', 'console'],
+#            'level': 'ERROR',
+#            'propagate': True,
+#        },
+#        'django': {
+#            'handlers': ['console', ],
+#        },
+#        'py.warnings': {
+#            'handlers': ['console', ],
+#        },
+#        '': {
+#            'handlers': ['console', 'production_file', 'debug_file'],
+#            'level': "INFO",
+#        },
+        '': {
+            'handlers': ['console'],
+            'level': "INFO",
+        },
+    }
+}
+
+try:
+    from localsettings import *
+except ImportError:
+    print 'localsettings could not be imported'
+    # pass
+    #raise Exception('localsettings could not be imported')
