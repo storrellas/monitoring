@@ -5,12 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 {% load staticfiles %}
+{% load tags %}
 
 <title>Sampling Admin</title>
 
 <link href="{% static 'inspinia_admin/css/morris.css' %}" rel="stylesheet">
 <link href="{% static 'inspinia_admin/css/bootstrap.min.css' %}" rel="stylesheet">
-<link href="{% static 'inspinia_admin/css/components.css' %}" rel="stylesheet">
+<!-- <link href="{% static 'inspinia_admin/css/components.css' %}" rel="stylesheet"> -->
 <link href="{% static 'inspinia_admin/font-awesome/css/font-awesome.css' %}" rel="stylesheet">
 <link href="{% static 'inspinia_admin/js/plugins/fancybox/jquery.fancybox.css' %}" rel="stylesheet">
 <link href="{% static 'inspinia_admin/css/animate.css' %}" rel="stylesheet">
@@ -40,6 +41,23 @@
 <!--                SIDEBAR               -->
 <!--  ---------------------------------   -->
 
+{% url 'login' as login_url %}
+
+{% url 'base' as base_url %}
+{% url 'event_result' as event_result_url %}
+{% url 'event_table' as event_table_url %}
+
+{% url 'events' as events_url %}
+{% url 'add_event' as add_event_url %}
+{% url 'edit_event' as edit_event_url %}
+
+{% url 'admins' as admins_url %}
+{% url 'users' as users_url %}
+{% url 'changepwd' as changepwd_url %}
+
+{% ifequal request.path login_url %}
+{% else %}
+
 <nav class="navbar-default navbar-static-side" role="navigation">
 <div class="sidebar-collapse">
 <ul class="nav" id="side-menu">
@@ -51,41 +69,67 @@
 	<div class="logo-element">FSA</div>
 	</li>
 
-	<li <?php if ($side_menu == 'eventresult' || $side_menu == 'eventtable') echo "class=\"active\""; ?>>
+	<li
+	{% if request.path == event_result_url or request.path == event_table_url %}
+	class="active"	
+	{% endif%} 	
+	>
 		<a href="#"><i class="fa fa-home"></i> <span class="nav-label">Dashboard</span><span class="fa arrow"></span> </a>
 		<ul class="nav nav-second-level">
-			<li <?php if ($side_menu == 'eventresult') echo "class=\"active\""; ?>><a
-				href="<?php echo site_url("home/"); ?>">Result</a></li>
-			<li <?php if ($side_menu == 'eventtable') echo "class=\"active\""; ?>><a
-				href="<?php echo site_url("home/analysis/0"); ?>">Analysis</a></li>
+			<li {% if request.path == event_result_url %} class="active"; {% endif %}><a
+				href="{% url 'home' %}">Result</a></li>
+			<li {% if request.path == event_table_url %} class="active"; {% endif %}><a
+				href="{% url 'analysis' %}">Analysis</a></li>
 		</ul>
 	</li>
 
 	<?php if ($this->session->userdata('permissionflag')) { ?>
-	<li <?php if ($side_menu == 'events' || $side_menu == 'addevent' || $side_menu == 'editevent') echo "class=\"active\""; ?>>
-		<a href="<?php echo site_url("event/events/0"); ?>"><i class="fa fa-clipboard"></i>
+
+	<li
+	{% if request.path == events_url or request.path == add_event_url or request.path == edit_event_url %}
+	class="active"	
+	{% endif%}  
+	>
+		<a href="{% url 'events_0' %}"><i class="fa fa-clipboard"></i>
 		<span class="nav-label">Events</span></a>
 	</li>
 	
-	<li <?php if ($side_menu == 'admins' || $side_menu == 'users') echo "class=\"active\""; ?>>
+	<li
+	{% if request.path == admins_url or request.path == users_url %}
+	class="active"	
+	{% endif%} 	
+	>
 		<a href="#"><i class="fa fa-users"></i> <span class="nav-label">Users</span><span class="fa arrow"></span> </a>
 		<ul class="nav nav-second-level">
-			<li <?php if ($side_menu == 'admins') echo "class=\"active\""; ?>><a
-				href="<?php echo site_url("admin/admins/0"); ?>">Admin Users</a></li>
-			<li <?php if ($side_menu == 'users') echo "class=\"active\""; ?>><a
-				href="<?php echo site_url("manage/users/0"); ?>">Event Users</a></li>
+			<li><a
+				href=" {% url 'admin_0' %}">Admin Users</a></li>
+			<li><a
+				href=" {% url 'users_0' %}">Event Users</a></li>
 		</ul>
 	</li>
+	
+		
 	<?php } ?>
-	<li <?php if ($side_menu == 'changepwd') echo "class=\"active\""; ?>>
-		<a href="<?php echo site_url("settings/changepwd"); ?>"><i class="fa fa-cogs"></i>
+	<li
+	{% if request.path == changepwd_url  %}
+	class="active"	
+	{% endif%} 	
+	>
+		<a href="{{ changepwd_url }}"><i class="fa fa-cogs"></i>
 		<span class="nav-label">Change Password</span></a>
 	</li>
 </ul>
 
 </div>
 </nav>
+{% endifequal %}
 
+{% block contents%}
+
+<!-- Place here the contents of your block -->
+
+
+{% endblock %}
 
 <!--  ---------------------------------   -->
 <!--                FOOTER                -->
