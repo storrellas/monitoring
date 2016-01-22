@@ -72,18 +72,17 @@
 	<div class="logo-element">FSA</div>
 	</li>
 
-	<li
-	
+	<li	
 	{% if home_url in request.path %}
 	class="active"	
 	{% endif%} 	
 	>
 		<a href="#"><i class="fa fa-home"></i> <span class="nav-label">Dashboard</span><span class="fa arrow"></span> </a>
 		<ul class="nav nav-second-level">
-			<li {% if home_url == request.path %} class="active" {% endif %}><a
-				href="{% url 'home' %}">Result</a></li>
-			<li {% if analysis_url in request.path %} class="active" {% endif %}><a
-				href="{% url 'analysis' %}">Analysis</a></li>
+			<li {% if home_url == request.path %} class="active" {% endif %}>
+				<a href="{% url 'home' %}">Result</a></li>
+			<li {% if analysis_url in request.path %} class="active" {% endif %}>
+				<a href="{% url 'analysis' %}">Analysis</a></li>
 		</ul>
 	</li>
 	
@@ -99,16 +98,16 @@
 	</li>
 	
 	<li
-	{% if request.path == admins_url or request.path == users_url %}
-	class="active"	
+	{% if admins_url in request.path or users_url in request.path %}
+	class="active"		
 	{% endif%} 	
 	>
 		<a href="#"><i class="fa fa-users"></i> <span class="nav-label">Users</span><span class="fa arrow"></span> </a>
 		<ul class="nav nav-second-level">
-			<li><a
-				href=" {% url 'admin_0' %}">Admin Users</a></li>
-			<li><a
-				href=" {% url 'users_0' %}">Event Users</a></li>
+			<li {% if admins_url in request.path %} class="active" {% endif %}><a
+				href="{% url 'admin_0' %}">Admin Users</a></li>
+			<li {% if users_0 in request.path %} class="active" {% endif %}><a
+				href="{% url 'users_0' %}">Event Users</a></li>
 		</ul>
 	</li>
 	

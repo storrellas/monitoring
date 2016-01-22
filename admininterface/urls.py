@@ -21,10 +21,12 @@ urlpatterns = [
     url(r'^editevent/$',          BaseView.as_view(template_name='base.html'),    name='edit_event'),    
     url(r'^event/events/0/$',     BaseView.as_view(template_name='base.html'),    name='events_0'),
     
-    url(r'^admins/$',             BaseView.as_view(template_name='base.html'),    name='admins'),
+    url(r'^admin/$',             BaseView.as_view(template_name='base.html'),    name='admins'),
     url(r'^users/$',              BaseView.as_view(template_name='manage/users.html'),    name='users'),
-    url(r'^settings/changepwd/$', BaseView.as_view(template_name='base.html'),    name='changepwd'),
     url(r'^admin/admins/0/$',     BaseView.as_view(template_name='manage/admins.html'),    name='admin_0'),
-    url(r'^manage/users/0/$',     BaseView.as_view(template_name='manage/users.html'),    name='users_0'),    
+    url(r'^manage/users/0/$',     BaseView.as_view(template_name='manage/users.html'),    name='users_0'),
+    
+    
+    url(r'^settings/changepwd/$', BaseView.as_view(template_name='base.html'),    name='changepwd'),    
     
 ]
