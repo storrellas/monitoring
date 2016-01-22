@@ -73,6 +73,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'samplingcontrol.wsgi.application'
 
+# LOGIN URLS
+LOGIN_URL='/login/'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases

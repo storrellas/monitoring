@@ -43,14 +43,17 @@
 
 {% url 'login' as login_url %}
 
+{# Dashboard section #}
 {% url 'base' as base_url %}
-{% url 'event_result' as event_result_url %}
-{% url 'event_table' as event_table_url %}
+{% url 'home' as home_url %}
+{% url 'analysis' as analysis_url %}
 
+{# Events section #}
 {% url 'events' as events_url %}
 {% url 'add_event' as add_event_url %}
 {% url 'edit_event' as edit_event_url %}
 
+{# Users section #}
 {% url 'admins' as admins_url %}
 {% url 'users' as users_url %}
 {% url 'changepwd' as changepwd_url %}
@@ -70,20 +73,21 @@
 	</li>
 
 	<li
-	{% if request.path == event_result_url or request.path == event_table_url %}
+	
+	{% if home_url in request.path %}
 	class="active"	
 	{% endif%} 	
 	>
 		<a href="#"><i class="fa fa-home"></i> <span class="nav-label">Dashboard</span><span class="fa arrow"></span> </a>
 		<ul class="nav nav-second-level">
-			<li {% if request.path == event_result_url %} class="active"; {% endif %}><a
+			<li {% if home_url == request.path %} class="active" {% endif %}><a
 				href="{% url 'home' %}">Result</a></li>
-			<li {% if request.path == event_table_url %} class="active"; {% endif %}><a
+			<li {% if analysis_url in request.path %} class="active" {% endif %}><a
 				href="{% url 'analysis' %}">Analysis</a></li>
 		</ul>
 	</li>
-
-	<?php if ($this->session->userdata('permissionflag')) { ?>
+	
+	{% if request.user.is_superuser %}
 
 	<li
 	{% if request.path == events_url or request.path == add_event_url or request.path == edit_event_url %}
@@ -91,7 +95,7 @@
 	{% endif%}  
 	>
 		<a href="{% url 'events_0' %}"><i class="fa fa-clipboard"></i>
-		<span class="nav-label">Events</span></a>
+		<span class="nav-label">Events {{ request.user }}</span></a>
 	</li>
 	
 	<li
@@ -109,7 +113,7 @@
 	</li>
 	
 		
-	<?php } ?>
+	{% endif %}
 	<li
 	{% if request.path == changepwd_url  %}
 	class="active"	

@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% load tags %}
+
+{% block contents %}
+<div id="wrapper">
+	<div id="page-wrapper" class="gray-bg">
+		
+		{% include 'topbar.html' %}
+		
+		<div class="row" style="margin-top: 10px">
+			<div class="col-lg-12">
+				<div class="ibox float-e-margins">
+					<label class="col-lg-1 control-label" style="margin-top: 5px">Event:</label>
+					<form role="form" id="viewResult" method="get" >
+					<div class="col-lg-2">
+						<select class="form-control" name="eventid" id="eventid" onchange="on_change()">
+							<?php
+								foreach($eventlist as $event)
+								{
+									$selected = '';
+									if ($event['eventid'] == $eventid)
+										$selected = 'selected';
+									echo "<option value='".$event['eventid']."' $selected>".$event['title']."</option>";
+								}
+							?>
+						</select>
+					</div>
+					</form>
+					<div class="ibox-content" style="background: none;">
+						<div class="row">
+							<div class="col-lg-3">
+								<div class="ibox float-e-margins">
+									<div class="ibox-title">
+										<h5>Sampling</h5>
+										<div class="ibox-content">
+											<h1 class="no-margins"><?php echo $sampling;?></h1>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="col-lg-3">
+								<div class="ibox float-e-margins">
+									<div class="ibox-title">
+										<h5>Target</h5>
+										<div class="ibox-content">
+											<h1 class="no-margins"><?php echo $target;?></h1>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-3">
+								<div class="ibox float-e-margins">
+									<div class="ibox-title">
+										<h5>Percent</h5>
+										<div class="ibox-content">
+											<h1 class="no-margins"><?php echo $percent.'%';?></h1>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+              				<div class="col-lg-6">
+								<div class="card-box">
+									<!-- /primary heading -->
+									<div class="portlet-heading">
+										<h3 class="portlet-title text-dark"> Sampling Analysis</h3>
+									</div>
+									<div id="portlet2" class="panel-collapse collapse in">
+										<div class="portlet-body">
+											<div class="text-center">
+												<ul class="list-inline chart-detail-list">
+													<li>
+						                                  <h5><i class="fa fa-circle m-r-5" style="color: #5d9cec;"></i>Sampling</h5>
+						                              </li>
+						                              <li>
+						                                  <h5><i class="fa fa-circle m-r-5" style="color: #5fbeaa;"></i>Target</h5>
+						                              </li>
+												</ul>
+											</div>
+											<div id="morris-area-with-dotted" style="height: 300px;"></div>
+										</div>
+									</div>
+								</div>
+								<!-- /Portlet -->
+							</div>
+							
+              				
+              				<!-- Donut Chart -->
+							<div class="col-lg-6">
+								<div class="card-box">
+									<!-- /primary heading -->
+									<div class="portlet-heading">
+										<h3 class="portlet-title text-dark"> Feedback Analysis </h3>
+									</div>
+									<div id="portlet3" class="panel-collapse collapse in">
+										<div class="portlet-body">
+											<div id="morris-donut-example" style="height: 300px;"></div>
+
+											<div class="text-center">
+												<ul class="list-inline chart-detail-list">
+													<li>
+														<h5><i class="fa fa-circle m-r-5" style="color: #5fbeaa;"></i>Good</h5>
+													</li>
+													<li>
+														<h5><i class="fa fa-circle m-r-5" style="color: #5d9cec;"></i>Normal</h5>
+													</li>
+													<li>
+														<h5><i class="fa fa-circle m-r-5" style="color: #dcdcdc;"></i>Bad</h5>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- /Portlet -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="{% static 'inspinia_admin/js/plugins/sparkline/jquery.sparkline.min.js' %}"></script>
+<script src="{% static 'inspinia_admin/js/custom/jquery.min.js' %}"></script>
+<script src="{% static 'inspinia_admin/js/custom/wow.min.js' %}"></script>
+<script src="{% static 'inspinia_admin/js/custom/waves.js' %}"></script>
+<script src="{% static 'inspinia_admin/js/custom/jquery.app.js' %}"></script>
+<script src="{% static 'inspinia_admin/js/custom/morris/morris.min.js' %}"></script>
+<script src="{% static 'inspinia_admin/js/custom/raphael/raphael-min.js' %}"></script>
+
+<script type="text/javascript">
+$(function() {
+	$("#sparkline7").sparkline([52,12,44], {
+        type: 'pie',
+        height: '150px',
+        sliceColors: ['#1ab394','#b3b3b3','#e4f0fb']
+    });
+});
+</script>
+
+<script type="text/javascript">
+!function($) {
+    "use strict";
+
+    var Dashboard1 = function() {
+    	this.$realData = []
+    };
+
+    //creates area chart with dotted
+    Dashboard1.prototype.createAreaChartDotted = function(element, pointSize, lineWidth, data, xkey, ykeys, labels, Pfillcolor, Pstockcolor, lineColors) {
+        Morris.Area({
+            element: element,
+            pointSize: 3,
+            lineWidth: 0,
+            data: data,
+            xkey: xkey,
+            xLabels: "day",
+            ykeys: ykeys,
+            labels: labels,
+            hideHover: 'auto',
+            pointFillColors: Pfillcolor,
+            pointStrokeColors: Pstockcolor,
+            resize: true,
+            gridLineColor: '#eef0f2',
+            lineColors: lineColors
+        });
+   },
+ 	//creates Donut chart
+   Dashboard1.prototype.createDonutChart = function(element, data, colors) {
+       Morris.Donut({
+           element: element,
+           data: data,
+           resize: true, //defaulted to true
+           colors: colors
+       });
+   },
+
+    Dashboard1.prototype.init = function() {
+        //creating area chart
+        var jsondata = <?php echo json_encode($graphdata);?>;
+        this.createAreaChartDotted('morris-area-with-dotted', 0, 0, jsondata, 'y', ['a', 'b'], ['Sampling', 'Target'],['#ffffff'],['#999999'], ['#5fbeaa', '#5d9cec']);
+
+      //creating donut chart
+      //creating donut chart
+      
+        var $donutData = [
+                {label: "Good", value: <?php echo $good;?>},
+                {label: "Normal", value: <?php echo $normal;?>},
+                {label: "Bad", value: <?php echo $bad;?>}
+            ];
+        this.createDonutChart('morris-donut-example', $donutData, ['#5fbeaa', '#5d9cec', '#ebeff2']);
+    },
+    //init
+    $.Dashboard1 = new Dashboard1, $.Dashboard1.Constructor = Dashboard1
+}(window.jQuery),
+
+//initializing
+function($) {
+    "use strict";
+    $.Dashboard1.init();
+}(window.jQuery);
+
+</script>
+
+<script type="text/javascript">
+	function on_change()
+	{
+		$("#viewResult").submit();
+	}
+</script>
+{% endblock %}

@@ -29,7 +29,8 @@ $('document').ready(function(){
 	src="{% static 'inspinia_admin/img/logo/adminlogo.png' %}"></div>
 <h3 style="color: #bfbfbf">Welcome to Sampling Admin</h3>
 
-<form class="m-t" role="form" id="loginForm">
+<form class="m-t" role="form" id="loginForm" method="post">
+{% csrf_token %}
 <div class="form-group"><input type="text" id="username" name="username"
 	class="form-control" placeholder="Username" style="width: 100%"
 	required></div>
@@ -62,14 +63,16 @@ $('document').ready(function(){
         $.ajax({
             async: true,
             //url: "<?php echo site_url('ajaxprocess/login') ?>",
-			url: "{% url 'api-login' %}",
+			//url: "{% url 'api-login' %}",
+			url: "{{ request.path }}",			
             dataType: "json",
             type: "POST",
             data: {
+            	csrfmiddlewaretoken : $('#loginForm :first-child').val(),
                 username: $('#username').val(),
                 password: $('#password').val()
             },
-            success: function(json) {
+            success: function(json) {            	
             	location.href = "{% url 'home' %}";
             	/*
             	if (json['result'] > 0)
@@ -85,6 +88,7 @@ $('document').ready(function(){
             error: function(xhr, errStr) {
                 //    alert(errStr);
             	location.href = location.href;
+            	console.log("Fail")
             }
         });
     }
