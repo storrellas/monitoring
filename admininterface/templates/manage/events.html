@@ -77,8 +77,8 @@ $('document').ready(function(){
 <!--                                        	<button class="btn btn-primary pull-left" type="submit"><strong>Go!</strong></button>-->
 <!--                                       	</div>-->
                                      	<div class="col-lg-1 search_btn" style="float:right;">
-                                     		<a data-toggle="modal" class="btn btn-primary" href="<?php echo site_url("event/add")?>"
-                                     			<?php if ($this->session->userdata('permissionflag') == 0) echo "disabled"; ?>>Add Event</a>
+                                     		<a data-toggle="modal" class="btn btn-primary" href="{% url 'add_event'%}"
+											{% if notrequest.user.is_superuser %}disabled{% endif %}>Add Event</a>
                                      	</div>	
                                   </div>
                               </form>
