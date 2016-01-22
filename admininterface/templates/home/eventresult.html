@@ -4,20 +4,17 @@
 {% load tags %}
 
 {% block contents %}
-<div id="wrapper">
-	<div id="page-wrapper" class="gray-bg">
+
 		
-		{% include 'topbar.html' %}
-		
-		<div class="row" style="margin-top: 10px">
-			<div class="col-lg-12">
-				<div class="ibox float-e-margins">
-					<label class="col-lg-1 control-label" style="margin-top: 5px">Event:</label>
-					<form role="form" id="viewResult" method="get" >
-					<div class="col-lg-2">
-						<select class="form-control" name="eventid" id="eventid" onchange="on_change()">
-							<?php
-								foreach($eventlist as $event)
+<div class="row" style="margin-top: 10px">
+	<div class="col-lg-12">
+		<div class="ibox float-e-margins">
+			<label class="col-lg-1 control-label" style="margin-top: 5px">Event:</label>
+			<form role="form" id="viewResult" method="get" >
+			<div class="col-lg-2">
+				<select class="form-control" name="eventid" id="eventid" onchange="on_change()">
+					<?php
+						foreach($eventlist as $event)
 								{
 									$selected = '';
 									if ($event['eventid'] == $eventid)
@@ -25,101 +22,99 @@
 									echo "<option value='".$event['eventid']."' $selected>".$event['title']."</option>";
 								}
 							?>
-						</select>
+				</select>
+			</div>
+			</form>
+			<div class="ibox-content" style="background: none;">
+				<div class="row">
+					<div class="col-lg-3">
+						<div class="ibox float-e-margins">
+							<div class="ibox-title">
+								<h5>Sampling</h5>
+								<div class="ibox-content">
+									<h1 class="no-margins"><?php echo $sampling;?></h1>
+								</div>
+							</div>
+						</div>
 					</div>
-					</form>
-					<div class="ibox-content" style="background: none;">
-						<div class="row">
-							<div class="col-lg-3">
-								<div class="ibox float-e-margins">
-									<div class="ibox-title">
-										<h5>Sampling</h5>
-										<div class="ibox-content">
-											<h1 class="no-margins"><?php echo $sampling;?></h1>
-										</div>
-									</div>
-								</div>
-							</div>
-							
-							<div class="col-lg-3">
-								<div class="ibox float-e-margins">
-									<div class="ibox-title">
-										<h5>Target</h5>
-										<div class="ibox-content">
-											<h1 class="no-margins"><?php echo $target;?></h1>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-lg-3">
-								<div class="ibox float-e-margins">
-									<div class="ibox-title">
-										<h5>Percent</h5>
-										<div class="ibox-content">
-											<h1 class="no-margins"><?php echo $percent.'%';?></h1>
-										</div>
-									</div>
+					
+					<div class="col-lg-3">
+						<div class="ibox float-e-margins">
+							<div class="ibox-title">
+								<h5>Target</h5>
+								<div class="ibox-content">
+									<h1 class="no-margins"><?php echo $target;?></h1>
 								</div>
 							</div>
 						</div>
-						
-						<div class="row">
-              				<div class="col-lg-6">
-								<div class="card-box">
-									<!-- /primary heading -->
-									<div class="portlet-heading">
-										<h3 class="portlet-title text-dark"> Sampling Analysis</h3>
-									</div>
-									<div id="portlet2" class="panel-collapse collapse in">
-										<div class="portlet-body">
-											<div class="text-center">
-												<ul class="list-inline chart-detail-list">
-													<li>
-						                                  <h5><i class="fa fa-circle m-r-5" style="color: #5d9cec;"></i>Sampling</h5>
-						                              </li>
-						                              <li>
-						                                  <h5><i class="fa fa-circle m-r-5" style="color: #5fbeaa;"></i>Target</h5>
-						                              </li>
-												</ul>
-											</div>
-											<div id="morris-area-with-dotted" style="height: 300px;"></div>
-										</div>
-									</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ibox float-e-margins">
+							<div class="ibox-title">
+								<h5>Percent</h5>
+								<div class="ibox-content">
+									<h1 class="no-margins"><?php echo $percent.'%';?></h1>
 								</div>
-								<!-- /Portlet -->
 							</div>
-							
-              				
-              				<!-- Donut Chart -->
-							<div class="col-lg-6">
-								<div class="card-box">
-									<!-- /primary heading -->
-									<div class="portlet-heading">
-										<h3 class="portlet-title text-dark"> Feedback Analysis </h3>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row">
+            				<div class="col-lg-6">
+						<div class="card-box">
+							<!-- /primary heading -->
+							<div class="portlet-heading">
+								<h3 class="portlet-title text-dark"> Sampling Analysis</h3>
+							</div>
+							<div id="portlet2" class="panel-collapse collapse in">
+								<div class="portlet-body">
+									<div class="text-center">
+										<ul class="list-inline chart-detail-list">
+											<li>
+				                                  <h5><i class="fa fa-circle m-r-5" style="color: #5d9cec;"></i>Sampling</h5>
+				                              </li>
+				                              <li>
+				                                  <h5><i class="fa fa-circle m-r-5" style="color: #5fbeaa;"></i>Target</h5>
+				                              </li>
+										</ul>
 									</div>
-									<div id="portlet3" class="panel-collapse collapse in">
-										<div class="portlet-body">
-											<div id="morris-donut-example" style="height: 300px;"></div>
+									<div id="morris-area-with-dotted" style="height: 300px;"></div>
+								</div>
+							</div>
+						</div>
+						<!-- /Portlet -->
+					</div>
+					
+            				
+            				<!-- Donut Chart -->
+					<div class="col-lg-6">
+						<div class="card-box">
+							<!-- /primary heading -->
+							<div class="portlet-heading">
+								<h3 class="portlet-title text-dark"> Feedback Analysis </h3>
+							</div>
+							<div id="portlet3" class="panel-collapse collapse in">
+								<div class="portlet-body">
+									<div id="morris-donut-example" style="height: 300px;"></div>
 
-											<div class="text-center">
-												<ul class="list-inline chart-detail-list">
-													<li>
-														<h5><i class="fa fa-circle m-r-5" style="color: #5fbeaa;"></i>Good</h5>
-													</li>
-													<li>
-														<h5><i class="fa fa-circle m-r-5" style="color: #5d9cec;"></i>Normal</h5>
-													</li>
-													<li>
-														<h5><i class="fa fa-circle m-r-5" style="color: #dcdcdc;"></i>Bad</h5>
-													</li>
-												</ul>
-											</div>
-										</div>
+									<div class="text-center">
+										<ul class="list-inline chart-detail-list">
+											<li>
+												<h5><i class="fa fa-circle m-r-5" style="color: #5fbeaa;"></i>Good</h5>
+											</li>
+											<li>
+												<h5><i class="fa fa-circle m-r-5" style="color: #5d9cec;"></i>Normal</h5>
+											</li>
+											<li>
+												<h5><i class="fa fa-circle m-r-5" style="color: #dcdcdc;"></i>Bad</h5>
+											</li>
+										</ul>
 									</div>
 								</div>
-								<!-- /Portlet -->
 							</div>
 						</div>
+						<!-- /Portlet -->
 					</div>
 				</div>
 			</div>

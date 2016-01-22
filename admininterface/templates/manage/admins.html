@@ -5,254 +5,247 @@
 
 {% block contents %}
 
-<div id="wrapper">
-	<div id="page-wrapper" class="gray-bg">
 
-		{% include 'topbar.html' %}
-
-		<div class="wrapper wrapper-content">
-			<div class="row">
-				<div class="col-lg-12">
-					<div class="ibox float-e-margins">
-						<div class="ibox-title">
-							<div class="row">
-								<div class="col-lg-12">
-									<h5>Admin Users</h5>
-									<a data-toggle="modal" class="btn btn-primary" style="float: right;" href="#modal-form-new"
-										{% if not request.user.is_superuser %}
-										disabled
-										{% endif %}
-									>New Admin</a>
-								</div>
-							</div>
-						</div>
-
-						<div class="ibox-content" style="min-height: 530px;">
-
-							<!-- modal form 'new' -->
-							<div id="modal-form-new" class="modal fade" aria-hidden="true">
-								<div class="modal-dialog">
-									<div class="modal-content">
-										<div class="modal-body">
-											<div class="row">
-												<div class="col-sm-12">
-													<h3 class="m-t-none m-b">New Admin User</h3>
-
-													<p>Create new admin user.</p>
-
-													<form role="form" id="modalform">
-														<div class="form-group">
-															<label>Username*</label> <input type="text"
-																placeholder="Username" class="form-control required"
-																name="username" id="username">
-														</div>
-														<div class="form-group">
-															<label>Event:</label> <select class="form-control"
-																name="eventid" id="eventid">
-																<option value="0" selected>All</option>
-																<?php
-				foreach($eventlist as $event)
-					echo "<option value='".$event['eventid']."'>".$event['title']."</option>";
-			?>
-															</select>
-														</div>
-														<div class="form-group">
-															<label>Password*</label> <input type="password"
-																placeholder="Password" class="form-control required"
-																name="password" id="password">
-														</div>
-														<div class="form-group">
-															<label>Confirm*</label> <input type="password"
-																placeholder="Confirm password"
-																class="form-control required" name="confirm"
-																id="confirm">
-														</div>
-														<div>
-															<button
-																class="btn btn-sm btn-primary pull-right m-t-n-xs"
-																type="submit" onclick="on_create()">
-																<strong>Create</strong>
-															</button>
-															<button
-																class="btn btn-sm btn-primary pull-right m-t-n-xs"
-																style="margin-right: 20px;" type="button"
-																onclick="on_cancel_new()">
-																<strong>Cancel</strong>
-															</button>
-														</div>
-													</form>
-												</div>
-
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<!-- modal form 'edit' -->
-							<div id="modal-form-edit" class="modal fade" aria-hidden="true">
-								<div class="modal-dialog">
-									<div class="modal-content">
-										<div class="modal-body">
-											<div class="row">
-												<div class="col-sm-12">
-													<h3 class="m-t-none m-b">Edit Admin User</h3>
-													<p>Change admin user.</p>
-													<form role="form" id="modalform_edit">
-														<input type="hidden" id="username_old" value="">
-														<div class="form-group">
-															<label>Username*</label> <input type="text"
-																placeholder="Username" class="form-control required"
-																name="username_edit" id="username_edit">
-														</div>
-														<div class="form-group">
-															<label>Event:</label> <select class="form-control"
-																name="eventid_edit" id="eventid_edit">
-																<option value="0">All</option>
-																<?php
-				foreach($eventlist as $event)
-					echo "<option value='".$event['eventid']."'>".$event['title']."</option>";
-			?>
-															</select>
-														</div>
-														<div class="form-group">
-															<label>Password*</label> <input type="password"
-																placeholder="Password" class="form-control required"
-																name="password_edit" id="password_edit">
-														</div>
-														<div class="form-group">
-															<label>Confirm*</label> <input type="password"
-																placeholder="Confirm password"
-																class="form-control required" name="confirm_edit"
-																id="confirm_edit">
-														</div>
-														<div>
-															<button
-																class="btn btn-sm btn-primary pull-right m-t-n-xs"
-																type="submit" onclick="on_edit_done()">
-																<strong>Change</strong>
-															</button>
-															<button
-																class="btn btn-sm btn-primary pull-right m-t-n-xs"
-																style="margin-right: 20px;" type="button"
-																onclick="on_cancel_edit()">
-																<strong>Cancel</strong>
-															</button>
-														</div>
-													</form>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<!-- confirm modal form -->
-							<div id="modal-confirm" class="modal fade" aria-hidden="true"
-								aria-labelledby="confirm-modal-label">
-								<div class="modal-dialog">
-									<div class="modal-content">
-										<input type="hidden" id="modal-opener" value=""> <input
-											type="hidden" id="modal-return" value=""> <input
-											type="hidden" id="modal-callback" value=""> <input
-											type="hidden" id="modal-param" value="">
-
-										<div class="modal-header">
-											<h4 class="modal-title" id="confirm-modal-label">Confirm
-												dialog</h4>
-										</div>
-
-										<div class="modal-body">
-											<p id="modal-message"></p>
-										</div>
-
-										<div class="modal-footer" style="padding: 10px 20px 5px">
-											<button class="btn btn-sm btn-primary pull-right"
-												data-dismiss="modal">Cancel</button>
-											<button class="btn btn-sm btn-primary pull-right"
-												style="margin-right: 10px;" onclick="on_ok_confirm()">Ok</button>
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<!-- admin user table -->
-							<div class="tooltip-demo" style="width: 50%; min-height: 450px;">
-								<table class="table table-bordered" style="margin-bottom: 0px;"
-									id="photo_table">
-									<tbody id="users_body">
-
-										<tr>
-											<th>No</th>
-											<th>Username</th>
-											<th>Event</th>
-											<th>Actions</th>
-										</tr>
-
-										<?php
-		for($i=0; $i<count($result); $i++)
-		{
-			?>
-
-										<tr>
-											<td style="display: none">
-												<?php echo $result['username']; ?>
-											</td>
-											<td>
-												<?php echo ($offset + $i + 1); ?>
-											</td>
-
-											<td>
-												<?php echo $result[$i]['username']; ?>
-											</td>
-											<td>
-												<?php 
-					if ($result[$i]['eventid'] == 0) echo "All";
-					echo $result[$i]['title']; ?>
-											</td>
-											<td
-												style="padding-top: 7px; padding-bottom: 7px; text-align: center; vertical-align: middle;">
-												<a class="btn btn-sm btn-white btn-action"
-												onclick="on_edit('<?php echo $result[$i]['username']; ?>', <?php echo $result[$i]['eventid']; ?>);"
-												data-toggle="tooltip" data-placement="bottom" title="Edit">
-													<img
-													src="<?php echo base_url();?>inspinia_admin/img/icon/change-account.png">
-											</a> <?php
-					if ($this->session->userdata('userno') != $result[$i]['username']) { 
-				?> <a class="btn btn-sm btn-white btn-action"
-												onclick="on_delete('<?php echo $result[$i]['username']; ?>');"
-												data-toggle="tooltip" data-placement="bottom" title="Delete">
-													<img
-													src="<?php echo base_url();?>inspinia_admin/img/icon/delete.png">
-											</a> <?php } ?>
-
-											</td>
-										</tr>
-
-										<?php
-		}
-		?>
-
-									</tbody>
-								</table>
-
-								<div class="row">
-									<div class="col col-lg-12">
-										<ul class="pagination pagination-sm no-margin pull-right"
-											id="pagenation_wrapper">
-											<?php echo $pagenation; ?>
-										</ul>
-									</div>
-								</div>
-
-							</div>
-
+<div class="wrapper wrapper-content">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<div class="row">
+						<div class="col-lg-12">
+							<h5>Admin Users</h5>
+							<a data-toggle="modal" class="btn btn-primary" style="float: right;" href="#modal-form-new"
+								{% if not request.user.is_superuser %}
+								disabled
+								{% endif %}
+							>New Admin</a>
 						</div>
 					</div>
 				</div>
+
+				<div class="ibox-content" style="min-height: 530px;">
+
+					<!-- modal form 'new' -->
+					<div id="modal-form-new" class="modal fade" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-body">
+									<div class="row">
+										<div class="col-sm-12">
+											<h3 class="m-t-none m-b">New Admin User</h3>
+
+											<p>Create new admin user.</p>
+
+											<form role="form" id="modalform">
+												<div class="form-group">
+													<label>Username*</label> <input type="text"
+														placeholder="Username" class="form-control required"
+														name="username" id="username">
+												</div>
+												<div class="form-group">
+													<label>Event:</label> <select class="form-control"
+														name="eventid" id="eventid">
+														<option value="0" selected>All</option>
+														<?php
+		foreach($eventlist as $event)
+					echo "<option value='".$event['eventid']."'>".$event['title']."</option>";
+			?>
+													</select>
+												</div>
+												<div class="form-group">
+													<label>Password*</label> <input type="password"
+														placeholder="Password" class="form-control required"
+														name="password" id="password">
+												</div>
+												<div class="form-group">
+													<label>Confirm*</label> <input type="password"
+														placeholder="Confirm password"
+														class="form-control required" name="confirm"
+														id="confirm">
+												</div>
+												<div>
+													<button
+														class="btn btn-sm btn-primary pull-right m-t-n-xs"
+														type="submit" onclick="on_create()">
+														<strong>Create</strong>
+													</button>
+													<button
+														class="btn btn-sm btn-primary pull-right m-t-n-xs"
+														style="margin-right: 20px;" type="button"
+														onclick="on_cancel_new()">
+														<strong>Cancel</strong>
+													</button>
+												</div>
+											</form>
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- modal form 'edit' -->
+					<div id="modal-form-edit" class="modal fade" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-body">
+									<div class="row">
+										<div class="col-sm-12">
+											<h3 class="m-t-none m-b">Edit Admin User</h3>
+											<p>Change admin user.</p>
+											<form role="form" id="modalform_edit">
+												<input type="hidden" id="username_old" value="">
+												<div class="form-group">
+													<label>Username*</label> <input type="text"
+														placeholder="Username" class="form-control required"
+														name="username_edit" id="username_edit">
+												</div>
+												<div class="form-group">
+													<label>Event:</label> <select class="form-control"
+														name="eventid_edit" id="eventid_edit">
+														<option value="0">All</option>
+														<?php
+		foreach($eventlist as $event)
+					echo "<option value='".$event['eventid']."'>".$event['title']."</option>";
+			?>
+													</select>
+												</div>
+												<div class="form-group">
+													<label>Password*</label> <input type="password"
+														placeholder="Password" class="form-control required"
+														name="password_edit" id="password_edit">
+												</div>
+												<div class="form-group">
+													<label>Confirm*</label> <input type="password"
+														placeholder="Confirm password"
+														class="form-control required" name="confirm_edit"
+														id="confirm_edit">
+												</div>
+												<div>
+													<button
+														class="btn btn-sm btn-primary pull-right m-t-n-xs"
+														type="submit" onclick="on_edit_done()">
+														<strong>Change</strong>
+													</button>
+													<button
+														class="btn btn-sm btn-primary pull-right m-t-n-xs"
+														style="margin-right: 20px;" type="button"
+														onclick="on_cancel_edit()">
+														<strong>Cancel</strong>
+													</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- confirm modal form -->
+					<div id="modal-confirm" class="modal fade" aria-hidden="true"
+						aria-labelledby="confirm-modal-label">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<input type="hidden" id="modal-opener" value=""> <input
+									type="hidden" id="modal-return" value=""> <input
+									type="hidden" id="modal-callback" value=""> <input
+									type="hidden" id="modal-param" value="">
+
+								<div class="modal-header">
+									<h4 class="modal-title" id="confirm-modal-label">Confirm
+										dialog</h4>
+								</div>
+
+								<div class="modal-body">
+									<p id="modal-message"></p>
+								</div>
+
+								<div class="modal-footer" style="padding: 10px 20px 5px">
+									<button class="btn btn-sm btn-primary pull-right"
+										data-dismiss="modal">Cancel</button>
+									<button class="btn btn-sm btn-primary pull-right"
+										style="margin-right: 10px;" onclick="on_ok_confirm()">Ok</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- admin user table -->
+					<div class="tooltip-demo" style="width: 50%; min-height: 450px;">
+						<table class="table table-bordered" style="margin-bottom: 0px;"
+							id="photo_table">
+							<tbody id="users_body">
+
+								<tr>
+									<th>No</th>
+									<th>Username</th>
+									<th>Event</th>
+									<th>Actions</th>
+								</tr>
+
+								<?php
+for($i=0; $i<count($result); $i++)
+		{
+			?>
+
+								<tr>
+									<td style="display: none">
+										<?php echo $result['username']; ?>
+									</td>
+									<td>
+										<?php echo ($offset + $i + 1); ?>
+									</td>
+
+									<td>
+										<?php echo $result[$i]['username']; ?>
+									</td>
+									<td>
+										<?php 
+			if ($result[$i]['eventid'] == 0) echo "All";
+					echo $result[$i]['title']; ?>
+									</td>
+									<td
+										style="padding-top: 7px; padding-bottom: 7px; text-align: center; vertical-align: middle;">
+										<a class="btn btn-sm btn-white btn-action"
+										onclick="on_edit('<?php echo $result[$i]['username']; ?>', <?php echo $result[$i]['eventid']; ?>);"
+										data-toggle="tooltip" data-placement="bottom" title="Edit">
+											<img
+											src="<?php echo base_url();?>inspinia_admin/img/icon/change-account.png">
+									</a> <?php
+			if ($this->session->userdata('userno') != $result[$i]['username']) { 
+				?> <a class="btn btn-sm btn-white btn-action"
+										onclick="on_delete('<?php echo $result[$i]['username']; ?>');"
+										data-toggle="tooltip" data-placement="bottom" title="Delete">
+											<img
+											src="<?php echo base_url();?>inspinia_admin/img/icon/delete.png">
+									</a> <?php } ?>
+
+									</td>
+								</tr>
+
+								<?php
+}
+		?>
+
+							</tbody>
+						</table>
+
+						<div class="row">
+							<div class="col col-lg-12">
+								<ul class="pagination pagination-sm no-margin pull-right"
+									id="pagenation_wrapper">
+									<?php echo $pagenation; ?>
+								</ul>
+							</div>
+						</div>
+
+					</div>
+
+				</div>
 			</div>
 		</div>
-
 	</div>
 </div>
 

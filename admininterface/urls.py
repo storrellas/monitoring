@@ -16,10 +16,10 @@ urlpatterns = [
     url(r'^home/$',            BaseView.as_view(template_name='home/eventresult.html'),   name='home'),
     url(r'^home/analysis/0/$', BaseView.as_view(template_name='home/eventtable.html'),    name='analysis'),
     
-    url(r'^events/$',             BaseView.as_view(template_name='base.html'),    name='events'),
+    url(r'^events/$',             BaseView.as_view(template_name='manage/events.html'),    name='events'),
     url(r'^addevent/$',           BaseView.as_view(template_name='base.html'),    name='add_event'),
     url(r'^editevent/$',          BaseView.as_view(template_name='base.html'),    name='edit_event'),    
-    url(r'^event/events/0/$',     BaseView.as_view(template_name='base.html'),    name='events_0'),
+    url(r'^event/events/0/$',     BaseView.as_view(template_name='manage/events.html'),    name='events_0'),
     
     url(r'^admin/$',             BaseView.as_view(template_name='base.html'),    name='admins'),
     url(r'^users/$',              BaseView.as_view(template_name='manage/users.html'),    name='users'),
@@ -27,6 +27,6 @@ urlpatterns = [
     url(r'^manage/users/0/$',     BaseView.as_view(template_name='manage/users.html'),    name='users_0'),
     
     
-    url(r'^settings/changepwd/$', BaseView.as_view(template_name='base.html'),    name='changepwd'),    
+    url(r'^settings/changepwd/$', BaseView.as_view(template_name='settings/changepwd.html'),    name='changepwd'),    
     
 ]
