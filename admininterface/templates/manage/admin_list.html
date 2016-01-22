@@ -193,6 +193,7 @@ for($i=0; $i<count($result); $i++)
 								<tr>
 									<td style="display: none">
 										<?php echo $result['username']; ?>
+										{{ admin.username }}
 									</td>
 									<td>
 										<?php echo ($offset + $i + 1); ?>
@@ -228,6 +229,45 @@ for($i=0; $i<count($result); $i++)
 								<?php
 }
 		?>
+
+								{% for user in object_list %}
+								<tr>
+									<td style="display: none">
+										<?php echo $result['username']; ?>
+										{{ user.username }}
+									</td>
+									<td>
+										{{ forloop.counter }}
+									</td>
+
+									<td>
+										<?php echo $result[$i]['username']; ?>
+										{{ user.username }}
+									</td>
+									<td>
+										<?php 
+			if ($result[$i]['eventid'] == 0) echo "All";
+					echo $result[$i]['title']; ?>
+									</td>
+									<td
+										style="padding-top: 7px; padding-bottom: 7px; text-align: center; vertical-align: middle;">
+										<a class="btn btn-sm btn-white btn-action"
+										onclick="on_edit('<?php echo $result[$i]['username']; ?>', <?php echo $result[$i]['eventid']; ?>);"
+										data-toggle="tooltip" data-placement="bottom" title="Edit">
+											<img
+											src="{% static 'inspinia_admin/img/icon/change-account.png' %}">
+									</a> 
+									{% if request.user == user %}
+									 <a class="btn btn-sm btn-white btn-action"
+										onclick="on_delete('<?php echo $result[$i]['username']; ?>');"
+										data-toggle="tooltip" data-placement="bottom" title="Delete">
+											<img
+											src="{% static 'inspinia_admin/img/icon/delete.png' %}">
+									</a>
+									{% endif %}
+									</td>
+								</tr>
+								{% endfor %}
 
 							</tbody>
 						</table>

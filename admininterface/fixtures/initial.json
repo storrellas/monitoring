@@ -1,0 +1,55 @@
+[
+{
+  "model": "admininterface.event",
+  "pk": 1,
+  "fields": {
+    "title": "MyEvent",
+    "description": "First event",
+    "register_date": "2016-01-22T14:04:43.515Z",
+    "pdfurl": "http://www.google.com",
+    "videourl": "http://www.elpais.es"
+  }
+},
+{
+  "model": "admininterface.data",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "event": 1,
+    "data": "Dont know what to put here"
+  }
+},
+{
+  "model": "admininterface.eventuser",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "event": 1,
+    "state": 0
+  }
+},
+{
+  "model": "admininterface.eventcheck",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "event": 1,
+    "checkouttime": "2016-01-22T14:04:43.517Z",
+    "checkintime": "2016-01-22T14:04:43.517Z"
+  }
+},
+{
+  "model": "admininterface.trackdata",
+  "pk": 3,
+  "fields": {
+    "user": 1,
+    "event": 1,
+    "checkout": 1,
+    "quantity": 1,
+    "target": 10,
+    "type": 1,
+    "note": "notes",
+    "trackdate": "2016-01-22T14:44:03.347Z"
+  }
+}
+]

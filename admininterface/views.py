@@ -1,14 +1,19 @@
 from django.shortcuts import render,redirect
-from django.views.generic import TemplateView,RedirectView
+from django.views.generic import TemplateView,RedirectView,ListView
+from django.views.generic.base import TemplateResponseMixin
+
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.views.generic import View
 from django.http import Http404, HttpResponseNotFound,HttpResponse,JsonResponse
 
-from django.contrib.auth import authenticate, login,logout
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+
+from braces.views import LoginRequiredMixin
 
 # Project imports
 from forms import UserForm
@@ -60,20 +65,36 @@ class LogoutView(RedirectView):
         log.info("Calling logout")
         logout(request)
         return super(LogoutView, self).get(request, *args, **kwargs)
-  
     
-class BaseView(TemplateView): 
+class BaseView( LoginRequiredMixin, TemplateView ): 
     template_name='base.html'
     
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super(self.__class__, self).dispatch(request, *args, **kwargs)
-     
+    """
     def get(self, request, *args, **kwargs):
         context = self.get_context_data()
         log.info( "Calling BaseView :" + str(request.user.username) + ":" )    
-        return super(TemplateView, self).render_to_response(context)
+        return super(BaseView, self).render_to_response(context)
+    """
+
+
+
+class AdminView( LoginRequiredMixin, ListView ):
+    template_name='manage/admin_list.html'  
+    model = User
+    
+    
+    def get_context_data(self, **kwargs):
+        context = super(AdminView, self).get_context_data(**kwargs)
+        log.info("value of ")
+        return context
     
     
     
-       
+    
+    
+    
+    
+    
+    
+    
+         
