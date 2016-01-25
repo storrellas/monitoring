@@ -46,10 +46,9 @@
 													<label>Event:</label> <select class="form-control"
 														name="eventid" id="eventid">
 														<option value="0" selected>All</option>
-														<?php
-		foreach($eventlist as $event)
-					echo "<option value='".$event['eventid']."'>".$event['title']."</option>";
-			?>
+														{% for event in event_list %}
+															<option value='{{ event.id }}'>{{ event.title }}</option>
+														{% endfor %}
 													</select>
 												</div>
 												<div class="form-group">
@@ -105,10 +104,9 @@
 													<label>Event:</label> <select class="form-control"
 														name="eventid_edit" id="eventid_edit">
 														<option value="0">All</option>
-														<?php
-		foreach($eventlist as $event)
-					echo "<option value='".$event['eventid']."'>".$event['title']."</option>";
-			?>
+														{% for event in event_list %}
+															<option value='{{ event.id }}'>{{ event.title }}</option>
+														{% endfor %}						
 													</select>
 												</div>
 												<div class="form-group">
@@ -185,77 +183,41 @@
 									<th>Actions</th>
 								</tr>
 
-								<?php
-for($i=0; $i<count($result); $i++)
-		{
-			?>
-
-								<tr>
-									<td style="display: none">
-										<?php echo $result['username']; ?>
-										{{ admin.username }}
-									</td>
-									<td>
-										<?php echo ($offset + $i + 1); ?>
-									</td>
-
-									<td>
-										<?php echo $result[$i]['username']; ?>
-									</td>
-									<td>
-										<?php 
-			if ($result[$i]['eventid'] == 0) echo "All";
-					echo $result[$i]['title']; ?>
-									</td>
-									<td
-										style="padding-top: 7px; padding-bottom: 7px; text-align: center; vertical-align: middle;">
-										<a class="btn btn-sm btn-white btn-action"
-										onclick="on_edit('<?php echo $result[$i]['username']; ?>', <?php echo $result[$i]['eventid']; ?>);"
-										data-toggle="tooltip" data-placement="bottom" title="Edit">
-											<img
-											src="<?php echo base_url();?>inspinia_admin/img/icon/change-account.png">
-									</a> <?php
-			if ($this->session->userdata('userno') != $result[$i]['username']) { 
-				?> <a class="btn btn-sm btn-white btn-action"
-										onclick="on_delete('<?php echo $result[$i]['username']; ?>');"
-										data-toggle="tooltip" data-placement="bottom" title="Delete">
-											<img
-											src="<?php echo base_url();?>inspinia_admin/img/icon/delete.png">
-									</a> <?php } ?>
-
-									</td>
-								</tr>
-
-								<?php
-}
-		?>
-
 								{% for user in object_list %}
 								<tr>
 									<td style="display: none">
-										<?php echo $result['username']; ?>
 										{{ user.username }}
 									</td>
 									<td>
-										{{ forloop.counter }}
+										{{ user.id }}
 									</td>
 
 									<td>
-										<?php echo $result[$i]['username']; ?>
 										{{ user.username }}
 									</td>
 									<td>
-										<?php 
-			if ($result[$i]['eventid'] == 0) echo "All";
-					echo $result[$i]['title']; ?>
+										{% if user.data.count == 0 %}
+											All																				
+										{% else %}
+											{{ user.data.first.event.title }}	
+										{% endif %}										
 									</td>
+									
 									<td
 										style="padding-top: 7px; padding-bottom: 7px; text-align: center; vertical-align: middle;">
-										<a class="btn btn-sm btn-white btn-action"
-										onclick="on_edit('<?php echo $result[$i]['username']; ?>', <?php echo $result[$i]['eventid']; ?>);"
-										data-toggle="tooltip" data-placement="bottom" title="Edit">
-											<img
-											src="{% static 'inspinia_admin/img/icon/change-account.png' %}">
+										{% if user.data.count == 0 %}
+											<a class="btn btn-sm btn-white btn-action"
+											onclick="on_edit('{{ user.username }}', 0);"
+											data-toggle="tooltip" data-placement="bottom" title="Edit">																				
+										{% else %}
+											<a class="btn btn-sm btn-white btn-action"
+											onclick="on_edit('{{ user.username }}', {{ user.data.first.event.id }});"
+											data-toggle="tooltip" data-placement="bottom" title="Edit">
+										{% endif %}
+										
+
+										
+										<img src="{% static 'inspinia_admin/img/icon/change-account.png' %}">
 									</a> 
 									{% if request.user == user %}
 									 <a class="btn btn-sm btn-white btn-action"
@@ -272,14 +234,25 @@ for($i=0; $i<count($result); $i++)
 							</tbody>
 						</table>
 
+
+
+    					{% if is_paginated %}
 						<div class="row">
 							<div class="col col-lg-12">
 								<ul class="pagination pagination-sm no-margin pull-right"
 									id="pagenation_wrapper">
-									<?php echo $pagenation; ?>
+
+										{% if page_obj.has_previous %}
+                    						<li><a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">&lt</a></li>
+                						{% endif %}
+                						<li><a href="#">{{ page_obj.number }}</a></li>
+                						{% if page_obj.has_next %}
+                    						<li><a href="{{ request.path }}?page={{ page_obj.next_page_number }}">&gt</a></li>
+                						{% endif %}
 								</ul>
 							</div>
 						</div>
+    					{% endif %}
 
 					</div>
 
