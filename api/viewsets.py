@@ -38,13 +38,25 @@ class EventViewset( ModelViewSet ):
     permission_classes = [AllowAny]
         
 
-class AdminListViewset( generics.ListAPIView ):
+class AdminListViewset( generics.ListCreateAPIView ):
 
     #A simple ViewSet for viewing and editing accounts.
     model = User
     queryset = User.objects.filter(is_superuser=True)
     serializer_class = AdminSerializer    
     permission_classes = [AllowAny]
+
+    def perform_create(self, serializer):
+        
+        # Save serializer - Create superuser
+        obj = serializer.save()
+        obj.is_superuser = True
+        obj.save()
+        
+        # Create associated data
+        data = Data(user=obj)                
+        data.save()
+    
 
     
 class AdminDetailViewset( generics.RetrieveUpdateDestroyAPIView ):
@@ -55,16 +67,7 @@ class AdminDetailViewset( generics.RetrieveUpdateDestroyAPIView ):
     serializer_class = AdminSerializer    
     permission_classes = [AllowAny]
 
-    
-    def get(self, request, *args, **kwargs):
-        return super(AdminDetailViewset, self).retrieve(request, *args, **kwargs)
 
-    def delete(self, request, *args, **kwargs):
-        return super(AdminDetailViewset, self).destroy(request, *args, **kwargs)
-
-    def put(self, request, *args, **kwargs):
-        return super(AdminDetailViewset, self).update(request, *args, **kwargs)
-    
 """
 class MapwaypointViewSet(viewsets.ViewSet):
     

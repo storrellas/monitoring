@@ -5,6 +5,10 @@ from django.contrib.auth.models import User
 
 from admininterface.models import *
 
+# Configure logger
+import logging
+log = logging.getLogger(__name__)
+
 class AdminSerializer(serializers.ModelSerializer):
 
     eventid = serializers.SerializerMethodField('eventid_field')        

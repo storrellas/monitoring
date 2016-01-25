@@ -20,6 +20,15 @@
   }
 },
 {
+  "model": "admininterface.data",
+  "pk": 2,
+  "fields": {
+    "user": 7,
+    "event": null,
+    "data": ""
+  }
+},
+{
   "model": "admininterface.eventuser",
   "pk": 1,
   "fields": {
