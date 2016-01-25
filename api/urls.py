@@ -14,7 +14,6 @@ urlpatterns = [
     # url(r'^blog/', include('blog.urls')),
     url(r'^login/', 'rest_framework_jwt.views.obtain_jwt_token', name='api-login'),       
     url(r'^docs/', include('rest_framework_swagger.urls'),       name='api-docs'),
-    url(r'^admingeneric/(?P<pk>[0-9]+)/', AdminGenericViewset.as_view(),       name='api-deree'),
     
 ]
 
