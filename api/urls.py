@@ -14,12 +14,13 @@ urlpatterns = [
     # url(r'^blog/', include('blog.urls')),
     url(r'^login/', 'rest_framework_jwt.views.obtain_jwt_token', name='api-login'),       
     url(r'^docs/', include('rest_framework_swagger.urls'),       name='api-docs'),
-    
+    url(r'^admin/$', AdminListViewset.as_view(),       name='api-docs'),
+    url(r'^admin/(?P<pk>[0-9]+)/$', AdminDetailViewset.as_view(),       name='api-docs'),        
 ]
 
 # Add routers for REST endpoints
 router = SimpleRouter()
-router.register(r'admin', AdminViewset,'api-admin')
+#router.register(r'admin', AdminViewset,'api-admin')
 router.register(r'event', EventViewset,'api-event')
 
 urlpatterns += router.urls
