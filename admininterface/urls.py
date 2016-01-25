@@ -2,14 +2,15 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView,RedirectView
 from views import *
 
 urlpatterns = [
-    url(r'^$',          TemplateView.as_view(template_name='sample.html'),      name='root'),
+    #url(r'^test/$',          TemplateView.as_view(template_name='sample.html'),      name='root'),
+    url(r'^$',                RedirectView.as_view(url='/login/'),      name='root'),
     
-    url(r'^login/$',     LoginView.as_view(),        name='login'),
-    url(r'^logout/$',    LogoutView.as_view(),        name='logout'),
+    url(r'^login/$',          LoginView.as_view(),        name='login'),
+    url(r'^logout/$',         LogoutView.as_view(),        name='logout'),
     
     
     url(r'^base/$',            BaseView.as_view(template_name='base.html'),        name='base'),
