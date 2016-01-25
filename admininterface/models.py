@@ -11,7 +11,7 @@ class Event(models.Model):
     videourl      = models.URLField(default='')
 
 class Data(models.Model):
-    user     = models.ForeignKey(User,related_name='data')
+    user     = models.OneToOneField(User,related_name='data')
     event    = models.ForeignKey(Event, null=True, blank=True )
     data     = models.CharField(max_length=400)
     

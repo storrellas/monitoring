@@ -196,11 +196,13 @@
 										{{ user.username }}
 									</td>
 									<td>
-										{% if user.data.count == 0 %}
-											All																				
+										{% if not user.data %}
+											All
 										{% else %}
-											{{ user.data.first.event.title }}	
-										{% endif %}										
+											{{ user.data.event.title }}	
+										{% endif %}
+																				
+																				
 									</td>
 									
 									<td
