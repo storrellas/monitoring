@@ -183,7 +183,7 @@
 									<th>Actions</th>
 								</tr>
 
-								{% for user in object_list %}
+								{% for user in admin_list %}
 								<tr>
 									<td style="display: none">
 										{{ user.username }}
@@ -219,13 +219,7 @@
 										
 										<img src="{% static 'inspinia_admin/img/icon/change-account.png' %}">
 									</a> 
-									{% if request.user == user %}
-<!-- 									 <a class="btn btn-sm btn-white btn-action"
-										onclick="on_delete('<?php echo $result[$i]['username']; ?>');"
-										data-toggle="tooltip" data-placement="bottom" title="Delete">
-											<img
-											src="{% static 'inspinia_admin/img/icon/delete.png' %}">
-									</a> -->
+									{% if request.user != user %}
 									<a class="btn btn-sm btn-white btn-action"
 										onclick="on_delete('{{ user.id }}');"
 										data-toggle="tooltip" data-placement="bottom" title="Delete">

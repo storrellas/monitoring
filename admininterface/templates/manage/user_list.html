@@ -191,7 +191,7 @@ $('document').ready(function(){
 									<div class="col-lg-2 search_field">
 										<input type="search" class="form-control" name="search_data"
 											id="search_data" placeholder="Search Username"
-											value="<?php echo $searchData?>">
+											value="{{ search_data }}">
 									</div>
 
 									<!-- Sort field -->
@@ -207,11 +207,9 @@ $('document').ready(function(){
 									<!--</select></div>-->
 									<div class="col-lg-1 order_field">
 										<select class="form-control m-b" name="order_field"
-											id="order_field">
-											<option value="ASC"<?php if($sortMode == 'ASC')
-												echo 'selected';?>>ASC</option>
-											<option value="DESC"<?php if($sortMode == 'DESC')
-												echo 'selected';?>>DESC</option>
+											id="order_field">											
+											<option value="ASC" {% ifequal sortMode 'ASC'%}selected{% endifequal %} >ASC</option>
+											<option value="DESC"{% ifequal sortMode 'DESC'%}selected{% endifequal %}>DESC</option>
 										</select>
 									</div>
 
@@ -256,7 +254,7 @@ $('document').ready(function(){
 						</div>
 					</div>
 
-
+<!-- 
 					<div class="table-responsive tooltip-demo"
 						style="display: block; overflow-x: auto;">
 						<table class="table table-bordered" style="margin-bottom: 0px;"
@@ -320,7 +318,73 @@ $('document').ready(function(){
 							</tbody>
 						</table>
 					</div>
+ -->
+<!-- ------------------------------------------------- -->
+					<div class="table-responsive tooltip-demo"
+						style="display: block; overflow-x: auto;">
+						<table class="table table-bordered" style="margin-bottom: 0px;"
+							id="users_table">
+							<tbody id="users_body"
+								style="height: 450px; overflow-y: auto; overflow-x: hidden; display: block;">
+								<tr>
+									<th style="width: 70px">No</th>
+									<th style="width: 200px">Username</th>
+									<th style="width: 400px">Description</th>
+									<th style="width: 280px">Actions</th>
+								</tr>
+								{% for user in event_user_list %}
+								<tr>
+									<td style="display: none;"><input type="hidden"
+										id="username<?php echo $userItem['userid']?>"
+										value="<?php echo $userItem['username'];?>"> <input
+										type="hidden" id="description<?php echo $userItem['userid']?>"
+										value="<?php echo $userItem['description'];?>"></td>
+									<td>
+										{{ user.id }}
+									</td>
+									<td>
+										{{ user.username }}
+									</td>
+									<td>
+										{{ user.first_name }}
+									</td>
+									<td
+										style="padding-top: 1px; padding-bottom: 0px; text-align: center;">
+										<a class="btn btn-sm btn-white btn-action"
+										onclick="on_editpass('<?php echo $userItem['userid']; ?>');"
+										data-toggle="tooltip" data-placement="bottom"
+										title="Change Password"
+										{% if not request.user.is_superuser %}
+										disabled
+										{% endif %}> 
+										<img src="{% static 'inspinia_admin/img/icon/change_password.png' %}">
+									</a> 
+									<a class="btn btn-sm btn-white btn-action"
+										onclick="on_edit('<?php echo $userItem['userid']?>');"
+										data-toggle="tooltip" data-placement="bottom" title="Edit"
+										{% if not request.user.is_superuser %}
+										disabled
+										{% endif %}
+										> 
+										<img src="{% static 'inspinia_admin/img/icon/change-account.png' %}">
+									</a> 
+									<a class="btn btn-sm btn-white btn-action"
+										onclick="on_delete('{{ user.id }}');"
+										data-toggle="tooltip" data-placement="bottom" title="Delete"
+										{% if not request.user.is_superuser %}
+										disabled
+										{% endif %}
+										> 
+										<img src="{% static 'inspinia_admin/img/icon/delete.png' %}">
+									</a>
+									</td>
+								</tr>
+							{% endfor %}
+							</tbody>
+						</table>
+					</div>
 
+<!-- ------------------------------------------------- -->
 					<div class="row">
 						<div class="col col-lg-12">
 							<ul class="pagination pagination-sm no-margin pull-right"

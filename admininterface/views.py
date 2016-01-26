@@ -84,23 +84,46 @@ class AdminView( LoginRequiredMixin, ListView ):
     template_name='manage/admin_list.html'  
     model = User
     paginate_by = 10
+    queryset = User.objects.filter(is_superuser=True).order_by('id')
+    context_object_name = 'admin_list'
     
-    def get_queryset(self):        
-        return User.objects.filter(is_superuser=True).order_by('id')    
+    
+    #def get_queryset(self):
+    #    return User.objects.filter(is_superuser=True).order_by('id')    
     
     def get_context_data(self, **kwargs):
         context = super(AdminView, self).get_context_data(**kwargs)        
-        context['event_list'] = Event.objects.all()
-        context['sergi'] = "abc"
-        log.info("adding event_list ->" + str(Event.objects.all()))
-        
+        context['event_list'] = Event.objects.all()        
         return context
+   
+
+class EventUserView( AdminView ):    
+    template_name='manage/user_list.html'  
+    queryset = User.objects.filter(is_superuser=False).order_by('id')
+    context_object_name = 'event_user_list'
     
+    def get_queryset(self):
+
+        if self.request.GET['order_field'] == 'ASC':
+            return self.queryset.filter(username__startswith=self.request.GET['search_data']) \
+                        .order_by('username')
+        else:
+            return self.queryset.filter(username__startswith=self.request.GET['search_data']) \
+                        .order_by('-username')
+        
     
-    
-    
-    
-    
+    def get_context_data(self, **kwargs):
+        context = super(EventUserView, self).get_context_data(**kwargs)                        
+        try:
+            context['sortMode'] = self.request.GET['order_field']
+        except: 
+            context['sortMode'] = 'ASC'
+        try:
+            context['search_data'] = self.request.GET['search_data']
+        except: 
+            context['search_data'] = ''                                         
+        return context    
+            
     
     
     

@@ -26,7 +26,7 @@ urlpatterns = [
     url(r'^admin/$',              BaseView.as_view(template_name='base.html'),    name='admin'),
     url(r'^users/$',              BaseView.as_view(template_name='manage/users.html'),    name='users'),
     url(r'^admin/admins/(?P<admin_id>[0-9]+)/$',    AdminView.as_view(),    name='admin_0'),
-    url(r'^manage/users/(?P<user_id>[0-9]+)/$',     BaseView.as_view(template_name='manage/users.html'),    name='users_0'),
+    url(r'^manage/users/(?P<user_id>[0-9]+)/$',     EventUserView.as_view(),    name='users_0'),
     
     
     url(r'^settings/changepwd/$', BaseView.as_view(template_name='settings/changepwd.html'),    name='changepwd'),    

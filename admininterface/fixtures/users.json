@@ -28,7 +28,7 @@
             "last_login":null,
             "is_superuser":false,
             "username":"sergi",
-            "first_name":"",
+            "first_name":"this is a test for description",
             "last_name":"",
             "email":"",
             "is_staff":false,
