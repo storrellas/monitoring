@@ -10,6 +10,10 @@ class Event(models.Model):
     pdfurl        = models.URLField(default='')
     videourl      = models.URLField(default='')
 
+    
+    def __unicode__(self):
+       return self.title
+
 class Data(models.Model):
     user     = models.OneToOneField(User, related_name='data')
     event    = models.ForeignKey(Event, null=True, blank=True)
@@ -26,6 +30,9 @@ class EventCheck(models.Model):
     checkouttime = models.DateTimeField(default=timezone.now())
     checkintime  = models.DateTimeField(default=timezone.now())
 
+    def __unicode__(self):
+       return self.checkouttime
+
 class TrackData(models.Model):
     user      = models.ForeignKey(User)
     event     = models.ForeignKey(Event)
@@ -35,6 +42,8 @@ class TrackData(models.Model):
     type      = models.IntegerField(default=0)
     note      = models.CharField(default='',max_length=400)
     trackdate = models.DateTimeField(default=timezone.now())
-    
+
+    def __unicode__(self):
+       return self.event + self.checkout    
 
     

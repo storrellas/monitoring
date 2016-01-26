@@ -1,6 +1,6 @@
 # Django imports
 from django.contrib.auth.models import User
-from django.http import HttpResponseBadRequest, HttpResponse
+from django.http import HttpResponseBadRequest, HttpResponse, JsonResponse
 
 # Rest framework imports
 from rest_framework.viewsets import ModelViewSet, ViewSet
@@ -38,18 +38,17 @@ class AdminListViewset( generics.ListCreateAPIView ):
     queryset = User.objects.filter(is_superuser=True)
     serializer_class = AdminSerializer    
     permission_classes = [IsAuthenticatedOrReadOnly]
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
-    def perform_create(self, serializer):
-        
-        # Save serializer - Create superuser
-        obj = serializer.save()
-        obj.is_superuser = True
-        obj.save()
-        
+    def perform_create(self, serializer):        
+        obj = User.objects.create_superuser(username = serializer.data['username'],                                             
+                                            password=serializer.data['password'],
+                                            email='username@mail.com')
         # Create associated data
         data = Data(user=obj)                
         data.save()
-    
+
+from django.http import QueryDict    
 
     
 class AdminDetailViewset( generics.RetrieveUpdateDestroyAPIView ):
@@ -57,10 +56,26 @@ class AdminDetailViewset( generics.RetrieveUpdateDestroyAPIView ):
     #A simple ViewSet for viewing and editing accounts.
     model = User
     queryset = User.objects.filter(is_superuser=True)
-    serializer_class = AdminSerializer    
+    serializer_class = AdminSerializer        
     permission_classes = [IsAuthenticatedOrReadOnly]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
+
+    def put(self, request, *args, **kwargs):
+        
+        serializer = AdminSerializer( request.POST )                        
+        admin = User.objects.get(id=kwargs['pk'])
+        admin.username = serializer.data['username']
+        admin.set_password(serializer.data['password'])        
+        try:
+            event = Event.objects.get(id=request.POST['eventid'])
+        except:
+            event = None
+        admin.data.event = event        
+        admin.save()
+        admin.data.save()                
+        return JsonResponse(AdminSerializer(admin).data)
+    
 
 class EventViewset( ModelViewSet ):
     model = Event

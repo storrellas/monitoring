@@ -9,23 +9,44 @@ from admininterface.models import *
 import logging
 log = logging.getLogger(__name__)
 
-class AdminSerializer(serializers.ModelSerializer):
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
 
-    eventid = serializers.SerializerMethodField('eventid_field')        
-    def eventid_field(self, user):        
-        if not user.data.event:            
-            return None
-        else:
-            return user.data.event.id
+        
+
+class DataSerializer(serializers.ModelSerializer):     
+    class Meta:
+        model = Data
+        fields = ('event', )
+ 
+class AdminSerializer(serializers.ModelSerializer):
     
+    eventid = serializers.SerializerMethodField('eventid_field')        
+    def eventid_field(self, user):
+        try:                
+            serializer = DataSerializer(user.data)
+            return serializer.data['event']
+        except:
+            return None
     
     class Meta:
         model = User
         fields = ('username', 'password','eventid')
 
 
-class EventSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Event
+"""
+class AdminSerializer(serializers.ModelSerializer):
 
+    eventid = serializers.SerializerMethodField('eventid_field')        
+    def eventid_field(self, user):
+        try:
+            return user.data.event.id
+        except:
+            return None
+    
+    class Meta:
+        model = User
+        fields = ('username', 'password','eventid')
+"""
 

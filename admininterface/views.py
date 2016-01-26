@@ -39,7 +39,10 @@ class LoginView(View):
         # Check form    
         user_form = UserForm(request.POST)
         if not user_form.is_valid():
-            raise Http404('Form not valid')
+            raise Http404('Form not valid')                
+        
+        log.info("Logging in " + user_form.data['username'])
+        log.info("Logging in " + user_form.data['username'])
         
         # Authenticate user        
         user = authenticate(username=user_form.data['username'], 
@@ -80,7 +83,7 @@ class BaseView( LoginRequiredMixin, TemplateView ):
 class AdminView( LoginRequiredMixin, ListView ):
     template_name='manage/admin_list.html'  
     model = User
-    paginate_by = 2
+    paginate_by = 10
     
     def get_queryset(self):        
         return User.objects.filter(is_superuser=True).order_by('id')    
@@ -89,7 +92,7 @@ class AdminView( LoginRequiredMixin, ListView ):
         context = super(AdminView, self).get_context_data(**kwargs)        
         context['event_list'] = Event.objects.all()
         context['sergi'] = "abc"
-        log.info("adding event_list" + str(Event.objects.all()))
+        log.info("adding event_list ->" + str(Event.objects.all()))
         
         return context
     

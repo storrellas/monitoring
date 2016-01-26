@@ -14,7 +14,7 @@
 					<div class="row">
 						<div class="col-lg-12">
 							<h5>Admin Users</h5>
-							<a data-toggle="modal" class="btn btn-primary" style="float: right;" href="#modal-form-new"
+							<a data-toggle="modal" class="btn btn-primary" style="float: right;" onclick='on_create_show()'
 								{% if not request.user.is_superuser %}
 								disabled
 								{% endif %}
@@ -288,6 +288,12 @@
             }
         });
     });
+    function on_create_show(){
+    	$('#modal-form-new input').val('')
+		$('#modal-form-new').modal('show')
+    }
+    
+    
     function on_create()
     {
         $('#modalform').validate({
@@ -295,6 +301,7 @@
                 element.before(error);
             },
             rules: {
+            	/*
                 username: {
                     remote: {
                         url: "<?php echo site_url('admin/check_adminname'); ?>",
@@ -306,6 +313,7 @@
                         }
                     }
                 },
+                /**/
                 password: {
                     required: true,
                     minlength : 6,
@@ -319,7 +327,8 @@
             submitHandler: function() {
                 $.ajax({
                     async: true,
-                    url: "<?php echo site_url('admin/new_admin') ?>",
+                    //url: "<?php echo site_url('admin/new_admin') ?>",
+					url: "{% url 'api-admin' %}",
                     dataType: "json",
                     type: "POST",
                     data: {
@@ -328,6 +337,9 @@
                         password: $('#password').val(),
                     },
                     success: function(json) {
+                    	location.reload()
+                    	return;
+                    	/*
                         if (json['result'] >= 0)
                         {
                             $('#modal-form-new').modal('hide');
@@ -341,9 +353,12 @@
                             $('#password').val('');
                             $('#confirm').val('');
                         }
+                    	/**/
                     },
                     error: function(xhr, errStr) {
-                            alert(errStr);
+                        $('#username').val('');
+                        $('#password').val('');
+                        $('#confirm').val(''); 
                     }
                 });
             }
@@ -357,7 +372,7 @@
     {
     	$.ajax({
             async: true,
-            url: "{% url 'api-admin-list' %}" + username + "/",
+            url: "{% url 'api-admin' %}" + username + "/",
             dataType: "json",
             type: "DELETE",
             success: function(json) {
@@ -416,7 +431,7 @@
             },
             /**/
             submitHandler: function() {
-            	var url_put = "{% url 'api-admin-list' %}" +  $('#username_old').val() + "/"
+            	var url_put = "{% url 'api-admin' %}" +  $('#username_old').val() + "/"
                 if ($('#username_old').val() == $('#username_edit').val() && $('#password_edit').val() == '' && $('#confirm_edit').val() == '')
                 {
                     $('#modal-form-edit').modal('hide');
@@ -433,6 +448,10 @@
                         eventid: $('#eventid_edit').val(),
                     },
                     success: function(json) {
+                    	location.reload()
+                    	return;
+                    	/*
+                    	// This is useless
                         if (json['result'] >= 0)
                         {
                             $('#modal-form-edit').modal('hide');
@@ -444,6 +463,7 @@
                         else
                         {
                         }
+                    	/**/
                     },
                     error: function(xhr, errStr) {
                         alert(errStr);
