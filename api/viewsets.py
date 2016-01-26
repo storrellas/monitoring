@@ -1,42 +1,35 @@
 # Django imports
 from django.contrib.auth.models import User
+from django.http import HttpResponseBadRequest, HttpResponse
 
 # Rest framework imports
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticatedOrReadOnly,IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.permissions import AllowAny
 from rest_framework.mixins import *
 
-# Project imports
-from serializers import *
-
-from admininterface.models import *
-
 from rest_framework import generics
 from rest_framework import mixins
+
+
+# Project imports
+from serializers import *
+from admininterface.models import *
+
+from rest_framework.authentication import BasicAuthentication
+
+from rest_framework.authentication import SessionAuthentication 
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+    def enforce_csrf(self, request):
+        return  # To not perform the csrf check previously happening
+
+
 
 # Configure logger
 import logging
 log = logging.getLogger(__name__)
 
-class AdminViewset( ModelViewSet ):
-
-    #A simple ViewSet for viewing and editing accounts.
-    model = User
-    queryset = User.objects.filter(is_superuser=True)
-    serializer_class = AdminSerializer    
-    permission_classes = [AllowAny]
-
-
-    
-
-class EventViewset( ModelViewSet ):
-    model = Event
-    queryset = Event.objects.filter()
-    serializer_class = EventSerializer    
-    permission_classes = [AllowAny]
-        
 
 class AdminListViewset( generics.ListCreateAPIView ):
 
@@ -44,7 +37,7 @@ class AdminListViewset( generics.ListCreateAPIView ):
     model = User
     queryset = User.objects.filter(is_superuser=True)
     serializer_class = AdminSerializer    
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
         
@@ -65,8 +58,30 @@ class AdminDetailViewset( generics.RetrieveUpdateDestroyAPIView ):
     model = User
     queryset = User.objects.filter(is_superuser=True)
     serializer_class = AdminSerializer    
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+
+
+class EventViewset( ModelViewSet ):
+    model = Event
+    queryset = Event.objects.filter()
+    serializer_class = EventSerializer    
     permission_classes = [AllowAny]
 
+class CheckAdminNameViewset( ViewSet ):
+    
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+    
+    def checkname(self, request, *args, **kwargs):                        
+        try:
+            User.objects.get(username=request.POST.get['username'])
+            return HttpResponseBadRequest()
+        except: 
+            return HttpResponse()
+        
+        
+        
+        
 
 """
 class MapwaypointViewSet(viewsets.ViewSet):

@@ -7,7 +7,7 @@ from views import *
 
 urlpatterns = [
     #url(r'^test/$',          TemplateView.as_view(template_name='sample.html'),      name='root'),
-    url(r'^$',                RedirectView.as_view(url='/login/'),      name='root'),
+    url(r'^$',                RedirectView.as_view(url='/home/'),      name='root'),
     
     url(r'^login/$',          LoginView.as_view(),        name='login'),
     url(r'^logout/$',         LogoutView.as_view(),        name='logout'),

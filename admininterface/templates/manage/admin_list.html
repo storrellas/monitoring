@@ -200,16 +200,14 @@
 											All
 										{% else %}
 											{{ user.data.event.title }}	
-										{% endif %}
-																				
-																				
+										{% endif %}																																							
 									</td>
 									
 									<td
 										style="padding-top: 7px; padding-bottom: 7px; text-align: center; vertical-align: middle;">
-										{% if user.data.count == 0 %}
+										{% if not user.data.count %}
 											<a class="btn btn-sm btn-white btn-action"
-											onclick="on_edit('{{ user.username }}', 0);"
+											onclick="on_edit('{{ user.id }}', '{{ user.username }}', 0);"
 											data-toggle="tooltip" data-placement="bottom" title="Edit">																				
 										{% else %}
 											<a class="btn btn-sm btn-white btn-action"
@@ -222,8 +220,14 @@
 										<img src="{% static 'inspinia_admin/img/icon/change-account.png' %}">
 									</a> 
 									{% if request.user == user %}
-									 <a class="btn btn-sm btn-white btn-action"
+<!-- 									 <a class="btn btn-sm btn-white btn-action"
 										onclick="on_delete('<?php echo $result[$i]['username']; ?>');"
+										data-toggle="tooltip" data-placement="bottom" title="Delete">
+											<img
+											src="{% static 'inspinia_admin/img/icon/delete.png' %}">
+									</a> -->
+									<a class="btn btn-sm btn-white btn-action"
+										onclick="on_delete('{{ user.id }}');"
 										data-toggle="tooltip" data-placement="bottom" title="Delete">
 											<img
 											src="{% static 'inspinia_admin/img/icon/delete.png' %}">
@@ -351,11 +355,25 @@
     }
     function do_delete(username)
     {
-        location.href="<?php echo site_url('admin/delete_admin/'); ?>" + "/" + username;
+    	$.ajax({
+            async: true,
+            url: "{% url 'api-admin-list' %}" + username + "/",
+            dataType: "json",
+            type: "DELETE",
+            success: function(json) {
+            	location.href = '#'
+            },
+            error: function(xhr, errStr) {
+                alert(errStr);
+            }
+        });
+        
+        
+
     }
-    function on_edit(username, eventid)
+    function on_edit(userid, username, eventid)
     {
-        $('#username_old').val(username);
+        $('#username_old').val(userid);
         $('#username_edit').val(username);
         $('#eventid_edit').val(eventid);
         $('#password_edit').val('');
@@ -368,10 +386,12 @@
             errorPlacement: function (error, element) {
                 element.before(error);
             },
+            
             rules: {
-                username_edit: {
+            	/*
+            	username_edit: {
                     remote: {
-                        url: "<?php echo site_url('admin/check_adminname_edit'); ?>",
+                        url : "{% url 'api-admin-check-name' %}",
                         type: "post",
                         data: {
                             username: function() {
@@ -383,6 +403,7 @@
                         }
                     }
                 },
+                /**/
                 password_edit: {
                     required: false,
                     minlength : 6,
@@ -393,7 +414,9 @@
                     equalTo: "#password_edit"
                 }
             },
+            /**/
             submitHandler: function() {
+            	var url_put = "{% url 'api-admin-list' %}" +  $('#username_old').val() + "/"
                 if ($('#username_old').val() == $('#username_edit').val() && $('#password_edit').val() == '' && $('#confirm_edit').val() == '')
                 {
                     $('#modal-form-edit').modal('hide');
@@ -401,11 +424,10 @@
                 }
                 $.ajax({
                     async: true,
-                    url: "<?php echo site_url('admin/edit_admin') ?>",
+                    url: url_put,
                     dataType: "json",
-                    type: "POST",
+                    type: "PUT",
                     data: {
-                        username_old: $('#username_old').val(),
                         username: $('#username_edit').val(),
                         password: $('#password_edit').val(),
                         eventid: $('#eventid_edit').val(),
@@ -415,7 +437,8 @@
                         {
                             $('#modal-form-edit').modal('hide');
                             $('#modal-form-edit').on('hidden.bs.modal', function(e) {
-                                location.href = "<?php echo site_url('admin/admins/0') ?>";
+                                //location.href = "<?php echo site_url('admin/admins/0') ?>";
+                                location.href = '#'
                             });
                         }
                         else

@@ -83,7 +83,7 @@ class AdminView( LoginRequiredMixin, ListView ):
     paginate_by = 2
     
     def get_queryset(self):        
-        return User.objects.filter(is_superuser=True)    
+        return User.objects.filter(is_superuser=True).order_by('id')    
     
     def get_context_data(self, **kwargs):
         context = super(AdminView, self).get_context_data(**kwargs)        
