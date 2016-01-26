@@ -254,72 +254,6 @@ $('document').ready(function(){
 						</div>
 					</div>
 
-<!-- 
-					<div class="table-responsive tooltip-demo"
-						style="display: block; overflow-x: auto;">
-						<table class="table table-bordered" style="margin-bottom: 0px;"
-							id="users_table">
-							<tbody id="users_body"
-								style="height: 450px; overflow-y: auto; overflow-x: hidden; display: block;">
-								<tr>
-									<th style="width: 70px">No</th>
-									<th style="width: 200px">Username</th>
-									<th style="width: 400px">Description</th>
-									<th style="width: 280px">Actions</th>
-								</tr>
-								<?php
-		$no = $offset + 1;
-		foreach($userDatas as $userItem)
-		{
-			?>
-								<tr>
-									<td style="display: none;"><input type="hidden"
-										id="username<?php echo $userItem['userid']?>"
-										value="<?php echo $userItem['username'];?>"> <input
-										type="hidden" id="description<?php echo $userItem['userid']?>"
-										value="<?php echo $userItem['description'];?>"></td>
-									<td>
-										<?php echo $no?>
-									</td>
-									<td>
-										<?php echo $userItem['username']?>
-									</td>
-									<td>
-										<?php echo $userItem['description']?>
-									</td>
-									<td
-										style="padding-top: 1px; padding-bottom: 0px; text-align: center;">
-										<a class="btn btn-sm btn-white btn-action"
-										onclick="on_editpass('<?php echo $userItem['userid']; ?>');"
-										data-toggle="tooltip" data-placement="bottom"
-										title="Change Password"<?php if
-											($this->session->userdata('permissionflag') == 0) echo
-											"disabled"; ?>> <img
-											src="<?php echo base_url();?>inspinia_admin/img/icon/change_password.png">
-									</a> <a class="btn btn-sm btn-white btn-action"
-										onclick="on_edit('<?php echo $userItem['userid']?>');"
-										data-toggle="tooltip" data-placement="bottom" title="Edit"<?php
-											if ($this->session->userdata('permissionflag') == 0) echo
-											"disabled"; ?>> <img
-											src="<?php echo base_url();?>inspinia_admin/img/icon/change-account.png">
-									</a> <a class="btn btn-sm btn-white btn-action"
-										onclick="on_delete('<?php echo $userItem['userid']?>');"
-										data-toggle="tooltip" data-placement="bottom" title="Delete"<?php
-											if ($this->session->userdata('permissionflag') == 0) echo
-											"disabled"; ?>> <img
-											src="<?php echo base_url();?>inspinia_admin/img/icon/delete.png">
-									</a>
-									</td>
-								</tr>
-								<?php
-		$no++;
-		}
-		?>
-							</tbody>
-						</table>
-					</div>
- -->
-<!-- ------------------------------------------------- -->
 					<div class="table-responsive tooltip-demo"
 						style="display: block; overflow-x: auto;">
 						<table class="table table-bordered" style="margin-bottom: 0px;"
@@ -351,7 +285,7 @@ $('document').ready(function(){
 									<td
 										style="padding-top: 1px; padding-bottom: 0px; text-align: center;">
 										<a class="btn btn-sm btn-white btn-action"
-										onclick="on_editpass('<?php echo $userItem['userid']; ?>');"
+										onclick="on_editpass('{{ user.id }}');"
 										data-toggle="tooltip" data-placement="bottom"
 										title="Change Password"
 										{% if not request.user.is_superuser %}
@@ -360,7 +294,7 @@ $('document').ready(function(){
 										<img src="{% static 'inspinia_admin/img/icon/change_password.png' %}">
 									</a> 
 									<a class="btn btn-sm btn-white btn-action"
-										onclick="on_edit('<?php echo $userItem['userid']?>');"
+										onclick="on_edit('{{ user.id }}');"
 										data-toggle="tooltip" data-placement="bottom" title="Edit"
 										{% if not request.user.is_superuser %}
 										disabled
@@ -384,15 +318,23 @@ $('document').ready(function(){
 						</table>
 					</div>
 
-<!-- ------------------------------------------------- -->
+   					{% if is_paginated %}
 					<div class="row">
 						<div class="col col-lg-12">
 							<ul class="pagination pagination-sm no-margin pull-right"
 								id="pagenation_wrapper">
-								<?php echo $pagenation; ?>
+
+									{% if page_obj.has_previous %}
+                   						<li><a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">&lt</a></li>
+               						{% endif %}
+               						<li><a href="#">{{ page_obj.number }}</a></li>
+               						{% if page_obj.has_next %}
+                   						<li><a href="{{ request.path }}?page={{ page_obj.next_page_number }}">&gt</a></li>
+               						{% endif %}
 							</ul>
 						</div>
 					</div>
+   					{% endif %}
 
 				</div>
 			</div>

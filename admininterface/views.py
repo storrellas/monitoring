@@ -115,10 +115,7 @@ class EventUserView( AdminView ):
         if order_field == 'ASC':
             return queryset.order_by('username')
         else:
-            return queryset.order_by('username')
-
-
-        
+            return queryset.order_by('username')       
     
     def get_context_data(self, **kwargs):
         context = super(EventUserView, self).get_context_data(**kwargs)                        
