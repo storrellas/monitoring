@@ -104,12 +104,20 @@ class EventUserView( AdminView ):
     
     def get_queryset(self):
 
-        if self.request.GET['order_field'] == 'ASC':
-            return self.queryset.filter(username__startswith=self.request.GET['search_data']) \
-                        .order_by('username')
+        try:
+            order_field = self.request.GET['order_field']
+            search_data = self.request.GET['search_data']
+        except:
+            return self.queryset.order_by('username')
+
+        # Filter by search_data
+        queryset = self.queryset.filter(username__startswith=search_data)
+        if order_field == 'ASC':
+            return queryset.order_by('username')
         else:
-            return self.queryset.filter(username__startswith=self.request.GET['search_data']) \
-                        .order_by('-username')
+            return queryset.order_by('username')
+
+
         
     
     def get_context_data(self, **kwargs):
