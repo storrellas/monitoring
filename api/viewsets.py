@@ -1,6 +1,9 @@
+import json
+
 # Django imports
 from django.contrib.auth.models import User
 from django.http import HttpResponseBadRequest, HttpResponse, JsonResponse
+from django.utils.six import BytesIO
 
 # Rest framework imports
 from rest_framework.viewsets import ModelViewSet, ViewSet
@@ -8,6 +11,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.permissions import AllowAny
 from rest_framework.mixins import *
+from rest_framework.parsers import JSONParser
 
 from rest_framework import generics
 from rest_framework import mixins
@@ -84,13 +88,6 @@ class EventUserEditViewset( generics.UpdateAPIView ):
     permission_classes = [AllowAny]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
-class EventViewset( ModelViewSet ):
-    model = Event
-    queryset = Event.objects.all()
-    serializer_class = EventSerializer    
-    permission_classes = [AllowAny]
-    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
-
 class CheckAdminNameViewset( ViewSet ):
     
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
@@ -102,9 +99,27 @@ class CheckAdminNameViewset( ViewSet ):
         except: 
             return HttpResponse()
         
+class EventViewset( ModelViewSet ):
+    model = Event
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer    
+    permission_classes = [AllowAny]
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)        
         
-        
-        
+
+class EventMultiDeleteViewset( ViewSet ):
+
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+
+    def multidelete(self, request, *args, **kwargs):
+        try:
+            eventid_list = json.loads(request.data['eventid'])        
+            for item in eventid_list:
+                Event.objects.get(id=item['id']).delete()            
+            return JsonResponse({})
+        except:
+            return HttpResponseBadRequest() 
+
 
 """
 class MapwaypointViewSet(viewsets.ViewSet):

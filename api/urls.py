@@ -24,6 +24,8 @@ urlpatterns = [
     url(r'^eventuser/edit/(?P<pk>[0-9]+)/$', EventUserEditViewset.as_view(),     name='api-event-user-edit-pk'),
             
     url(r'^admin/checkname/$', CheckAdminNameViewset.as_view({'post': 'checkname'}), name='api-admin-check-name'),
+    
+    url(r'^event/multidelete/$', EventMultiDeleteViewset.as_view({'post': 'multidelete'}), name='api-event-multidelete'),
 ]
 
 # Add routers for REST endpoints

@@ -63,7 +63,7 @@ $('document').ready(function(){
 		<div class="col-lg-12">
 			<div class="ibox float-e-margins">
 				<div class="ibox-title">
-					<h5>Total Event : <?php echo $total_count?></h5>
+					<h5>Total Event : {{ event_list| length }}</h5>
 				</div>
 				<div class="ibox-content">
 					<input type="hidden" id="selno" name="selno" value="">
@@ -107,15 +107,14 @@ $('document').ready(function(){
 								
 								{% for event in event_list %}
                                       <tr>
-                                      	<td><input type="checkbox" class="selecttag" id="seltag<?php echo $item['eventid']?>" value="<?php echo $item['eventid']?>,"></td>
+                                      	<td><input type="checkbox" class="selecttag" id="seltag{{ event.id }}" value="{{ event.id }},"></td>
                                           <td>{{ event.id }} </td>
                                           <td>{{ event.title }} </td>
                                           <td>{{ event.pdfurl }}</td>
                                           <td>{{ event.videourl }}</td>
                                           <td>
                                           {% for eventuser in event.eventuser_set.all %}
-                                          		{{ eventuser.user.username }}
-                                          		{% ifnotequal forloop.last True %},{% endifnotequal %}                                          		                                          		
+                                          		{{ eventuser.user.username }}{% ifnotequal forloop.last True %},{% endifnotequal %}                                          		                                          		
                                           {% endfor %}
                                           </td>
                                           <td>
@@ -172,7 +171,7 @@ $('document').ready(function(){
                     eventid: $eventid,
                 },
                 success: function(json) {
-                    location.href = "<?php echo site_url('event/events/0') ?>";
+                	location.reload()
                 },
                 error: function(xhr, errStr) {
         //         	console.log(errStr);
@@ -181,27 +180,39 @@ $('document').ready(function(){
         }
     }
     function on_multi_delete()
-    {
+    {   
+    	var eventid_list = $('#selno').val().slice(0,-1)     
+    	eventid_list = eventid_list.split(',')
+    	eventjson_list = '['
+    	$.each(eventid_list,function(index,value){
+    	  eventjson_list +='{"id":' + value + '},'
+    	});
+    	eventjson_list = eventjson_list.slice(0,-1)
+    	eventjson_list += ']'
+    	    	
+    	
     	var $selAllNo = $('#selno').val();
     	if(!$selAllNo) return;
     	if(confirm("Do you want to delete?"))
-        {
-        	$.ajax({
-                async: true,
-                url: "<?php echo site_url('ajaxprocess/event') ?>",
+        {    		
+    		$.ajax({
+
+                url: "{% url 'api-event-multidelete' %}",
                 dataType: "json",
                 type: "POST",
                 data: {
-                    mode: "MULTI_EVENT_DELETE",
-                    eventids: $selAllNo,
+                    eventid: eventjson_list,
                 },
-                success: function(json) {
-                	location.href = "<?php echo site_url('event/events/0') ?>";
+                success: function(json) {  
+                	console.log("here")
+                	location.reload()
                 },
                 error: function(xhr, errStr) {
+                	console.log("here2" + errStr)
                 }
             });
         }
+    	console.log("after here")
     }
     function on_edit($eventid)
     {

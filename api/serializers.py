@@ -9,12 +9,6 @@ from models import *
 import logging
 log = logging.getLogger(__name__)
 
-class EventSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Event
-
-        
-
 class DataSerializer(serializers.ModelSerializer):     
     class Meta:
         model = Data
@@ -83,6 +77,13 @@ class EventUserEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'first_name')
+
+
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+
+
 
 
 """
