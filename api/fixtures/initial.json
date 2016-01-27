@@ -1,6 +1,6 @@
 [
 {
-  "model": "admininterface.event",
+  "model": "api.event",
   "pk": 1,
   "fields": {
     "title": "MyEvent",
@@ -11,7 +11,7 @@
   }
 },
 {
-  "model": "admininterface.data",
+  "model": "api.data",
   "pk": 1,
   "fields": {
     "user": 1,
@@ -20,7 +20,7 @@
   }
 },
 {
-  "model": "admininterface.data",
+  "model": "api.data",
   "pk": 2,
   "fields": {
     "user": 7,
@@ -29,7 +29,7 @@
   }
 },
 {
-  "model": "admininterface.eventuser",
+  "model": "api.eventuser",
   "pk": 1,
   "fields": {
     "user": 1,
@@ -38,7 +38,7 @@
   }
 },
 {
-  "model": "admininterface.eventcheck",
+  "model": "api.eventcheck",
   "pk": 1,
   "fields": {
     "user": 1,
@@ -48,7 +48,7 @@
   }
 },
 {
-  "model": "admininterface.trackdata",
+  "model": "api.trackdata",
   "pk": 3,
   "fields": {
     "user": 1,

@@ -1,1 +1,1 @@
-./manage.py loaddata admininterface/fixtures/users.json admininterface/fixtures/initial.json
+./manage.py loaddata api/fixtures/users.json api/fixtures/initial.json

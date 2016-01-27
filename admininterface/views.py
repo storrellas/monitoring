@@ -15,7 +15,7 @@ from braces.views import LoginRequiredMixin
 
 # Project imports
 from forms import UserForm
-from models import Event
+from api.models import *
 
 # Configure logger
 import logging

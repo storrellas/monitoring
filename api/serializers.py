@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
-from admininterface.models import *
+from models import *
 
 # Configure logger
 import logging
