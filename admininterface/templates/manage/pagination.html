@@ -1,0 +1,17 @@
+{% if is_paginated %}
+<div class="row">
+    <div class="col col-lg-12">
+        <ul class="pagination pagination-sm no-margin pull-right"
+            id="pagenation_wrapper">
+
+                {% if page_obj.has_previous %}
+                    <li><a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">&lt</a></li>
+                {% endif %}
+                <li><a href="#">{{ page_obj.number }}</a></li>
+                {% if page_obj.has_next %}
+                    <li><a href="{{ request.path }}?page={{ page_obj.next_page_number }}">&gt</a></li>
+                {% endif %}
+        </ul>
+    </div>
+</div>
+{% endif %}

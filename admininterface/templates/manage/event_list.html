@@ -1,0 +1,279 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% load tags %}
+
+{% block contents %}
+
+<script type="text/javascript">
+$('document').ready(function(){
+	var $result = $("#INSERTRESULT").val();
+	if($result == "SUCCESS")
+	{
+		show_loading(false);
+ 	 	location.href = location.href;
+	}
+	// multi check
+	$('#selecttag').on('click', function(){
+		var $className = "."+$(this).attr("id");
+		
+		if($(this).prop("checked"))
+		{
+			$($className).prop("checked", true);
+			
+			var $selno = "";
+			
+			$($className).each(function(){
+				$selno += $(this).val();
+			});
+			
+			$("#selno").val($selno);
+		}
+		else
+		{
+			$($className).prop("checked", false);
+			$("#selno").val("");
+		}
+	});
+	
+	$('.selecttag').on('click', function()
+	{
+		var $temp ="";
+		
+		var $selno = $(this).val();
+		var $selAllNo = $('#selno').val();
+		
+		if($(this).prop("checked"))
+		{
+			$temp = $selAllNo + $selno;
+		}
+		else
+		{
+			$temp = $selAllNo.replace($selno, '');
+		}
+		
+		$("#selno").val($temp);
+	});
+});
+</script>
+
+
+<div class="wrapper wrapper-content">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>Total Event : <?php echo $total_count?></h5>
+				</div>
+				<div class="ibox-content">
+					<input type="hidden" id="selno" name="selno" value="">
+					<div class="col-lg-12">
+						<form class="form-horizontal" action="" method="get">
+                              	<div class="form-group">
+<!--                                    	<label class="col-lg-1 control-label">Title : </label>-->
+<!--                                        <div class="col-lg-2">-->
+<!--                                        </div>-->
+<!--                                        <div class="col-lg-1 search_btn">-->
+<!--                                        	<button class="btn btn-primary pull-left" type="submit"><strong>Go!</strong></button>-->
+<!--                                       	</div>-->
+                                     	<div class="col-lg-1 search_btn" style="float:right;">
+                                     		<a data-toggle="modal" class="btn btn-primary" href="{% url 'add_event'%}"
+											{% if notrequest.user.is_superuser %}disabled{% endif %}>Add Event</a>
+                                     	</div>	
+                                  </div>
+                              </form>
+                          </div>
+
+                          <div style="clear:both;"></div>
+                          <div class="tooltip-demo photo_table_wrapper">
+						<table class="table table-bordered" style="margin-bottom: 0px;" id="photo_table">
+							<col width="50px"/>
+							<col width="50px"/>
+							<col width="150px"/>
+							<col width="100px"/>
+							<col width="100px"/>
+							<col width="100px"/>
+							<col width="100px"/>
+							<tbody id="users_body">
+								<tr>
+									<th><input type="checkbox" id="selecttag"></th>
+									<th>No</th>
+									<th>Title</th>
+									<th>Pdf URL</th>
+									<th>Video URL</th>
+									<th>Event Users</th>
+									<th>Actions</th>
+								</tr>
+								
+								{% for event in event_list %}
+                                      <tr>
+                                      	<td><input type="checkbox" class="selecttag" id="seltag<?php echo $item['eventid']?>" value="<?php echo $item['eventid']?>,"></td>
+                                          <td>{{ event.id }} </td>
+                                          <td>{{ event.title }} </td>
+                                          <td>{{ event.pdfurl }}</td>
+                                          <td>{{ event.videourl }}</td>
+                                          <td><?php echo $item['usernames'];?>
+                                          {% for data in event.data_set.all %}
+                                          		{{ data.user.username }}
+                                          		{% ifnotequal forloop.last True %},{% endifnotequal %}                                          		                                          		
+                                          {% endfor %}
+                                          </td>
+                                          <td>
+                                          	<a class="btn btn-sm btn-white btn-action" href="{% url 'edit_event' event.id %}" data-toggle="tooltip" 
+                                          		data-placement="bottom" title="Edit" 
+                                          		{% ifnotequal request.user.is_superuser True %}disabled{% endifnotequal %}
+                                          		>
+                                          		<img src="{% static 'inspinia_admin/img/icon/edit-1.png' %}">
+											</a>
+                                            <a class="btn btn-sm btn-white btn-action" onclick="on_delete('{{ event.id }}');" data-toggle="tooltip" 
+                                              	data-placement="bottom" title="Delete" 
+												{% ifnotequal request.user.is_superuser True %}disabled{% endifnotequal %}
+												>
+                                              		<img src="{% static 'inspinia_admin/img/icon/delete.png' %}">
+											</a>
+                                          </td>
+                                      </tr>
+								{% endfor %}
+								
+
+							</tbody>
+						</table>
+
+						<div class="row">
+							<div class="col col-lg-2">
+								<div style="margin: 20px 0;">
+									<button class="btn btn-sm btn-danger m-t-n-xs" type="button" onclick="on_multi_delete()"
+										{% ifnotequal request.user.is_superuser True %}disabled{% endifnotequal %}>
+										<strong>DELETE</strong>
+									</button>
+								</div>
+							</div>
+							{% include 'manage/pagination.html' %}
+                         </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+    function on_delete($eventid)
+    {
+    	if(confirm("Do you want to delete?"))
+        {
+        	$.ajax({
+                async: true,
+                url: "<?php echo site_url('ajaxprocess/event') ?>",
+                dataType: "json",
+                type: "POST",
+                data: {
+                    mode: "DELETE_EVENT",
+                    eventid: $eventid,
+                },
+                success: function(json) {
+                    location.href = "<?php echo site_url('event/events/0') ?>";
+                },
+                error: function(xhr, errStr) {
+        //         	console.log(errStr);
+                }
+            });
+        }
+    }
+    function on_multi_delete()
+    {
+    	var $selAllNo = $('#selno').val();
+    	if(!$selAllNo) return;
+    	if(confirm("Do you want to delete?"))
+        {
+        	$.ajax({
+                async: true,
+                url: "<?php echo site_url('ajaxprocess/event') ?>",
+                dataType: "json",
+                type: "POST",
+                data: {
+                    mode: "MULTI_EVENT_DELETE",
+                    eventids: $selAllNo,
+                },
+                success: function(json) {
+                	location.href = "<?php echo site_url('event/events/0') ?>";
+                },
+                error: function(xhr, errStr) {
+                }
+            });
+        }
+    }
+    function on_edit($eventid)
+    {
+// 		var $imageUrl 	= $('#imageURL'+eventid).val();
+// 		var $categoryID = $('#categoryID'+eventid).val();
+// 		var $title 		= $('#title'+eventid).val();
+// 		var $content 	= $('#content'+eventid).val();
+// 		var $author 	= $('#author'+eventid).val();
+// 		var $tags 		= $('#tags'+eventid).val();
+// // console.log($imageUrl);
+// 		$("#enewsImage").attr('src', $imageUrl);
+// 		$("#etitle").val($title);
+// 		$("#econtent").val($content);
+// 		$("#eauthor").val($author);
+// 		$("#etag").val($tags);
+// 		$("#esubCateID").val($categoryID);
+// 		$("#eeventid").val(eventid);
+		
+//         $('#modal-form-edit').modal('show');
+    }
+    function on_edit_done()
+    {
+        var eeventid  = $("#eeventid").val();
+    	var etitle 		= $("#etitle").val();
+    	var econtent 	= $("#econtent").val();
+    	var eauthor 	= $("#eauthor").val();
+    	var etag 		= $("#etag").val();
+    	var esubCateID 	= $("#esubCateID").val();
+    	$.ajax({
+            async: true,
+            url: "<?php echo site_url('ajaxprocess/product') ?>",
+            dataType: "json",
+            type: "POST",
+            data: {
+            	eventid: eeventid,
+                mode: "EDIT_PRODUCT",
+                etitle: etitle,
+                econtent: econtent,
+                eauthor: eauthor,
+                etag: etag,
+                esubCateID: esubCateID,
+            },
+            success: function(json) {
+                location.href = location.href;
+            },
+            error: function(xhr, errStr) {
+            	console.log(errStr);
+            }
+        });
+    }
+    function on_cancel_new()
+    {
+        $('#modal-form-new').modal('hide');
+    }
+    function on_cancel_edit()
+    {
+        $('#modal-form-edit').modal('hide');
+    }
+    function open_confirm(opener, message, callback, param)
+    {
+        $('#modal-opener').val(opener);
+        $('#modal-return').val('0');
+        $('#modal-message').html(message);
+        $('#modal-callback').val(callback);
+        $('#modal-param').val(param);
+        $('#modal-confirm').modal('show');
+    }
+    function on_ok_confirm()
+    {
+        $('#modal-return').val('1');
+        $('#modal-confirm').modal('hide');
+    }
+</script>
+
+{% endblock %}
