@@ -1,64 +1,84 @@
 [
 {
-  "model": "api.event",
-  "pk": 1,
-  "fields": {
-    "title": "MyEvent",
-    "description": "First event",
-    "register_date": "2016-01-22T14:04:43.515Z",
-    "pdfurl": "http://www.google.com",
-    "videourl": "http://www.elpais.es"
-  }
+   "model": "api.event",
+   "pk": 1,
+   "fields": {
+      "title": "MyEvent",
+      "description": "First event",
+      "register_date": "2016-01-22T14:04:43.515Z",
+      "pdfurl": "http://www.google.com",
+      "videourl": "http://www.elpais.es"
+   }
 },
 {
-  "model": "api.data",
-  "pk": 1,
-  "fields": {
-    "user": 1,
-    "event": 1,
-    "data": "Dont know what to put here"
-  }
+   "model": "api.event",
+   "pk": 2,
+   "fields": {
+      "title": "SecondEvent",
+      "description": "This is the second event",
+      "register_date": "2016-01-27T13:39:50.695Z",
+      "pdfurl": "http://www.google.com",
+      "videourl": "http://migranne.com"
+   }
 },
 {
-  "model": "api.data",
-  "pk": 2,
-  "fields": {
-    "user": 7,
-    "event": null,
-    "data": ""
-  }
+   "model": "api.data",
+   "pk": 1,
+   "fields": {
+      "user": 1,
+      "event": 1,
+      "data": "Dont know what to put here"
+   }
 },
 {
-  "model": "api.eventuser",
-  "pk": 1,
-  "fields": {
-    "user": 1,
-    "event": 1,
-    "state": 0
-  }
+   "model": "api.data",
+   "pk": 2,
+   "fields": {
+      "user": 7,
+      "event": null,
+      "data": ""
+   }
 },
 {
-  "model": "api.eventcheck",
-  "pk": 1,
-  "fields": {
-    "user": 1,
-    "event": 1,
-    "checkouttime": "2016-01-22T14:04:43.517Z",
-    "checkintime": "2016-01-22T14:04:43.517Z"
-  }
+   "model": "api.eventuser",
+   "pk": 1,
+   "fields": {
+      "user": 2,
+      "event": 1,
+      "state": 0
+   }
 },
 {
-  "model": "api.trackdata",
-  "pk": 3,
-  "fields": {
-    "user": 1,
-    "event": 1,
-    "checkout": 1,
-    "quantity": 1,
-    "target": 10,
-    "type": 1,
-    "note": "notes",
-    "trackdate": "2016-01-22T14:44:03.347Z"
-  }
+   "model": "api.eventuser",
+   "pk": 2,
+   "fields": {
+      "user": 3,
+      "event": 1,
+      "state": 0
+   }
+},
+{
+   "model": "api.eventcheck",
+   "pk": 1,
+   "fields": {
+      "user": 1,
+      "event": 1,
+      "checkouttime": "2016-01-22T14:04:43.517Z",
+      "checkintime": "2016-01-22T14:04:43.517Z"
+   }
+},
+{
+   "model": "api.trackdata",
+   "pk": 3,
+   "fields": {
+      "user": 1,
+      "event": 1,
+      "checkout": 1,
+      "quantity": 1,
+      "target": 10,
+      "type": 1,
+      "note": "notes",
+      "trackdate": "2016-01-22T14:44:03.347Z"
+   }
 }
 ]

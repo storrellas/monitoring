@@ -28,8 +28,6 @@ urlpatterns = [
 
 # Add routers for REST endpoints
 router = SimpleRouter()
-#router.register(r'admin', AdminViewset,'api-admin')
 router.register(r'event', EventViewset,'api-event')
-
 urlpatterns += router.urls
 

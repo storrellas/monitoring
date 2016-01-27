@@ -112,9 +112,9 @@ $('document').ready(function(){
                                           <td>{{ event.title }} </td>
                                           <td>{{ event.pdfurl }}</td>
                                           <td>{{ event.videourl }}</td>
-                                          <td><?php echo $item['usernames'];?>
-                                          {% for data in event.data_set.all %}
-                                          		{{ data.user.username }}
+                                          <td>
+                                          {% for eventuser in event.eventuser_set.all %}
+                                          		{{ eventuser.user.username }}
                                           		{% ifnotequal forloop.last True %},{% endifnotequal %}                                          		                                          		
                                           {% endfor %}
                                           </td>
@@ -164,9 +164,9 @@ $('document').ready(function(){
         {
         	$.ajax({
                 async: true,
-                url: "<?php echo site_url('ajaxprocess/event') ?>",
+				url: "{% url 'api-event-list'  %}" + $eventid + '/',
                 dataType: "json",
-                type: "POST",
+                type: "DELETE",
                 data: {
                     mode: "DELETE_EVENT",
                     eventid: $eventid,

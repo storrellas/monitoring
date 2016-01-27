@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from django.views.generic import TemplateView,RedirectView,ListView
+from django.views.generic import TemplateView, RedirectView, ListView, DetailView
 from django.views.generic.base import TemplateResponseMixin
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
@@ -136,7 +136,14 @@ class EventView( LoginRequiredMixin, ListView ):
     paginate_by = 10
     context_object_name = 'event_list'
     
-
+class EventEditView( LoginRequiredMixin, DetailView ):
+    template_name='manage/editevent.html'
+    model = Event
+    context_object_name = 'event'
     
+    def get_context_data(self, **kwargs):
+        context = super(EventUserView, self).get_context_data(**kwargs)                            
+        context['user_list'] = self.request.GET['search_data']
+        return context    
     
          

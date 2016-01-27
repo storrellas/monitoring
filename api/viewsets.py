@@ -86,9 +86,10 @@ class EventUserEditViewset( generics.UpdateAPIView ):
 
 class EventViewset( ModelViewSet ):
     model = Event
-    queryset = Event.objects.filter()
+    queryset = Event.objects.all()
     serializer_class = EventSerializer    
     permission_classes = [AllowAny]
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
 class CheckAdminNameViewset( ViewSet ):
     
