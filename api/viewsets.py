@@ -68,6 +68,22 @@ class EventUserDetailViewset( generics.RetrieveUpdateDestroyAPIView ):
     permission_classes = [IsAuthenticatedOrReadOnly]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
+class EventUserEditListViewset( generics.ListAPIView ):
+
+    #A simple ViewSet for viewing and editing accounts.
+    model = User
+    queryset = User.objects.filter(is_superuser=False)
+    serializer_class = EventUserEditSerializer      
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+
+class EventUserEditViewset( generics.UpdateAPIView ):
+    model = User
+    queryset = User.objects.filter(is_superuser=False)
+    serializer_class = EventUserEditSerializer    
+    permission_classes = [AllowAny]
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+
 class EventViewset( ModelViewSet ):
     model = Event
     queryset = Event.objects.filter()

@@ -64,8 +64,6 @@ class AdminSerializer(serializers.ModelSerializer):
 class EventUserSerializer(serializers.ModelSerializer):
         
     def create(self, validated_data):       
-        log.info("Creating user ")
-        print validated_data         
         obj = self.Meta.model.objects.create_user(username = validated_data['username'],                                             
                                                   password=validated_data['password'],
                                                   first_name=validated_data['first_name'])       
@@ -79,6 +77,12 @@ class EventUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'password','first_name')
+
+class EventUserEditSerializer(serializers.ModelSerializer):
+            
+    class Meta:
+        model = User
+        fields = ('username', 'first_name')
 
 
 """

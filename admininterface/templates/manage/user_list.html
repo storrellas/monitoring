@@ -49,6 +49,8 @@ $('document').ready(function(){
 											<h3 class="m-t-none m-b">Change Password</h3>
 											<form role="form" id="updatePasswordForm">
 												<input type="hidden" id="upuserid" value="">
+												<input type="hidden" id="upusername" value="">
+												<input type="hidden" id="updescription" value="">
 												<div class="form-group">
 													<label>Password*</label> <input type="password"
 														placeholder="Password" class="form-control required"
@@ -285,7 +287,7 @@ $('document').ready(function(){
 									<td
 										style="padding-top: 1px; padding-bottom: 0px; text-align: center;">
 										<a class="btn btn-sm btn-white btn-action"
-										onclick="on_editpass('{{ user.id }}');"
+										onclick="on_editpass('{{ user.id }}','{{user.username}}','{{ user.first_name }}');"
 										data-toggle="tooltip" data-placement="bottom"
 										title="Change Password"
 										{% if not request.user.is_superuser %}
@@ -362,7 +364,6 @@ $('document').ready(function(){
 	            }
 	        },
 	        submitHandler: function(){
-	        	//$("#createNewUser").submit();
                 $.ajax({
                     async: true,
                     url: "{% url 'api-event-user'%}",
@@ -391,9 +392,11 @@ $('document').ready(function(){
     {
         $('#modal-form-new').modal('hide');
     }
-	function on_editpass(userid)
-	{
+	function on_editpass(userid, username, description)
+	{				
 		$("#upuserid").val(userid);
+		$("#upusername").val(username);
+		$("#updescription").val(description);
 		$("#upconfirmpass").val('');
 		$("#uppassword").val('');
 		$('#modal-form-editpass').modal('show');
@@ -414,21 +417,25 @@ $('document').ready(function(){
 	        },
 	
 	        submitHandler: function() {
-	        	$.ajax({
-	                async: true,
-	                url: "<?php echo site_url('ajaxprocess/user') ?>",
-	                dataType: "json",
-	                type: "POST",
-	                data: {
-	                	mode: "UPDATE_PASSWORD",
-	                    userid: $('#upuserid').val(),
-	                    password:$('#uppassword').val(),
-	                },
-	                success: function(json) {
-	                	$('#modal-form-editpass').modal('hide');
-	                	location.href = location.href;
-	                },
-	            });
+                $.ajax({
+                    async: true,
+                    url: "{% url 'api-event-user'%}" + $("#upuserid").val() + "/",
+                    dataType: "json",
+                    type: "PUT",
+                    data: {
+                        username:   $("#upusername").val(),
+                        password:   $("#uppassword").val(),
+                        first_name: $("#updescription").val(),
+                    },
+                    success: function(json) {
+                    	location.reload()
+                    	return;
+                    },
+                    error: function(xhr, errStr) {
+                        alert(errStr);
+                    }
+                });
+	        	
 	        }
 	    });
 	}
@@ -459,29 +466,24 @@ $('document').ready(function(){
 	            },
 	        },
 	
-	        submitHandler: function() {
-	        	var formdata = new FormData($('#editUser')[0]);
-	        	formdata.append('mode', 'UPDATE_USER');
-	        	formdata.append('userid', $('#euserid').val());
-	        	formdata.append('username', $('#eusername').val());
-	        	formdata.append('description', $('#edescription').val());
-	        	
-	        	$.ajax({
-	                async: true,
-	                url: "<?php echo site_url('ajaxprocess/user') ?>",
-	                dataType: "json",
-	                type: "POST",
-	                data: formdata,
-	                processData: false,
-	                contentType: false,
-	                success: function(json) {
-	                	$('#modal-form-edit').modal('hide');
-	                	location.href = location.href;
-	                },
-	                error: function(ts) {
-		                 alert(ts.responseText);
-		            }
-	            });
+	        submitHandler: function() {	        	 
+                $.ajax({
+                    async: true,
+                    url: "{% url 'api-event-user-edit' %}" + $("#euserid").val() + "/",
+                    dataType: "json",
+                    type: "PUT",
+                    data: {
+                        username:   $("#eusername").val(),
+                        first_name: $("#edescription").val(),
+                    },
+                    success: function(json) {
+                    	location.reload()
+                    	return;
+                    },
+                    error: function(xhr, errStr) {
+                        alert(errStr);
+                    }
+                });
 	        }
 	    });
 	}

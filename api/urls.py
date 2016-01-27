@@ -18,8 +18,10 @@ urlpatterns = [
     url(r'^admin/$', AdminListViewset.as_view(),                  name='api-admin'),
     url(r'^admin/(?P<pk>[0-9]+)/$', AdminDetailViewset.as_view(), name='api-admin-detail'),
     
-    url(r'^eventuser/$', EventUserListViewset.as_view(),                  name='api-event-user'),
-    url(r'^eventuser/(?P<pk>[0-9]+)/$', EventUserDetailViewset.as_view(), name='api-event-user-detail'),
+    url(r'^eventuser/$',                     EventUserListViewset.as_view(),     name='api-event-user'),
+    url(r'^eventuser/(?P<pk>[0-9]+)/$',      EventUserDetailViewset.as_view(),   name='api-event-user-detail'),
+    url(r'^eventuser/edit/$',                EventUserEditListViewset.as_view(), name='api-event-user-edit'),
+    url(r'^eventuser/edit/(?P<pk>[0-9]+)/$', EventUserEditViewset.as_view(),     name='api-event-user-edit-pk'),
             
     url(r'^admin/checkname/$', CheckAdminNameViewset.as_view({'post': 'checkname'}), name='api-admin-check-name'),
 ]
