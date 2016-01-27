@@ -36,19 +36,9 @@ class AdminListViewset( generics.ListCreateAPIView ):
     #A simple ViewSet for viewing and editing accounts.
     model = User
     queryset = User.objects.filter(is_superuser=True)
-    serializer_class = AdminSerializer    
+    serializer_class = AdminSerializer      
     permission_classes = [IsAuthenticatedOrReadOnly]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
-
-    def perform_create(self, serializer):        
-        obj = User.objects.create_superuser(username = serializer.data['username'],                                             
-                                            password=serializer.data['password'],
-                                            email='username@mail.com')
-        # Create associated data
-        data = Data(user=obj)                
-        data.save()
-
-from django.http import QueryDict    
 
     
 class AdminDetailViewset( generics.RetrieveUpdateDestroyAPIView ):
@@ -60,22 +50,23 @@ class AdminDetailViewset( generics.RetrieveUpdateDestroyAPIView ):
     permission_classes = [IsAuthenticatedOrReadOnly]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
+class EventUserListViewset( generics.ListCreateAPIView ):
 
-    def put(self, request, *args, **kwargs):
-        
-        serializer = AdminSerializer( request.POST )                        
-        admin = User.objects.get(id=kwargs['pk'])
-        admin.username = serializer.data['username']
-        admin.set_password(serializer.data['password'])        
-        try:
-            event = Event.objects.get(id=request.POST['eventid'])
-        except:
-            event = None
-        admin.data.event = event        
-        admin.save()
-        admin.data.save()                
-        return JsonResponse(AdminSerializer(admin).data)
+    #A simple ViewSet for viewing and editing accounts.
+    model = User
+    queryset = User.objects.filter(is_superuser=False)
+    serializer_class = EventUserSerializer      
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     
+class EventUserDetailViewset( generics.RetrieveUpdateDestroyAPIView ):
+
+    #A simple ViewSet for viewing and editing accounts.
+    model = User
+    queryset = User.objects.filter(is_superuser=False)
+    serializer_class = EventUserSerializer        
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
 class EventViewset( ModelViewSet ):
     model = Event

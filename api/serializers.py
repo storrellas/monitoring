@@ -30,9 +30,55 @@ class AdminSerializer(serializers.ModelSerializer):
         except:
             return None
     
+    def create(self, validated_data):                
+        obj = self.Meta.model.objects.create_superuser(username = self.data['username'],                                             
+                                            password=self.data['password'],
+                                            email='username@mail.com')
+        try:            
+            event = Event.objects.get(id=self.initial_data['eventid'][0])
+        except:            
+            event = None
+                
+        # Create associated data
+        data = Data(user=obj, event= event) 
+        data.save()        
+        return obj        
+    
+    def update(self, instance, validated_data):
+        instance.set_password(validated_data['password'])
+        instance.save()
+        
+        try:
+            event = Event.objects.get(id=self.initial_data['eventid'][0])
+        except:
+            event = None
+        instance.data.event = event
+        instance.save()
+        instance.data.save()                 
+        return instance                
+    
     class Meta:
         model = User
         fields = ('username', 'password','eventid')
+
+class EventUserSerializer(serializers.ModelSerializer):
+        
+    def create(self, validated_data):       
+        log.info("Creating user ")
+        print validated_data         
+        obj = self.Meta.model.objects.create_user(username = validated_data['username'],                                             
+                                                  password=validated_data['password'],
+                                                  first_name=validated_data['first_name'])       
+        return obj        
+    
+    def update(self, instance, validated_data):
+        instance.set_password(validated_data['password'])
+        instance.save()                 
+        return instance                
+    
+    class Meta:
+        model = User
+        fields = ('username', 'password','first_name')
 
 
 """

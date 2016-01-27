@@ -88,7 +88,7 @@ $('document').ready(function(){
 									<div class="row">
 										<div class="col-sm-12">
 											<h3 class="m-t-none m-b">Create User</h3>
-											<form role="form" id="createNewUser" method="post">
+											<form role="form" id="createNewUser">
 												<input type="hidden" id="INSERTRESULT"
 													value="<?php echo $result?>">
 												<div class="form-group">
@@ -362,7 +362,28 @@ $('document').ready(function(){
 	            }
 	        },
 	        submitHandler: function(){
-	        	$("#createNewUser").submit();
+	        	//$("#createNewUser").submit();
+                $.ajax({
+                    async: true,
+                    url: "{% url 'api-event-user'%}",
+                    dataType: "json",
+                    type: "POST",
+                    data: {
+                        username:   $('#createNewUser #username').val(),
+                        password:   $('#createNewUser #cpassword_edit').val(),
+                        first_name: $('#createNewUser #description').val(),
+                    },
+                    success: function(json) {
+                    	location.reload()
+                    	return;
+                    },
+                    error: function(xhr, errStr) {
+                        alert(errStr);
+                    }
+                });
+	        	
+	        	
+	        	
 	        }
 	    });
 	}
@@ -473,17 +494,19 @@ $('document').ready(function(){
     {
     	if(confirm("Do you want to delete?"))
         {
+    		var url_delete = "{% url 'api-event-user' %}" + $userid 
         	$.ajax({
                 async: true,
-                url: "<?php echo site_url('ajaxprocess/user') ?>",
+				url: url_delete,
                 dataType: "json",
-                type: "POST",
+                type: "DELETE",
                 data: {
                     mode: "DELETE_USER",
                     userid: $userid,
                 },
                 success: function(json) {
-                    location.href = location.href;
+                    location.reload()
+                    return
                 },
                 error: function(xhr, errStr) {
                  	console.log(errStr);

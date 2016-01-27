@@ -14,8 +14,13 @@ urlpatterns = [
     # url(r'^blog/', include('blog.urls')),
     url(r'^login/', 'rest_framework_jwt.views.obtain_jwt_token',  name='api-login'),       
     url(r'^docs/', include('rest_framework_swagger.urls'),        name='api-docs'),
+    
     url(r'^admin/$', AdminListViewset.as_view(),                  name='api-admin'),
-    url(r'^admin/(?P<pk>[0-9]+)/$', AdminDetailViewset.as_view(), name='api-admin-detail'),        
+    url(r'^admin/(?P<pk>[0-9]+)/$', AdminDetailViewset.as_view(), name='api-admin-detail'),
+    
+    url(r'^eventuser/$', EventUserListViewset.as_view(),                  name='api-event-user'),
+    url(r'^eventuser/(?P<pk>[0-9]+)/$', EventUserDetailViewset.as_view(), name='api-event-user-detail'),
+            
     url(r'^admin/checkname/$', CheckAdminNameViewset.as_view({'post': 'checkname'}), name='api-admin-check-name'),
 ]
 

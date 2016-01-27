@@ -321,13 +321,12 @@
             submitHandler: function() {
                 $.ajax({
                     async: true,
-                    //url: "<?php echo site_url('admin/new_admin') ?>",
 					url: "{% url 'api-admin' %}",
                     dataType: "json",
                     type: "POST",
                     data: {
                         username: $('#username').val(),
-                        eventid: $('#eventid').val(),
+                        eventid: $('#eventid').val(),                        
                         password: $('#password').val(),
                     },
                     success: function(json) {
