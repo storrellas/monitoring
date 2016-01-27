@@ -130,7 +130,13 @@ class EventUserView( AdminView ):
         return context    
             
     
+class EventView( LoginRequiredMixin, ListView ):
+    template_name='manage/event_list.html'
+    model = Event
+    paginate_by = 10
+    context_object_name = 'event_list'
     
+
     
     
          

@@ -17,11 +17,11 @@ urlpatterns = [
     url(r'^home/$',            BaseView.as_view(template_name='home/eventresult.html'),   name='home'),
     url(r'^home/analysis/0/$', BaseView.as_view(template_name='home/eventtable.html'),    name='analysis'),
     
-    url(r'^events/$',             BaseView.as_view(template_name='manage/events.html'),    name='events'),
+
         
-    url(r'^event/events/0/$',     BaseView.as_view(template_name='manage/events.html'),    name='events_0'),
+    url(r'^event/events/0/$',     EventView.as_view(),    name='events_0'),
     url(r'^event/add/$',           BaseView.as_view(template_name='manage/addevent.html'),    name='add_event'),
-    url(r'^event/edit/$',          BaseView.as_view(template_name='manage/editevent.html'),    name='edit_event'),
+    url(r'^event/edit/(?P<pk>[0-9]+)/$',          BaseView.as_view(template_name='manage/editevent.html'),    name='edit_event'),
     
     url(r'^admin/$',              BaseView.as_view(template_name='base.html'),    name='admin'),
     url(r'^users/$',              BaseView.as_view(template_name='manage/users.html'),    name='users'),
