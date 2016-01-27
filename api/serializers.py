@@ -84,7 +84,8 @@ class EventSerializer(serializers.ModelSerializer):
         model = Event
 
 
-
+class EventIdSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
 
 """
 class AdminSerializer(serializers.ModelSerializer):

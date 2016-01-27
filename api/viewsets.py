@@ -1,4 +1,4 @@
-import json
+from StringIO import StringIO
 
 # Django imports
 from django.contrib.auth.models import User
@@ -112,13 +112,15 @@ class EventMultiDeleteViewset( ViewSet ):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
     def multidelete(self, request, *args, **kwargs):
-        try:
-            eventid_list = json.loads(request.data['eventid'])        
-            for item in eventid_list:
-                Event.objects.get(id=item['id']).delete()            
-            return JsonResponse({})
-        except:
-            return HttpResponseBadRequest() 
+        stream = StringIO(str(request.data['eventid']))
+        data = JSONParser().parse(stream)
+        serializer = EventIdSerializer(data=data,many=True)
+        if not serializer.is_valid():
+            return HttpResponseBadRequest()        
+        for item in serializer.data:
+            Event.objects.get(id=item['id']).delete()   
+        return JsonResponse({})
+        
 
 
 """
