@@ -135,15 +135,24 @@ class EventView( LoginRequiredMixin, ListView ):
     model = Event
     paginate_by = 10
     context_object_name = 'event_list'
+
+
+class EventAddView( LoginRequiredMixin, TemplateView ):
+    template_name='manage/addevent.html'
+    model = Event
+
+
+    def post(self,request,*args,**kwargs):
+        log.info('Accessing form')
+        return HttpResponse()
     
 class EventEditView( LoginRequiredMixin, DetailView ):
     template_name='manage/editevent.html'
     model = Event
     context_object_name = 'event'
-    
-    def get_context_data(self, **kwargs):
-        context = super(EventUserView, self).get_context_data(**kwargs)                            
-        context['user_list'] = self.request.GET['search_data']
-        return context    
+
+    def post(self,request,*args,**kwargs):
+        log.info('Accessing form')
+        return HttpResponse()
     
          

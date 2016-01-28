@@ -112,11 +112,15 @@ class EventMultiDeleteViewset( ViewSet ):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
     def multidelete(self, request, *args, **kwargs):
+        # Transform into native datatypes
         stream = StringIO(str(request.data['eventid']))
         data = JSONParser().parse(stream)
+        # Apply serializer
         serializer = EventIdSerializer(data=data,many=True)
         if not serializer.is_valid():
-            return HttpResponseBadRequest()        
+            return HttpResponseBadRequest()
+        
+        # Delete corresponding items        
         for item in serializer.data:
             Event.objects.get(id=item['id']).delete()   
         return JsonResponse({})

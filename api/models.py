@@ -11,7 +11,7 @@ class Event(models.Model):
     register_date = models.DateTimeField(default=timezone.now())
     pdfurl        = models.URLField(default='')
     videourl      = models.URLField(default='')
-
+    pdf           = models.FileField(upload_to='event/',blank=True,null=True)
     
     def __unicode__(self):
        return self.title

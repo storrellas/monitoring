@@ -20,7 +20,7 @@ urlpatterns = [
 
         
     url(r'^event/$',                        EventView.as_view(),    name='event'),
-    url(r'^event/add/$',                    BaseView.as_view(template_name='manage/addevent.html'),    name='add_event'),
+    url(r'^event/add/$',                    EventAddView.as_view(),    name='add_event'),
     url(r'^event/edit/(?P<pk>[0-9]+)/$',    EventEditView.as_view(template_name='manage/editevent.html'),    name='edit_event'),
     
     url(r'^admin/$',              BaseView.as_view(template_name='base.html'),    name='admin'),
