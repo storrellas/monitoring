@@ -9,49 +9,32 @@
 <script type="text/javascript">
 $('document').ready(function(){
 	
+	function calculate_selno(){
+		var $temp = '';
+		$('.selecttag').each(function(){
+			if( $(this).prop("checked")){
+				$temp += $(this).val() + ',';
+			}
+		});		
+		$temp = $temp.slice(0,-1)
+		$("#selno").val($temp);
+	}
+	
 	// multi check
 	$('#selecttag').on('click', function(){
-		var $className = "."+$(this).attr("id");
-		if($(this).prop("checked"))
-		{
-			$($className).prop("checked", true);
-			var $selno = "";
-			var len = $($className).length;
-			$($className).each(function(index,element){
-				if( index == len -1 ){
-					$selno += $(this).val();
-				}else{
-					$selno += $(this).val() + ',';	
-				}
-				
-			});
-			
-			$("#selno").val($selno);
-		}
-		else
-		{
-			$($className).prop("checked", false);
-			$("#selno").val("");
-		}
+		
+		
+		$('.selecttag').each(function(){
+			if( $('#selecttag').prop("checked") ){
+				$(this).prop("checked", true);	
+			}			
+		});			
+		calculate_selno();
 	});
 	
 	$('.selecttag').on('click', function()
 	{
-		var $temp ="";
-		
-		var $selno = $(this).val();
-		var $selAllNo = $('#selno').val();
-		
-		if($(this).prop("checked"))
-		{
-			$temp = $selAllNo + $selno;
-		}
-		else
-		{
-			$temp = $selAllNo.replace($selno, '');
-		}
-		
-		$("#selno").val($temp);
+		calculate_selno();
 	});
 });
 </script>

@@ -157,19 +157,16 @@ class EventAddView( LoginRequiredMixin, TemplateView ):
             #raise Http404()          
             print form.errors
             return HttpResponseBadRequest(form.errors)
-        
-        # Save the form          
-        #form.save()
-        
-        
-        event = form.save()
-        print request.POST['selno']
-        for id in str(request.POST['selno']).split(','):
-            log.info("Getting id " + str(id))
-            user = User.objects.get(id=int(id))
-            eventuser = EventUser.objects.get(user=user)
-            eventuser.event = event        
-            eventuser.save()
+                
+        # Save the form        
+        event = form.save()      
+        if request.POST['selno'] != '':            
+            selno_list = str(request.POST['selno']).split(',')
+            for id in selno_list:
+                user = User.objects.get(id=int(id))
+                eventuser = EventUser.objects.get(user=user)
+                eventuser.event = event        
+                eventuser.save()
         
         
         return redirect(reverse('event'))
@@ -202,7 +199,21 @@ class EventEditView( LoginRequiredMixin, DetailView ):
             return HttpResponseBadRequest(form.errors)
 
         # Save form
-        form.save()
+        event = form.save()
+
+        # Remove previous event users
+        for eventuser in event.eventuser_set.all():            
+            eventuser.event = None
+            eventuser.save()
+
+        # Add new EventUsers
+        if request.POST['selno'] != '':            
+            selno_list = str(request.POST['selno']).split(',')
+            for id in selno_list:
+                user = User.objects.get(id=int(id))
+                eventuser = EventUser.objects.get(user=user)
+                eventuser.event = event        
+                eventuser.save()
 
         
         return redirect(reverse('event'))
