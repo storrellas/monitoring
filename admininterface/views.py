@@ -4,7 +4,7 @@ from django.views.generic.base import TemplateResponseMixin
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.views.generic import View
-from django.http import Http404, HttpResponseNotFound,HttpResponse,JsonResponse
+from django.http import Http404, HttpResponseBadRequest, HttpResponseNotFound,HttpResponse,JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
@@ -14,7 +14,7 @@ from django.contrib.auth.decorators import login_required
 from braces.views import LoginRequiredMixin
 
 # Project imports
-from forms import UserForm
+from forms import *
 from api.models import *
 
 # Configure logger
@@ -39,9 +39,10 @@ class LoginView(View):
         # Check form    
         user_form = UserForm(request.POST)
         if not user_form.is_valid():
-            raise Http404('Form not valid')                
+            #raise Http404(event_form.errors)
+            print user_form.errors
+            return HttpResponseBadRequest(user_form.errors)             
         
-        log.info("Logging in " + user_form.data['username'])
         log.info("Logging in " + user_form.data['username'])
         
         # Authenticate user        
@@ -137,20 +138,65 @@ class EventView( LoginRequiredMixin, ListView ):
     context_object_name = 'event_list'
 
 
-class EventAddView( LoginRequiredMixin, TemplateView ):
+class EventUserNotAssignedMixin(object):
+    """
+    Returns thos users that are not assinged to an event   
+    """
+    def get_context_data(self, **kwargs):
+        context = super(EventUserNotAssignedMixin, self).get_context_data(**kwargs)
+      
+        context['user_list'] = User.objects.filter(eventuser__event__isnull=True,
+                                                   is_superuser=False)        
+        return context
+
+
+class EventAddView( LoginRequiredMixin, EventUserNotAssignedMixin, TemplateView ):
     template_name='manage/addevent.html'
     model = Event
 
-
     def post(self,request,*args,**kwargs):
         log.info('Accessing form')
-        return HttpResponse()
+
+        form = EventModelForm(request.POST, request.FILES)
+        if not form.is_valid():
+            #raise Http404()
+            log.info('Form NOT valid!')  
+            print form.errors
+            return HttpResponseBadRequest(form.errors)
+        
+        log.info('Form is valid!')  
+        form.save()                  
+
+        
+        return redirect(reverse('add_event'))
+        return redirect(reverse('event'))
+
+        
+        """
+        form = EventForm(request.POST, request.FILES)
+        if not form.is_valid():
+            #raise Http404()
+            log.info('Form NOT valid!')  
+            print form.errors
+            return HttpResponseBadRequest(form.errors)
+
+        log.info('Form is valid!')                    
+
+        
+        return redirect(reverse('add_event'))
+        return redirect(reverse('event'))
+        """
     
 class EventEditView( LoginRequiredMixin, DetailView ):
     template_name='manage/editevent.html'
     model = Event
     context_object_name = 'event'
-
+    
+    def get_context_data(self, **kwargs):
+        context = super(EventEditView, self).get_context_data(**kwargs)        
+        context['user_list'] = User.objects.all(is_superuser=False)        
+        return context
+    
     def post(self,request,*args,**kwargs):
         log.info('Accessing form')
         return HttpResponse()

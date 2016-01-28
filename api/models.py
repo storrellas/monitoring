@@ -9,9 +9,8 @@ class Event(models.Model):
     title         = models.CharField(max_length=30)
     description   = models.CharField(max_length=400)
     register_date = models.DateTimeField(default=timezone.now())
-    pdfurl        = models.URLField(default='')
     videourl      = models.URLField(default='')
-    pdf           = models.FileField(upload_to='event/',blank=True,null=True)
+    pdfdocument   = models.FileField(upload_to='event/',blank=True,null=True)
     
     def __unicode__(self):
        return self.title

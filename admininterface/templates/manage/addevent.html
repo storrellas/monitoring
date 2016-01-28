@@ -16,8 +16,14 @@ $('document').ready(function(){
 		{
 			$($className).prop("checked", true);
 			var $selno = "";
-			$($className).each(function(){
-				$selno += $(this).val();
+			var len = $($className).length;
+			$($className).each(function(index,element){
+				if( index == len -1 ){
+					$selno += $(this).val();
+				}else{
+					$selno += $(this).val() + ',';	
+				}
+				
 			});
 			
 			$("#selno").val($selno);
@@ -64,8 +70,10 @@ $('document').ready(function(){
 				</div>
 				<div class="ibox-content">
 					<div class="col-lg-12">
-						<form role="form" id="addNewEventForm" method="post" enctype="multipart/form-data"><input type="hidden" id="INSERTRESULT" >
-							<input type="hidden" id="selno" name="selno" value=""> 
+						<form role="form" id="addNewEventForm" method="post" enctype="multipart/form-data">
+ 							{% csrf_token %}
+ 							<input type="hidden" id="INSERTRESULT" >
+							<input type="hidden" id="selno" name="selno" value="">
 							<div class="form-group"><label class="col-sm-2 control-label" style="text-align: right;">
 								<b class="required">*</b>Title:</label>
 									<div class="col-sm-9">
@@ -73,7 +81,7 @@ $('document').ready(function(){
 									</div>
 							</div>
 
-							<div class="form-group">
+ 							<div class="form-group">
 								<label class="col-sm-2 control-label" style="text-align: right;">
 									<b class="required">*</b>PDF:</label>
 								<div class="col-sm-9"><input type="file" class="form-control required" name="pdfdocument" id="pdfdocument">
@@ -90,6 +98,7 @@ $('document').ready(function(){
 									<textarea class="form-control required" name="description" id="description" style="width:100%; height:80px;"></textarea>
 								</div>
 							</div>
+					 		
 							<div style="clear: both;"></div>
 							<div class="form-group">
 								<label class="col-sm-2 control-label" style="text-align: right;">Users:</label>
@@ -103,30 +112,23 @@ $('document').ready(function(){
 												<th style="width: 200px">Username</th>
 											</tr>
 											<tr>
-											<?php 
-											$no=1;
-													foreach ($users as $item)
-													{
-													?>
+											{% for user in user_list %}
 	                                        <tr>
-	                                        	<td><input type="checkbox" class="selecttag" id="seltag<?php echo $item['userid']?>" value="<?php echo $item['userid']?>,"></td>
-	                                            <td><?php echo $no?></td>
-	                                            <td><?php echo $item['username'];?></td>
+	                                        	<td><input type="checkbox" class="selecttag" id="seltag{{ user.id }}" value="{{ user.id }}"></td>
+	                                            <td>{{ user.id }}</td>
+	                                            <td>{{ user.username }}</td>
 	                                        </tr>
-	                                        <?php
-	                                        	$no++; 
-													}
-													?>
+											{% endfor %}
 										</tbody>
 									</table>
 								</div>
 							</div>
-							
+							 
 							<div class="form-group">
 								<label class="col-sm-2 control-label" style="text-align: right;"> </label>
 								<div class="col-sm-9">
-									<button class="btn btn-sm btn-default pull-center m-t-n-xs" style="margin-right: 10px;" type="button" onclick="on_reset()"><strong>Reset</strong> </button>
-									<button class="btn btn-sm btn-success pull-center m-t-n-xs" onclick="on_create()"><strong> Add </strong></button>
+									<div class="btn btn-sm btn-default pull-center m-t-n-xs" style="margin-right: 10px;" type="button" onclick="on_reset()"><strong>Reset</strong> </div>
+									<div class="btn btn-sm btn-success pull-center m-t-n-xs" onclick="on_create()"><strong> Add </strong></div>
 								</div>
 							</div>
 							<div style="clear: both;"></div>
@@ -142,17 +144,31 @@ $('document').ready(function(){
 
 <script type="text/javascript">
 function on_create()
-{
+{	
+	$("#addNewEventForm").submit();
+	return;
+	
+	
 	$('#addNewEventForm').validate({
         errorPlacement: function (error, element) {
             element.before(error);
         },
         
         submitHandler: function() {
+        	console.log("value")
         	show_loading(true);
         	$("#addNewEventForm").submit();
         }
-    });	
+    });
+	/**/
+	/*
+	$("#addNewEventForm").ajaxSubmit(function(){
+		alert('tank you!')
+	});
+	/**/
+	
+	
+	//$.post('{{ request.path }}', $('#addNewEventForm').serialize())
 }
 // add content
 function on_reset()
@@ -161,7 +177,7 @@ function on_reset()
 }
 function on_back()
 {
-	location.href = '<?php echo site_url('event/events/0')?>';
+	location.href = "{% url 'event' %}";
 }
 $('document').ready(function(){
 	
