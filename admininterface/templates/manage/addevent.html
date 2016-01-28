@@ -160,20 +160,11 @@ function on_create()
         	$("#addNewEventForm").submit();
         }
     });
-	/**/
-	/*
-	$("#addNewEventForm").ajaxSubmit(function(){
-		alert('tank you!')
-	});
-	/**/
-	
-	
-	//$.post('{{ request.path }}', $('#addNewEventForm').serialize())
 }
 // add content
 function on_reset()
 {
-	location.href = location.href;
+	location.reload();
 }
 function on_back()
 {

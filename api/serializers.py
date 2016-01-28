@@ -60,7 +60,9 @@ class EventUserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):       
         obj = self.Meta.model.objects.create_user(username = validated_data['username'],                                             
                                                   password=validated_data['password'],
-                                                  first_name=validated_data['first_name'])       
+                                                  first_name=validated_data['first_name'])
+        eventuser = EventUser(user=obj)
+        eventuser.save()       
         return obj        
     
     def update(self, instance, validated_data):

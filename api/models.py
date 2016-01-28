@@ -22,7 +22,7 @@ class Data(models.Model):
     
 class EventUser(models.Model):
     user     = models.OneToOneField(User)
-    event    = models.ForeignKey(Event)
+    event    = models.ForeignKey(Event, null=True, blank=True)
     state    = models.IntegerField(default=0)
     
 class EventCheck(models.Model):
