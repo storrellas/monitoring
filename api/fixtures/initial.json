@@ -88,24 +88,48 @@
   "model": "api.eventcheck",
   "pk": 1,
   "fields": {
-    "user": 1,
+    "user": 2,
     "event": 1,
     "checkouttime": "2016-01-22T14:04:43.517Z",
     "checkintime": "2016-01-22T14:04:43.517Z"
   }
 },
 {
+  "model": "api.eventcheck",
+  "pk": 2,
+  "fields": {
+    "user": 2,
+    "event": 1,
+    "checkouttime": "2016-01-29T07:43:36.229Z",
+    "checkintime": "2016-01-29T07:43:36.229Z"
+  }
+},
+{
   "model": "api.trackdata",
   "pk": 3,
   "fields": {
-    "user": 1,
+    "user": 2,
     "event": 1,
-    "checkout": 1,
+    "eventcheck": 1,
     "quantity": 1,
     "target": 10,
     "type": 1,
     "note": "notes",
     "trackdate": "2016-01-22T14:44:03.347Z"
+  }
+},
+{
+  "model": "api.trackdata",
+  "pk": 4,
+  "fields": {
+    "user": 2,
+    "event": 1,
+    "eventcheck": 2,
+    "quantity": 10,
+    "target": 35,
+    "type": 2,
+    "note": "",
+    "trackdate": "2016-01-29T08:02:16.340Z"
   }
 }
 ]

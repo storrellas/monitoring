@@ -46,7 +46,7 @@
 {# Dashboard section #}
 {% url 'base' as base_url %}
 {% url 'home' as home_url %}
-{% url 'analysis' as analysis_url %}
+{% url 'event_analysis' as analysis_url %}
 
 {# Events section #}
 {% url 'events' as events_url %}
@@ -82,7 +82,7 @@
 			<li {% if home_url == request.path %} class="active" {% endif %}>
 				<a href="{% url 'home' %}">Result</a></li>
 			<li {% if analysis_url in request.path %} class="active" {% endif %}>
-				<a href="{% url 'analysis' %}">Analysis</a></li>
+				<a href="{% url 'event_analysis' %}">Analysis</a></li>
 		</ul>
 	</li>
 	

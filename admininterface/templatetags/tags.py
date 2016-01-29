@@ -18,3 +18,7 @@ def sidebar(context):
     if reverse('base') == request.path:
         pass
     return {'url': "sergi" }
+
+@register.filter(name='percentage')
+def percentage(quantity, target):
+    return str(quantity*100/target) + '%'

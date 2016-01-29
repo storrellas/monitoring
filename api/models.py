@@ -32,17 +32,27 @@ class EventCheck(models.Model):
     checkintime  = models.DateTimeField(default=timezone.now())
 
     def __unicode__(self):
-       return self.checkouttime
+       return self.user.username + "," + self.event.title + "," + self.checkouttime.strftime("%d/%m/%y")
 
 class TrackData(models.Model):
-    user      = models.ForeignKey(User)
-    event     = models.ForeignKey(Event)
-    checkout  = models.ForeignKey(EventCheck)
-    quantity  = models.IntegerField(default=0)    
-    target    = models.IntegerField(default=0)
-    type      = models.IntegerField(default=0)
-    note      = models.CharField(default='',max_length=400)
-    trackdate = models.DateTimeField(default=timezone.now())
+    
+    GOOD    = 1
+    NEUTRAL = 2
+    BAD     = 3
+    FEEDBACK = (
+        (GOOD, 1),
+        (NEUTRAL, 2),
+        (BAD, 3),
+    )
+    
+    user       = models.ForeignKey(User)
+    event      = models.ForeignKey(Event)
+    eventcheck = models.OneToOneField(EventCheck)
+    quantity   = models.IntegerField(default=0)    
+    target     = models.IntegerField(choices=FEEDBACK, default=0)
+    type       = models.IntegerField(default=1)
+    note       = models.CharField(default='',max_length=400)
+    trackdate  = models.DateTimeField(default=timezone.now())
 
     def __unicode__(self):
-       return self.event + self.checkout    
+       return self.user.username + "," + self.event.title + "," + self.trackdate.strftime("%d/%m/%y")    

@@ -9,13 +9,16 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
+from django.core.files.base import ContentFile
 
-# Django braces
+# Thrid-party libs
 from braces.views import LoginRequiredMixin
 
 # Project imports
 from forms import *
 from api.models import *
+from api.admin import TrackDataResource
 
 # Configure logger
 import logging
@@ -217,5 +220,53 @@ class EventEditView( LoginRequiredMixin, DetailView ):
 
         
         return redirect(reverse('event'))
+
+
+class EventAnalysisView( LoginRequiredMixin, ListView ):
+    template_name='home/event_analysis.html'
+    model = TrackData
+    paginate_by = 10
+    context_object_name = 'trackdata_list'
+    event = None
     
+    def get_queryset(self):
+        try:
+            event_id = self.request.GET['eventid']            
+        except:
+            event_id = Event.objects.first().id
+        self.event = Event.objects.get( id = event_id )
+        
+        return self.model.objects.filter(event=self.event).order_by('id')
+    
+    def get_context_data(self, **kwargs):
+        context = super(EventAnalysisView, self).get_context_data(**kwargs)
+        context['event_list'] = Event.objects.all()
+        
+
+        analytics = TrackData.objects.filter(event=self.event) \
+                        .aggregate(Sum('quantity'), Sum('target'))
+        try:
+            context['sampling']    = analytics['quantity__sum']
+            context['target']      = analytics['target__sum']
+            context['percentage']  = str(context['sampling']*100 / context['target']) + '%' 
+        except:
+            context['sampling']    = '0'
+            context['target']      = '0'
+            context['percentage']  = '0%'
+        context['eventid_selected'] = self.event.id
+
+        return context
+
+
+
+
+class EventAnalysisCSVView( LoginRequiredMixin, View ):
+    
+    def get(self,request,*args,**kwargs):
+        file_to_send = ContentFile(TrackDataResource().export().csv)
+        response     = HttpResponse(file_to_send,'text/csv')
+        response['Content-Length']      = file_to_send.size    
+        response['Content-Disposition'] = 'attachment; filename="event.csv"'        
+        return response
+        
          
