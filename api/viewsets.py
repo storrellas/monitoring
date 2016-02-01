@@ -1,4 +1,5 @@
 from StringIO import StringIO
+from datetime import datetime
 
 # Django imports
 from django.contrib.auth.models import User
@@ -16,15 +17,14 @@ from rest_framework.parsers import JSONParser
 
 from rest_framework import generics
 from rest_framework import mixins
-
+from rest_framework.renderers import JSONRenderer
 
 # Project imports
 from serializers import *
 from admininterface.models import *
 
-from rest_framework.authentication import BasicAuthentication
 
-from rest_framework.authentication import SessionAuthentication 
+from rest_framework.authentication import BasicAuthentication, SessionAuthentication 
 class CsrfExemptSessionAuthentication(SessionAuthentication):
     def enforce_csrf(self, request):
         return  # To not perform the csrf check previously happening
@@ -127,12 +127,11 @@ class EventMultiDeleteViewset( ViewSet ):
         return JsonResponse({})
         
         
-from rest_framework.renderers import JSONRenderer        
 class TrackDataGraphViewset( ViewSet ):
 
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
-    def generate_graph_data(self, request, *args, **kwargs):        
+    def generate_graph_data(self, request, *args, **kwargs):
         event = Event.objects.get(id= kwargs['pk'] )
         trackdata_list = TrackData.objects.filter(event=event)
          
@@ -172,3 +171,37 @@ class MapwaypointViewSet(viewsets.ViewSet):
         serializer = MapWaypointSerializer(user)
         return Response(serializer.data)
 """
+
+##############################
+## API 
+##############################
+
+class TaskViewset( ViewSet ):
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+
+    def post(self, request, *args, **kwargs):
+        id = kwargs['pk']
+        print args
+        
+        # Get task
+        user = User.objects.get(id=id)
+        event = user.eventuser.event
+        serializer = EventSerializer(user.eventuser.event)
+        json_task = serializer.data
+        json_task['pdfurl'] = request.scheme + '://' + request.get_host() + event.pdfdocument.url
+
+        # This is hardcoded
+        json_task['total'] = 25
+        json_task['lastsubmit'] = datetime.now()
+        json_task['completeflag'] = 0
+        json_task['checkoutid'] = 0
+        
+        
+        json_dict = {}
+        json_dict['status'] = 200 
+        json_dict['task'] = json_task
+        
+        return JsonResponse(json_dict)
+    
+    
+    

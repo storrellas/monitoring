@@ -9,6 +9,8 @@ from models import *
 import logging
 log = logging.getLogger(__name__)
 
+
+
 class DataSerializer(serializers.ModelSerializer):     
     class Meta:
         model = Data
@@ -95,6 +97,21 @@ class TrackDataSerializer(serializers.Serializer):
     quantity = serializers.IntegerField()
     target = serializers.IntegerField()
     
+# API Serializers
+##########################
+
+def jwt_response_payload_handler(token, user=None, request=None):
+    return {
+        'token': token,
+        'user': EventUserAPISerializer(user).data,
+        'status' : 200
+    }
+
+class EventUserAPISerializer(serializers.ModelSerializer):                   
+    class Meta:
+        model = User
+        fields = ('id', 'username')
+
 
 """
 class AdminSerializer(serializers.ModelSerializer):
