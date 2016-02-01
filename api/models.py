@@ -52,8 +52,9 @@ class TrackData(models.Model):
     target       = models.IntegerField(choices=FEEDBACK, default=0)
     type         = models.IntegerField(default=1)
     note         = models.CharField(default='',max_length=400)
-    trackdate    = models.DateField(default=timezone.now())
+    trackdate    = models.DateField(auto_now=True)
+    tracktime    = models.TimeField(auto_now=True)
     completeflag = models.IntegerField(default=0)
 
     def __unicode__(self):
-       return self.user.username + "," + self.event.title + "," + self.trackdate.strftime("%d/%m/%y")    
+       return self.user.username + "," + self.event.title + "," + self.trackdate.strftime("%d/%m/%y") 

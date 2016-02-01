@@ -21,7 +21,7 @@ from rest_framework.renderers import JSONRenderer
 
 # Project imports
 from serializers import *
-from admininterface.models import *
+from models import *
 
 
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication 
@@ -191,7 +191,9 @@ class TaskViewset( ViewSet ):
         json_task['pdfurl'] = request.scheme + '://' + request.get_host() + event.pdfdocument.url
 
         # This is hardcoded
-        json_task['total'] = 25
+        total_dict = TrackData.objects.filter(user=user,event=event) \
+                        .aggregate(total=Sum('quantity'))
+        json_task.update(total_dict)
         json_task['lastsubmit'] = datetime.now()
         json_task['completeflag'] = 0
         json_task['checkoutid'] = 0
