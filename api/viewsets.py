@@ -181,24 +181,28 @@ class TaskViewset( ViewSet ):
 
     def post(self, request, *args, **kwargs):
         id = kwargs['pk']
-        print args
         
-        # Get task
+        # Add event info
         user = User.objects.get(id=id)
         event = user.eventuser.event
         serializer = EventSerializer(user.eventuser.event)
         json_task = serializer.data
         json_task['pdfurl'] = request.scheme + '://' + request.get_host() + event.pdfdocument.url
 
-        # This is hardcoded
-        total_dict = TrackData.objects.filter(user=user,event=event) \
-                        .aggregate(total=Sum('quantity'))
+        # Add TrackData info                
+        track_data = TrackData.objects.filter(event=event,user=user) \
+                        .order_by('-eventcheck__checkouttime').order_by('-trackdate').first()                                                                 
+        serializer = TrackDataAppSerializer(track_data)
+        json_task.update( serializer.data ) 
+        
+        """                        
         json_task.update(total_dict)
         json_task['lastsubmit'] = datetime.now()
         json_task['completeflag'] = 0
         json_task['checkoutid'] = 0
+        """
         
-        
+        # Add status
         json_dict = {}
         json_dict['status'] = 200 
         json_dict['task'] = json_task

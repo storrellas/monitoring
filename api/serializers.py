@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from django.db.models import Sum
 
 from models import *
 
@@ -100,18 +101,49 @@ class TrackDataSerializer(serializers.Serializer):
 # API Serializers
 ##########################
 
-def jwt_response_payload_handler(token, user=None, request=None):
-    return {
-        'token': token,
-        'user': EventUserAPISerializer(user).data,
-        'status' : 200
-    }
-
-class EventUserAPISerializer(serializers.ModelSerializer):                   
+class UserAppSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username')
 
+def jwt_response_payload_handler(token, user=None, request=None):
+    return {
+        'token': token,
+        'user': UserAppSerializer(user).data,
+        'status' : 200
+    }
+
+
+class TrackDataAppSerializer(serializers.ModelSerializer):
+    
+    lastsubmit = serializers.SerializerMethodField('lastsubmit_field')        
+    def lastsubmit_field(self, trackdata):
+        return trackdata.trackdate.strftime("%d/%m/%y ") + trackdata.tracktime.strftime("%H:%M %p")
+
+    total = serializers.SerializerMethodField('total_field')        
+    def total_field(self, trackdata):
+        total_dict=self.Meta.model.objects.filter(event=trackdata.event) \
+                        .aggregate(total=Sum('quantity'))
+        return total_dict['total']
+    
+    checkintime = serializers.SerializerMethodField('checkintime_field')        
+    def checkintime_field(self, trackdata):
+        try:
+            return trackdata.eventcheck.checkintime.strftime("%d/%m/%y %H:%M %p")
+        except:
+            return None        
+
+    checkouttime = serializers.SerializerMethodField('checkouttime_field')        
+    def checkouttime_field(self, trackdata):
+        try:
+            return trackdata.eventcheck.checkouttime.strftime("%d/%m/%y %H:%M %p")
+        except:
+            return None
+    
+    class Meta:
+        model = TrackData
+        fields = ('eventcheck', 'checkouttime', 'checkintime', \
+                  'completeflag','lastsubmit','total')
 
 """
 class AdminSerializer(serializers.ModelSerializer):
