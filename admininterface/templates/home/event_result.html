@@ -9,56 +9,8 @@
 <div class="row" style="margin-top: 10px">
 	<div class="col-lg-12">
 		<div class="ibox float-e-margins">
-			<label class="col-lg-1 control-label" style="margin-top: 5px">Event:</label>
-			<form role="form" id="viewResult" method="get" >
-			<div class="col-lg-2">
-				<select class="form-control" name="eventid" id="eventid" onchange="on_change()">
-					<?php
-						foreach($eventlist as $event)
-								{
-									$selected = '';
-									if ($event['eventid'] == $eventid)
-										$selected = 'selected';
-									echo "<option value='".$event['eventid']."' $selected>".$event['title']."</option>";
-								}
-							?>
-				</select>
-			</div>
-			</form>
-			<div class="ibox-content" style="background: none;">
-				<div class="row">
-					<div class="col-lg-3">
-						<div class="ibox float-e-margins">
-							<div class="ibox-title">
-								<h5>Sampling</h5>
-								<div class="ibox-content">
-									<h1 class="no-margins"><?php echo $sampling;?></h1>
-								</div>
-							</div>
-						</div>
-					</div>
-					
-					<div class="col-lg-3">
-						<div class="ibox float-e-margins">
-							<div class="ibox-title">
-								<h5>Target</h5>
-								<div class="ibox-content">
-									<h1 class="no-margins"><?php echo $target;?></h1>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="ibox float-e-margins">
-							<div class="ibox-title">
-								<h5>Percent</h5>
-								<div class="ibox-content">
-									<h1 class="no-margins"><?php echo $percent.'%';?></h1>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+				
+				{% include 'home/event_header.html' with export_to_csv=False %}
 				
 				<div class="row">
             				<div class="col-lg-6">
@@ -179,17 +131,32 @@ $(function() {
 
     Dashboard1.prototype.init = function() {
         //creating area chart
-        var jsondata = <?php echo json_encode($graphdata);?>;
-        this.createAreaChartDotted('morris-area-with-dotted', 0, 0, jsondata, 'y', ['a', 'b'], ['Sampling', 'Target'],['#ffffff'],['#999999'], ['#5fbeaa', '#5d9cec']);
-
-      //creating donut chart
-      //creating donut chart
-      
-        var $donutData = [
-                {label: "Good", value: <?php echo $good;?>},
-                {label: "Normal", value: <?php echo $normal;?>},
-                {label: "Bad", value: <?php echo $bad;?>}
-            ];
+        var graph = this;
+        $.ajax({
+            url: "{% url 'api-trackdata-graph' eventid_selected %}",
+            dataType: "json",
+            type: "GET",
+            success: function(json) {
+				console.log("Success!!" + json)
+		        graph.createAreaChartDotted('morris-area-with-dotted', 0, 0, json, 
+		        							'trackdate', ['target', 'quantity'], 
+		        							['Sampling', 'Target'],
+		        							['#ffffff'],['#999999'], 
+		        							['#5fbeaa', '#5d9cec']);
+            },
+            error: function(xhr, errStr) {
+                alert(errStr);
+            }
+        });
+        /**/
+        
+      	// Creating donut chart      
+		var $donutData = [
+			{% for key, value in feedback.items %}
+			{label: "{{key}}",    value: {{ value }} },
+			{% endfor %}
+		];
+      	
         this.createDonutChart('morris-donut-example', $donutData, ['#5fbeaa', '#5d9cec', '#ebeff2']);
     },
     //init

@@ -10,6 +10,7 @@
 <div class="row" style="margin-top: 10px">
 	<div class="col-lg-12">
 		<div class="ibox float-e-margins">
+<!--		
 			<label class="col-lg-1 control-label" style="margin-top: 5px">Event:</label>
 			<form role="form" id="viewResult" method="get" >
 				<div class="col-lg-2">
@@ -26,7 +27,7 @@
 			</form>
 			<button class="btn btn-sm btn-primary pull-right" style="margin-top: 2px; " onclick="on_export()">Export to CSV</button>
 			<div class="ibox-content" style="background: none;">
-				<div class="row">
+ 				<div class="row">
 					<div class="col-lg-3">
 						<div class="ibox float-e-margins">
 							<div class="ibox-title">
@@ -58,7 +59,9 @@
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> -->
+				
+				{% include 'home/event_header.html' with export_to_csv=True %}
 				
 				<div class="row">
 					<div class="ibox-content">

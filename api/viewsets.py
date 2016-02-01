@@ -4,6 +4,7 @@ from StringIO import StringIO
 from django.contrib.auth.models import User
 from django.http import HttpResponseBadRequest, HttpResponse, JsonResponse
 from django.utils.six import BytesIO
+from django.db.models import Sum
 
 # Rest framework imports
 from rest_framework.viewsets import ModelViewSet, ViewSet
@@ -125,6 +126,34 @@ class EventMultiDeleteViewset( ViewSet ):
             Event.objects.get(id=item['id']).delete()   
         return JsonResponse({})
         
+        
+from rest_framework.renderers import JSONRenderer        
+class TrackDataGraphViewset( ViewSet ):
+
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+
+    def generate_graph_data(self, request, *args, **kwargs):        
+        event = Event.objects.get(id= kwargs['pk'] )
+        trackdata_list = TrackData.objects.filter(event=event)
+         
+        # Generate graph data
+        graph_data = trackdata_list.values('trackdate') \
+                     .annotate(quantity = Sum('quantity'), target = Sum('target') )         
+        
+        
+        
+        serializer = TrackDataSerializer(graph_data, many=True)
+        json = JSONRenderer().render(serializer.data)
+
+        
+        # Quantity and target need to be read as int
+        json_response = []            
+        for item in serializer.data:
+            json_response.append({ "trackdate": item['trackdate'],
+                                   "quantity" : str(item['quantity']),
+                                   "target" : str(item['target']),
+                                  })
+        return JsonResponse( json_response, safe=False )
 
 
 """

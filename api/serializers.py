@@ -89,6 +89,13 @@ class EventSerializer(serializers.ModelSerializer):
 class EventIdSerializer(serializers.Serializer):
     id = serializers.IntegerField()
 
+
+class TrackDataSerializer(serializers.Serializer):
+    trackdate = serializers.DateField(format='%Y-%m-%d')
+    quantity = serializers.IntegerField()
+    target = serializers.IntegerField()
+    
+
 """
 class AdminSerializer(serializers.ModelSerializer):
 

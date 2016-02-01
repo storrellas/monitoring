@@ -13,9 +13,9 @@ urlpatterns = [
     url(r'^logout/$',         LogoutView.as_view(),        name='logout'),
     
     
-    url(r'^base/$',            BaseView.as_view(template_name='base.html'),        name='base'),
-    url(r'^home/$',            BaseView.as_view(template_name='home/event_result.html'),   name='home'),
-    url(r'^home/analysis/$',   EventAnalysisView.as_view(),    name='event_analysis'),
+    url(r'^base/$',                BaseView.as_view(template_name='base.html'),        name='base'),
+    url(r'^home/$',                EventResultView.as_view(template_name='home/event_result.html'),   name='home'),
+    url(r'^home/analysis/$',       EventAnalysisView.as_view(),    name='event_analysis'),
     url(r'^home/analysis/csv/$',   EventAnalysisCSVView.as_view(),    name='event_analysis_csv'),
         
     url(r'^event/$',                        EventView.as_view(),    name='event'),

@@ -221,6 +221,14 @@ class EventEditView( LoginRequiredMixin, DetailView ):
         
         return redirect(reverse('event'))
 
+class EventAnalysisCSVView( LoginRequiredMixin, View ):
+    
+    def get(self,request,*args,**kwargs):
+        file_to_send = ContentFile(TrackDataResource().export().csv)
+        response     = HttpResponse(file_to_send,'text/csv')
+        response['Content-Length']      = file_to_send.size    
+        response['Content-Disposition'] = 'attachment; filename="event.csv"'        
+        return response
 
 class EventAnalysisView( LoginRequiredMixin, ListView ):
     template_name='home/event_analysis.html'
@@ -259,14 +267,51 @@ class EventAnalysisView( LoginRequiredMixin, ListView ):
 
 
 
+class EventResultView( LoginRequiredMixin, TemplateView ):
+    template_name='home/event_result.html'
 
-class EventAnalysisCSVView( LoginRequiredMixin, View ):
     
-    def get(self,request,*args,**kwargs):
-        file_to_send = ContentFile(TrackDataResource().export().csv)
-        response     = HttpResponse(file_to_send,'text/csv')
-        response['Content-Length']      = file_to_send.size    
-        response['Content-Disposition'] = 'attachment; filename="event.csv"'        
-        return response
+    
+    def get_context_data(self, **kwargs):
+        context = super(EventResultView, self).get_context_data(**kwargs)
+        context['event_list'] = Event.objects.all()
+
+        # Capture selected event
+        try:
+            event_id = self.request.GET['eventid']            
+        except:
+            event_id = Event.objects.first().id
+        event = Event.objects.get( id = event_id )        
+
+        # Capture data for event_header.html
+        trackdata_list = TrackData.objects.filter(event=event) 
+        analytics = trackdata_list.aggregate(Sum('quantity'), Sum('target'))
+        try:
+            context['sampling']    = analytics['quantity__sum']
+            context['target']      = analytics['target__sum']
+            context['percentage']  = str(context['sampling']*100 / context['target']) + '%' 
+        except:
+            context['sampling']    = '0'
+            context['target']      = '0'
+            context['percentage']  = '0%'
+        context['eventid_selected'] = event.id
+
+        
+        # Add data for feedback graph
+        feedback = {}
+        feedback['Good'] = trackdata_list.filter(type=TrackData.GOOD).count()
+        feedback['Neutral'] = trackdata_list.filter(type=TrackData.NEUTRAL).count()
+        feedback['Bad'] = trackdata_list.filter(type=TrackData.BAD).count()
+        context['feedback'] = feedback
+
+        # Generate graph data
+        graph_data = trackdata_list.values('trackdate') \
+                     .annotate(quantity = Sum('quantity'), target = Sum('target') )
+        #print graph_data
+        context['graph_data'] = graph_data
+
+        return context
+
+
         
          
