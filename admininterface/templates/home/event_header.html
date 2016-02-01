@@ -1,0 +1,51 @@
+<label class="col-lg-1 control-label" style="margin-top: 5px">Event:</label>
+<form role="form" id="viewResult" method="get" >
+	<div class="col-lg-2">
+		<select class="form-control" name="eventid" id="eventid" onchange="on_change()" style="min-width: 270px">
+			{% for event in event_list %}								
+			<option value='{{ event.id }}' 
+				{% ifequal eventid_selected event.id %}selected{% endifequal %}
+				>
+				{{ event.title }}
+			</option>
+			{% endfor %}
+		</select>
+	</div>
+</form>
+{% ifequal export_to_csv True %}
+<button class="btn btn-sm btn-primary pull-right" style="margin-top: 2px; " onclick="on_export()">Export to CSV</button>
+{% endifequal %}
+<div class="ibox-content" style="background: none;">
+		<div class="row">
+		<div class="col-lg-3">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>Sampling</h5>
+					<div class="ibox-content">
+						<h1 class="no-margins">{{ sampling }}</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-lg-3">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>Target</h5>
+					<div class="ibox-content">
+						<h1 class="no-margins">{{ target }}</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>Percent</h5>
+					<div class="ibox-content">
+						<h1 class="no-margins">{{ percentage }}</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
