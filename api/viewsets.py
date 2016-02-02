@@ -1,3 +1,4 @@
+import traceback
 from StringIO import StringIO
 from datetime import datetime
 
@@ -204,12 +205,42 @@ class TaskViewset( ViewSet ):
         return JsonResponse(json_dict)
 
 
-class CheckinViewset( ViewSet ):
+class EventCheckinViewset( ViewSet ):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
     def post(self, request, *args, **kwargs):
-        #id = kwargs['pk']
-        
-        return JsonResponse({})  
-    
+
+        try:
+            print request.data
+            # This is a constraint of the library used in the app
+            data_processed = {}
+            for key, value in request.data.iteritems():
+                data_processed[key] = value
+                if key == "userid":
+                    data_processed['user'] = int(value)
+                if key == "eventid":
+                    data_processed['event'] = int(value)
+                if key == "latitude" or key == "longitude":
+                    data_processed[key] = float(value)
+                                                    
+            # Create EventCheckin
+            #serializer = EventCheckinAppSerializer( data=request.data )
+            serializer = EventCheckinAppSerializer( data=data_processed )
+            if not serializer.is_valid():
+                raise Exception(serializer.errors)            
+            eventcheck = serializer.save()
+                
+            # Generate associated trackdata
+            trackdata = TrackData(user=eventcheck.user, event=eventcheck.event, eventcheck=eventcheck)            
+            trackdata.save()
+            trackdata_serializer = TrackDataCheckinAppSerializer(instance=trackdata,data=data_processed)
+            if not trackdata_serializer.is_valid():
+                raise Exception( serializer.errors )            
+            trackdata_serializer.save()
+                
+            return JsonResponse(serializer.data)
+        except:
+            traceback.print_exc()
+            return HttpResponseBadRequest()
+            
     

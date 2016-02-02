@@ -42,9 +42,9 @@ urlpatterns = [
     url(r'^task/(?P<pk>[0-9]+)/$', TaskViewset.as_view({'post': 'post'}), name='api-task'),
     
     # Track    
-    url(r'^checkin/$', CheckinViewset.as_view({'post': 'post'}), name='api-task'),
-    #url(r'^checkout/(?P<eventcheck_id>[0-9]+)/$', TaskViewset.as_view({'post': 'post'}), name='api-task'),
-    #url(r'^report/(?P<eventcheck_id>[0-9]+)/$', TaskViewset.as_view({'post': 'post'}), name='api-task'),
+    url(r'^trackdata/checkin/$', EventCheckinViewset.as_view({'post': 'post'}), name='api-task'),
+    #url(r'^trackdata/checkout/(?P<eventcheck_id>[0-9]+)/$', TaskViewset.as_view({'post': 'post'}), name='api-task'),
+    #url(r'^trackdata/report/(?P<eventcheck_id>[0-9]+)/$', TaskViewset.as_view({'post': 'post'}), name='api-task'),
 ]
 
 # Add routers for REST endpoints

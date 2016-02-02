@@ -50,11 +50,18 @@ class TrackData(models.Model):
     eventcheck   = models.OneToOneField(EventCheck)
     quantity     = models.IntegerField(default=0)    
     target       = models.IntegerField(choices=FEEDBACK, default=0)
-    type         = models.IntegerField(default=1)
+    type         = models.IntegerField(default=NEUTRAL)
     note         = models.CharField(default='',max_length=400)
     trackdate    = models.DateField(auto_now=True)
     tracktime    = models.TimeField(auto_now=True)
     completeflag = models.IntegerField(default=0)
 
+    latitude     = models.FloatField(default=0.0)
+    longitude    = models.FloatField(default=0.0)
+    location     = models.CharField(default='', max_length=400)
+
     def __unicode__(self):
-       return self.user.username + "," + self.event.title + "," + self.trackdate.strftime("%d/%m/%y") 
+        if self.trackdate is not None:
+            return self.user.username + "," + self.event.title + "," + self.trackdate.strftime("%d/%m/%y")
+        else: 
+            return self.user.username + "," + self.event.title

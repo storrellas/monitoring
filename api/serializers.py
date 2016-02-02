@@ -145,9 +145,20 @@ class TrackDataAppSerializer(serializers.ModelSerializer):
         fields = ('eventcheck', 'checkouttime', 'checkintime', \
                   'completeflag','lastsubmit','total')
 
-class TrackDataAppSerializer(serializers.ModelSerializer):
+
+class EventCheckinAppSerializer(serializers.ModelSerializer):
+
+    checkintime = serializers.DateTimeField(format="%d/%m/%y %H:%M %p",input_formats=["%d/%m/%y %H:%M %p"], required=False)    
+    class Meta:
+        model = EventCheck
+        fields = ('user','event','checkintime')
+
+class TrackDataCheckinAppSerializer(serializers.ModelSerializer):
+        
     class Meta:
         model = TrackData
+        fields = ('user','event','latitude','longitude','location')
+
 """
 class AdminSerializer(serializers.ModelSerializer):
 
