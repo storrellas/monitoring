@@ -177,7 +177,40 @@ class MapwaypointViewSet(viewsets.ViewSet):
 ## API 
 ##############################
 
-class TaskViewset( ViewSet ):
+class GenerateUserTask(object):
+
+    def generateUserTask(self,request,user,event, status = 200):
+        serializer = EventSerializer(user.eventuser.event)
+        json_task = serializer.data
+        json_task['pdfurl'] = request.scheme + '://' + request.get_host() + event.pdfdocument.url
+
+
+
+        """
+        # Add TrackData info                
+        track_data = TrackData.objects.filter(event=event,user=user) \
+                        .order_by('-eventcheck__checkouttime').order_by('-trackdate').first()
+        if track_data is not None:
+            serializer = TrackDataAppSerializer(track_data)
+            json_task.update( serializer.data )
+            print serializer.data
+        """
+        # Complete JSON with EventCheck
+        eventcheck = EventCheck.objects.filter(event=event,user=user) \
+                        .order_by('-checkouttime').order_by('trackdata__trackdate').first()
+        if eventcheck is not None:
+            serializer = EventCheckAppSerializer(eventcheck)
+            json_task.update( serializer.data )
+            print serializer.data
+        
+        # Add status
+        json_dict = {}
+        json_dict['status'] = status 
+        json_dict['task'] = json_task
+        
+        return JsonResponse(json_dict)
+
+class TaskViewset( GenerateUserTask, ViewSet ):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
     def post(self, request, *args, **kwargs):
@@ -186,27 +219,12 @@ class TaskViewset( ViewSet ):
         # Add event info
         user = User.objects.get(id=id)
         event = user.eventuser.event
-        serializer = EventSerializer(user.eventuser.event)
-        json_task = serializer.data
-        json_task['pdfurl'] = request.scheme + '://' + request.get_host() + event.pdfdocument.url
-
-        # Add TrackData info                
-        track_data = TrackData.objects.filter(event=event,user=user) \
-                        .order_by('-eventcheck__checkouttime').order_by('-trackdate').first()
-        if track_data is not None:
-            serializer = TrackDataAppSerializer(track_data)
-            json_task.update( serializer.data )
-        
-        # Add status
-        json_dict = {}
-        json_dict['status'] = 200 
-        json_dict['task'] = json_task
-        
-        return JsonResponse(json_dict)
+        return self.generateUserTask(request,user,event)
 
 
-class EventCheckinViewset( ViewSet ):
+class EventCheckinViewset( GenerateUserTask, ViewSet ):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+
 
     def post(self, request, *args, **kwargs):
 
@@ -229,18 +247,42 @@ class EventCheckinViewset( ViewSet ):
             if not serializer.is_valid():
                 raise Exception(serializer.errors)            
             eventcheck = serializer.save()
-                
-            # Generate associated trackdata
-            trackdata = TrackData(user=eventcheck.user, event=eventcheck.event, eventcheck=eventcheck)            
-            trackdata.save()
-            trackdata_serializer = TrackDataCheckinAppSerializer(instance=trackdata,data=data_processed)
-            if not trackdata_serializer.is_valid():
-                raise Exception( serializer.errors )            
-            trackdata_serializer.save()
-                
-            return JsonResponse(serializer.data)
+            
+            # Return serializer.data
+            #return JsonResponse(serializer.data)
+
+            # Return UserTask - NOTE: This is very very weird
+            return self.generateUserTask(request,eventcheck.user,eventcheck.event)             
+            
         except:
             traceback.print_exc()
-            return HttpResponseBadRequest()
+            return self.generateUserTask(request,eventcheck.user,eventcheck.event, status = 400)
             
+class EventCheckoutViewset( GenerateUserTask, ViewSet ):
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+
+
+    def post(self, request, *args, **kwargs):
+
+        try:                                    
+            eventcheck = EventCheck.objects.get(id=kwargs['eventcheck_id'] )                        
+            
+            # Check if exists trackdata            
+            try:
+                eventcheck.trackdata
+            except:
+                return self.generateUserTask(request,eventcheck.user,eventcheck.event, status = 400)  
+            
+
+            eventcheck.checkouttime = datetime.now()
+            eventcheck.save()
+
+
+            # Return UserTask - NOTE: This is very very weird
+            return self.generateUserTask(request,eventcheck.user,eventcheck.event)             
+            
+        except:
+            traceback.print_exc()
+            return self.generateUserTask(request,eventcheck.user,eventcheck.event, status = 400)    
+    
     

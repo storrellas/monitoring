@@ -31,8 +31,16 @@ class EventCheck(models.Model):
     checkintime  = models.DateTimeField(default=timezone.now())
     checkouttime = models.DateTimeField(null=True, blank=True)
 
+    latitude     = models.FloatField(default=0.0)
+    longitude    = models.FloatField(default=0.0)
+    location     = models.CharField(default='', max_length=400)
+
     def __unicode__(self):
-       return self.user.username + "," + self.event.title + "," + self.checkouttime.strftime("%d/%m/%y")
+        if self.checkintime is not None:
+            return self.user.username + "," + self.event.title + "," + self.checkintime.strftime("%d/%m/%y")
+        else: 
+            return self.user.username + "," + self.event.title
+       
 
 class TrackData(models.Model):
     
@@ -55,10 +63,6 @@ class TrackData(models.Model):
     trackdate    = models.DateField(auto_now=True)
     tracktime    = models.TimeField(auto_now=True)
     completeflag = models.IntegerField(default=0)
-
-    latitude     = models.FloatField(default=0.0)
-    longitude    = models.FloatField(default=0.0)
-    location     = models.CharField(default='', max_length=400)
 
     def __unicode__(self):
         if self.trackdate is not None:

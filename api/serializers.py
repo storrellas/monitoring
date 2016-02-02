@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+import traceback
 
 from rest_framework import serializers
 from django.contrib.auth.models import User
@@ -145,13 +146,51 @@ class TrackDataAppSerializer(serializers.ModelSerializer):
         fields = ('eventcheck', 'checkouttime', 'checkintime', \
                   'completeflag','lastsubmit','total')
 
+class EventCheckAppSerializer(serializers.ModelSerializer):
+    checkouttime = serializers.DateTimeField(format="%d/%m/%y %H:%M %p",input_formats=["%d/%m/%y %H:%M %p"])
+    checkintime = serializers.DateTimeField(format="%d/%m/%y %H:%M %p",input_formats=["%d/%m/%y %H:%M %p"])
+    
+    
+    total = serializers.SerializerMethodField('total_field')        
+    def total_field(self, eventcheck):
+        try:
+            total_dict=TrackData.objects.filter(event=eventcheck.event) \
+                            .aggregate(total=Sum('quantity'))
+            return total_dict['total']
+        except:
+            return 0
+    
+    completeflag = serializers.SerializerMethodField('completeflag_field')        
+    def completeflag_field(self, eventcheck):
+        try:
+            return eventcheck.trackdata.completeflag
+        except:
+            return 0
+    
+    lastsubmit = serializers.SerializerMethodField('lastsubmit_field')        
+    def lastsubmit_field(self, eventcheck):
+        try:
+            lastsubmit = eventcheck.trackdate.strftime("%d/%m/%y ") + \
+                            eventcheck.trackdata.tracktime.strftime("%H:%M %p")
+            return lastsubmit
+        except:
+            return eventcheck.checkintime.strftime("%d/%m/%y %H:%M %p")
+    
+    eventcheck = serializers.SerializerMethodField('eventcheck_field')        
+    def eventcheck_field(self, eventcheck):
+        return eventcheck.id
+    
+    class Meta:
+        model = EventCheck
+        fields = ('eventcheck', 'checkouttime', 'checkintime', \
+                  'completeflag','lastsubmit','total')
 
 class EventCheckinAppSerializer(serializers.ModelSerializer):
 
     checkintime = serializers.DateTimeField(format="%d/%m/%y %H:%M %p",input_formats=["%d/%m/%y %H:%M %p"], required=False)    
     class Meta:
         model = EventCheck
-        fields = ('user','event','checkintime')
+        fields = ('user','event','checkintime', 'latitude','longitude','location')
 
 class TrackDataCheckinAppSerializer(serializers.ModelSerializer):
         
