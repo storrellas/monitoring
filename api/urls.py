@@ -34,8 +34,17 @@ urlpatterns = [
     url(r'^event/multidelete/$', EventMultiDeleteViewset.as_view({'post': 'multidelete'}), name='api-event-multidelete'),
     url(r'^event/graph/(?P<pk>[0-9]+)/$',   TrackDataGraphViewset.as_view({'get': 'generate_graph_data'}), name='api-trackdata-graph'),
     
+    ############################3
+    # Backend endpoints
+    ############################3
+    
     # Returns the task for the user
-    url(r'^task/(?P<pk>[0-9]+)/$', TaskViewset.as_view({'post': 'post'}), name='api-task'),    
+    url(r'^task/(?P<pk>[0-9]+)/$', TaskViewset.as_view({'post': 'post'}), name='api-task'),
+    
+    # Track    
+    url(r'^checkin/$', CheckinViewset.as_view({'post': 'post'}), name='api-task'),
+    #url(r'^checkout/(?P<eventcheck_id>[0-9]+)/$', TaskViewset.as_view({'post': 'post'}), name='api-task'),
+    #url(r'^report/(?P<eventcheck_id>[0-9]+)/$', TaskViewset.as_view({'post': 'post'}), name='api-task'),
 ]
 
 # Add routers for REST endpoints

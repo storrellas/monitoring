@@ -28,8 +28,8 @@ class EventUser(models.Model):
 class EventCheck(models.Model):
     user         = models.ForeignKey(User)
     event        = models.ForeignKey(Event)
-    checkouttime = models.DateTimeField(default=timezone.now())
     checkintime  = models.DateTimeField(default=timezone.now())
+    checkouttime = models.DateTimeField(null=True, blank=True)
 
     def __unicode__(self):
        return self.user.username + "," + self.event.title + "," + self.checkouttime.strftime("%d/%m/%y")

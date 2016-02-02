@@ -191,16 +191,10 @@ class TaskViewset( ViewSet ):
 
         # Add TrackData info                
         track_data = TrackData.objects.filter(event=event,user=user) \
-                        .order_by('-eventcheck__checkouttime').order_by('-trackdate').first()                                                                 
-        serializer = TrackDataAppSerializer(track_data)
-        json_task.update( serializer.data ) 
-        
-        """                        
-        json_task.update(total_dict)
-        json_task['lastsubmit'] = datetime.now()
-        json_task['completeflag'] = 0
-        json_task['checkoutid'] = 0
-        """
+                        .order_by('-eventcheck__checkouttime').order_by('-trackdate').first()
+        if track_data is not None:
+            serializer = TrackDataAppSerializer(track_data)
+            json_task.update( serializer.data )
         
         # Add status
         json_dict = {}
@@ -208,6 +202,14 @@ class TaskViewset( ViewSet ):
         json_dict['task'] = json_task
         
         return JsonResponse(json_dict)
-    
+
+
+class CheckinViewset( ViewSet ):
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+
+    def post(self, request, *args, **kwargs):
+        #id = kwargs['pk']
+        
+        return JsonResponse({})  
     
     

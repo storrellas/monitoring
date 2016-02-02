@@ -145,6 +145,9 @@ class TrackDataAppSerializer(serializers.ModelSerializer):
         fields = ('eventcheck', 'checkouttime', 'checkintime', \
                   'completeflag','lastsubmit','total')
 
+class TrackDataAppSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TrackData
 """
 class AdminSerializer(serializers.ModelSerializer):
 
