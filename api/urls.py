@@ -39,7 +39,7 @@ urlpatterns = [
     ############################3
     
     # Returns the task for the user
-    url(r'^task/(?P<pk>[0-9]+)/$', TaskViewset.as_view({'post': 'post'}), name='api-task'),
+    url(r'^task/(?P<pk>[0-9]+)/$', TaskViewset.as_view({'get': 'get'}), name='api-task'),
     
     # Track    
     url(r'^trackdata/checkin/$', EventCheckinViewset.as_view({'post': 'post'}), name='api-task'),

@@ -184,7 +184,7 @@ class GenerateUserTask(object):
 class TaskViewset( GenerateUserTask, ViewSet ):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         id = kwargs['pk']
         
         # Add event info
