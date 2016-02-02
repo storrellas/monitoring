@@ -192,25 +192,3 @@ class TrackDataCheckinAppSerializer(serializers.ModelSerializer):
         fields = ('user','event','latitude','longitude','location')
 
 
-
-class TrackDataAppSerializer(serializers.ModelSerializer):
-        
-    class Meta:
-        model = TrackData
-        fields = ('user','event','target','quantity','note')
-
-"""
-class AdminSerializer(serializers.ModelSerializer):
-
-    eventid = serializers.SerializerMethodField('eventid_field')        
-    def eventid_field(self, user):
-        try:
-            return user.data.event.id
-        except:
-            return None
-    
-    class Meta:
-        model = User
-        fields = ('username', 'password','eventid')
-"""
-

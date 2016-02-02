@@ -156,23 +156,6 @@ class TrackDataGraphViewset( ViewSet ):
         return JsonResponse( json_response, safe=False )
 
 
-"""
-class MapwaypointViewSet(viewsets.ViewSet):
-    
-    #A simple ViewSet for listing or retrieving mapwaypoints.
-    
-    def list(self, request):
-        queryset = MapWaypoint.objects.all()
-        serializer = MapWaypointSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def retrieve(self, request, pk=None):
-        queryset = MapWaypoint.objects.all()
-        user = get_object_or_404(queryset, pk=pk)
-        serializer = MapWaypointSerializer(user)
-        return Response(serializer.data)
-"""
-
 ##############################
 ## API 
 ##############################
@@ -184,17 +167,6 @@ class GenerateUserTask(object):
         json_task = serializer.data
         json_task['pdfurl'] = request.scheme + '://' + request.get_host() + event.pdfdocument.url
 
-
-
-        """
-        # Add TrackData info                
-        track_data = TrackData.objects.filter(event=event,user=user) \
-                        .order_by('-eventcheck__checkouttime').order_by('-trackdate').first()
-        if track_data is not None:
-            serializer = TrackDataAppSerializer(track_data)
-            json_task.update( serializer.data )
-            print serializer.data
-        """
         # Complete JSON with EventCheck
         eventcheck = EventCheck.objects.filter(event=event,user=user) \
                         .order_by('-checkouttime').order_by('trackdata__trackdate').first()
