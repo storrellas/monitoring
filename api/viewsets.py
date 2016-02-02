@@ -201,7 +201,6 @@ class GenerateUserTask(object):
         if eventcheck is not None:
             serializer = EventCheckAppSerializer(eventcheck)
             json_task.update( serializer.data )
-            print serializer.data
         
         # Add status
         json_dict = {}
@@ -227,9 +226,8 @@ class EventCheckinViewset( GenerateUserTask, ViewSet ):
 
 
     def post(self, request, *args, **kwargs):
-
+        
         try:
-            print request.data
             # This is a constraint of the library used in the app
             data_processed = {}
             for key, value in request.data.iteritems():
@@ -244,8 +242,22 @@ class EventCheckinViewset( GenerateUserTask, ViewSet ):
             # Create EventCheckin
             #serializer = EventCheckinAppSerializer( data=request.data )
             serializer = EventCheckinAppSerializer( data=data_processed )
-            if not serializer.is_valid():
-                raise Exception(serializer.errors)            
+
+            
+                
+            # Check if already checkin
+            event = Event.objects.get(id=data_processed['event'])
+            user = User.objects.get(id=data_processed['user'])
+            eventcheck_list = EventCheck.objects.filter(event=event,user=user) \
+                        .order_by('-checkouttime').order_by('trackdata__trackdate')            
+            if eventcheck_list.count() > 0:                
+                eventcheck = eventcheck_list.first()
+                if eventcheck.completeflag == 1:
+                    return self.generateUserTask(request,user,event, status = 605)
+
+            
+            if not serializer.is_valid():                 
+                raise Exception(serializer.errors)  
             eventcheck = serializer.save()
             
             # Return serializer.data
@@ -271,8 +283,8 @@ class EventCheckoutViewset( GenerateUserTask, ViewSet ):
             try:
                 eventcheck.trackdata
             except:
-                return self.generateUserTask(request,eventcheck.user,eventcheck.event, status = 400)  
-            
+                return self.generateUserTask(request,eventcheck.user,eventcheck.event, status = 607)  
+
 
             eventcheck.checkouttime = datetime.now()
             eventcheck.save()
@@ -284,5 +296,55 @@ class EventCheckoutViewset( GenerateUserTask, ViewSet ):
         except:
             traceback.print_exc()
             return self.generateUserTask(request,eventcheck.user,eventcheck.event, status = 400)    
-    
+
+
+class TrackDataViewset( GenerateUserTask, ViewSet ):
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+
+
+    def post(self, request, *args, **kwargs):
+        try:
+            #eventcheck = EventCheck.objects.get(id=kwargs['eventcheck_id'] )
+            eventcheck = EventCheck.objects.first()
+            
+            # This is a constraint of the library used in the app
+            data_processed = {}
+            for key, value in request.data.iteritems():
+                data_processed[key] = value
+                if key == "userid":
+                    data_processed['user'] = int(value)
+                if key == "eventid":
+                    data_processed['event'] = int(value)
+            
+                                             
+            event = Event.objects.get(id=data_processed['event'])
+            user = User.objects.get(id=data_processed['user'])
+            
+            # Check if already checkin
+            event = Event.objects.get(id=data_processed['event'])
+            user = User.objects.get(id=data_processed['user'])
+            eventcheck_list = EventCheck.objects.filter(event=event,user=user) \
+                        .order_by('-checkouttime').order_by('trackdata__trackdate')
+            if eventcheck_list.count() > 0:                
+                eventcheck = eventcheck_list.first()
+                if eventcheck.completeflag == 1:
+                    return self.generateUserTask(request,user,event, status = 608)
+            else:
+                return self.generateUserTask(request,user,event, status = 604)
+                
+            # Capture the trackdata    
+            trackdata = TrackData(event=event, user=user, eventcheck=eventcheck)
+            serializer = TrackDataAppSerializer( instance=trackdata,data=data_processed )
+            if not serializer.is_valid():                 
+                raise Exception(serializer.errors)  
+            
+            # Save serializer
+            serializer.save()
+
+            # Return UserTask - NOTE: This is very very weird
+            return self.generateUserTask(request,eventcheck.user,eventcheck.event)             
+            
+        except:
+            traceback.print_exc()
+            return self.generateUserTask(request,eventcheck.user,eventcheck.event, status = 400)
     

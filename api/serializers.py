@@ -159,14 +159,7 @@ class EventCheckAppSerializer(serializers.ModelSerializer):
             return total_dict['total']
         except:
             return 0
-    
-    completeflag = serializers.SerializerMethodField('completeflag_field')        
-    def completeflag_field(self, eventcheck):
-        try:
-            return eventcheck.trackdata.completeflag
-        except:
-            return 0
-    
+        
     lastsubmit = serializers.SerializerMethodField('lastsubmit_field')        
     def lastsubmit_field(self, eventcheck):
         try:
@@ -174,7 +167,7 @@ class EventCheckAppSerializer(serializers.ModelSerializer):
                             eventcheck.trackdata.tracktime.strftime("%H:%M %p")
             return lastsubmit
         except:
-            return eventcheck.checkintime.strftime("%d/%m/%y %H:%M %p")
+            return ""
     
     eventcheck = serializers.SerializerMethodField('eventcheck_field')        
     def eventcheck_field(self, eventcheck):
@@ -197,6 +190,14 @@ class TrackDataCheckinAppSerializer(serializers.ModelSerializer):
     class Meta:
         model = TrackData
         fields = ('user','event','latitude','longitude','location')
+
+
+
+class TrackDataAppSerializer(serializers.ModelSerializer):
+        
+    class Meta:
+        model = TrackData
+        fields = ('user','event','target','quantity','note')
 
 """
 class AdminSerializer(serializers.ModelSerializer):

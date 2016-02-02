@@ -90,8 +90,12 @@
   "fields": {
     "user": 2,
     "event": 1,
+    "checkintime": "2016-01-22T14:04:43.517Z",
     "checkouttime": "2016-01-22T14:04:43.517Z",
-    "checkintime": "2016-01-22T14:04:43.517Z"
+    "completeflag": 1,
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "location": ""
   }
 },
 {
@@ -100,8 +104,12 @@
   "fields": {
     "user": 2,
     "event": 1,
+    "checkintime": "2016-01-29T07:43:36.229Z",
     "checkouttime": "2016-01-29T07:43:36.229Z",
-    "checkintime": "2016-01-29T07:43:36.229Z"
+    "completeflag": 1,
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "location": ""
   }
 },
 {
@@ -110,8 +118,26 @@
   "fields": {
     "user": 2,
     "event": 1,
-    "checkouttime": "2016-01-29T17:48:02.401Z",
-    "checkintime": "2016-01-29T13:17:02.401Z"
+    "checkintime": "2016-01-29T13:17:02.401Z",
+    "checkouttime": "2016-02-02T12:18:59.911Z",
+    "completeflag": 1,
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "location": ""
+  }
+},
+{
+  "model": "api.eventcheck",
+  "pk": 22,
+  "fields": {
+    "user": 3,
+    "event": 1,
+    "checkintime": "2016-02-02T13:24:28.234Z",
+    "checkouttime": null,
+    "completeflag": 0,
+    "latitude": 41.414762,
+    "longitude": 2.131821,
+    "location": "Carrer d'Adri\u00e0 Margarit, 24, 08035 Barcelona, Barcelona, Spain"
   }
 },
 {
@@ -126,8 +152,7 @@
     "type": 1,
     "note": "notes",
     "trackdate": "2016-01-22",
-    "tracktime": "12:39:45.388",
-    "completeflag": 0
+    "tracktime": "12:39:45.388"
   }
 },
 {
@@ -142,8 +167,7 @@
     "type": 2,
     "note": "",
     "trackdate": "2016-01-29",
-    "tracktime": "13:22:45.388",
-    "completeflag": 0
+    "tracktime": "13:22:45.388"
   }
 },
 {
@@ -157,9 +181,23 @@
     "target": 45,
     "type": 2,
     "note": "",
-    "trackdate": "2016-01-29",
-    "tracktime": "17:39:45.388",
-    "completeflag": 0
+    "trackdate": "2016-02-02",
+    "tracktime": "12:18:59.883"
+  }
+},
+{
+  "model": "api.trackdata",
+  "pk": 16,
+  "fields": {
+    "user": 3,
+    "event": 1,
+    "eventcheck": 22,
+    "quantity": 25,
+    "target": 14,
+    "type": 2,
+    "note": "dbx",
+    "trackdate": "2016-02-02",
+    "tracktime": "13:43:50.617"
   }
 }
 ]

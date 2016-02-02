@@ -30,6 +30,7 @@ class EventCheck(models.Model):
     event        = models.ForeignKey(Event)
     checkintime  = models.DateTimeField(default=timezone.now())
     checkouttime = models.DateTimeField(null=True, blank=True)
+    completeflag = models.IntegerField(default=0)
 
     latitude     = models.FloatField(default=0.0)
     longitude    = models.FloatField(default=0.0)
@@ -57,12 +58,11 @@ class TrackData(models.Model):
     event        = models.ForeignKey(Event)
     eventcheck   = models.OneToOneField(EventCheck)
     quantity     = models.IntegerField(default=0)    
-    target       = models.IntegerField(choices=FEEDBACK, default=0)
-    type         = models.IntegerField(default=NEUTRAL)
+    target       = models.IntegerField(default=0)
+    type         = models.IntegerField(choices=FEEDBACK, default=NEUTRAL)
     note         = models.CharField(default='',max_length=400)
     trackdate    = models.DateField(auto_now=True)
     tracktime    = models.TimeField(auto_now=True)
-    completeflag = models.IntegerField(default=0)
 
     def __unicode__(self):
         if self.trackdate is not None:
