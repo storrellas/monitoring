@@ -110,7 +110,7 @@ $('document').ready(function(){
                                       	<td><input type="checkbox" class="selecttag" id="seltag{{ event.id }}" value="{{ event.id }},"></td>
                                           <td>{{ event.id }} </td>
                                           <td>{{ event.title }} </td>
-                                          <td>{{ event.pdfurl }}</td>
+                                          <td>{{ request.scheme }}://{{ request.get_host }}{{ event.pdfdocument.url }}</td>
                                           <td>{{ event.videourl }}</td>
                                           <td>
                                           {% for eventuser in event.eventuser_set.all %}

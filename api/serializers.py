@@ -125,7 +125,8 @@ class TrackDataAppSerializer(serializers.ModelSerializer):
             return total_dict['total']
         except:
             return 0
-
+    
+    note = serializers.CharField(required=False,allow_blank=True)
     class Meta:
         model = TrackData
         fields = ('user','event','eventcheck', 'note', 
