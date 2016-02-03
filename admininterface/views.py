@@ -256,7 +256,7 @@ class EventAnalysisView( LoginRequiredMixin, ListView ):
         try:
             context['sampling']    = analytics['quantity__sum']
             context['target']      = analytics['target__sum']
-            context['percentage']  = str(context['sampling']*100 / context['target']) + '%' 
+            context['percentage']  = str(context['target']*100 / context['sampling']) + '%' 
         except:
             context['sampling']    = '0'
             context['target']      = '0'
@@ -289,7 +289,7 @@ class EventResultView( LoginRequiredMixin, TemplateView ):
         try:
             context['sampling']    = analytics['quantity__sum']
             context['target']      = analytics['target__sum']
-            context['percentage']  = str(context['sampling']*100 / context['target']) + '%' 
+            context['percentage']  = str(context['target']*100 / context['sampling']) + '%' 
         except:
             context['sampling']    = '0'
             context['target']      = '0'

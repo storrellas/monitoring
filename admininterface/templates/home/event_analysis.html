@@ -10,56 +10,7 @@
 <div class="row" style="margin-top: 10px">
 	<div class="col-lg-12">
 		<div class="ibox float-e-margins">
-<!--		
-			<label class="col-lg-1 control-label" style="margin-top: 5px">Event:</label>
-			<form role="form" id="viewResult" method="get" >
-				<div class="col-lg-2">
-					<select class="form-control" name="eventid" id="eventid" onchange="on_change()" style="min-width: 270px">
-						{% for event in event_list %}								
-						<option value='{{ event.id }}' 
-							{% ifequal eventid_selected event.id %}selected{% endifequal %}
-							>
-							{{ event.title }}
-						</option>
-						{% endfor %}
-					</select>
-				</div>
-			</form>
-			<button class="btn btn-sm btn-primary pull-right" style="margin-top: 2px; " onclick="on_export()">Export to CSV</button>
-			<div class="ibox-content" style="background: none;">
- 				<div class="row">
-					<div class="col-lg-3">
-						<div class="ibox float-e-margins">
-							<div class="ibox-title">
-								<h5>Sampling</h5>
-								<div class="ibox-content">
-									<h1 class="no-margins">{{ sampling }}</h1>
-								</div>
-							</div>
-						</div>
-					</div>
-					
-					<div class="col-lg-3">
-						<div class="ibox float-e-margins">
-							<div class="ibox-title">
-								<h5>Target</h5>
-								<div class="ibox-content">
-									<h1 class="no-margins">{{ target }}</h1>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="ibox float-e-margins">
-							<div class="ibox-title">
-								<h5>Percent</h5>
-								<div class="ibox-content">
-									<h1 class="no-margins">{{ percentage }}</h1>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div> -->
+
 				
 				{% include 'home/event_header.html' with export_to_csv=True %}
 				
@@ -99,7 +50,7 @@
                                            <td>{{ trackdata.eventcheck.checkouttime|date:"H:m" }}</td>
                                            <td>{{ trackdata.quantity }}</td>
                                            <td>{{ trackdata.target }}</td>
-                                           <td>{{ trackdata.quantity|percentage:trackdata.target }}</td>
+                                           <td>{{ trackdata.target|percentage:trackdata.quantity }}</td>
                                            <td
 											style="padding-top: 1px; padding-bottom: 0px; text-align: center;">
 											<img src="
@@ -114,7 +65,7 @@
 												{% endifequal %}
 												" style="width: 30px; height: 30px">
 											</td>
-                                           <td>"TO BE COMPLETED"</td>
+                                           <td>{{ trackdata.eventcheck.location }}</td>
 <!--	                                            <td>-->
 <!--	                                            	<a class="btn btn-sm btn-white btn-action" href="<?php echo site_url("event/edit/".$item['eventid'])?>" data-toggle="tooltip" data-placement="bottom" title="Edit"><img src="<?php echo base_url();?>inspinia_admin/img/icon/edit-1.png"></a>-->
 <!--	                                                <a class="btn btn-sm btn-white btn-action" onclick="on_delete('<?php echo $item['eventid']?>');" data-toggle="tooltip" data-placement="bottom" title="Delete"><img src="<?php echo base_url();?>inspinia_admin/img/icon/delete.png"></a>-->
