@@ -48,7 +48,7 @@ class ErrorCodeSet(object):
 
 class JsonAppInterface(object):
 
-    def parameterTranslate(self, data):
+    def paramterTranslateInput(self, data):
         # This is a constraint of the library used in the app
         data_processed = {}
         for key, value in data.iteritems():
@@ -58,6 +58,16 @@ class JsonAppInterface(object):
                 data_processed['event'] = int(value)
             elif key == "checkoutid":
                 data_processed['eventcheck'] = int(value)
+            else:
+                data_processed[key] = value
+        return data_processed
+
+    def paramterTranslateOuput(self, data):
+        # This is a constraint of the library used in the app
+        data_processed = {}
+        for key, value in data.iteritems():
+            if key == "eventcheck":
+                data_processed['checkoutid'] = int(value)
             else:
                 data_processed[key] = value
         return data_processed
@@ -80,13 +90,28 @@ class JsonAppInterface(object):
         
         # Add status
         json_dict = {}
-        json_dict['task'] = json_task        
+        json_dict['task'] = self.paramterTranslateOuput(json_task)        
         return self.jsonAppResponse(json_dict, status)
 
 class LoginAppViewset( JsonAppInterface, ViewSet ):
-    
-    def post(self, request, *args, **kwargs):
+    """
+    Login operation
+    """
 
+    def post(self, request, *args, **kwargs):
+        """
+        ---
+        parameters:
+        - name: username
+          description: username
+          required: true
+          type: string
+          paramType: form
+        - name: password
+          paramType: form
+          required: true
+          type: string
+        """
         # Get paramters
         username = request.data['username']
         password = request.data['password']
@@ -112,8 +137,25 @@ class LoginAppViewset( JsonAppInterface, ViewSet ):
 
 
 class TaskViewset( JsonAppInterface, ViewSet ):
+    """
+    Retrieves the current task 
+    """
 
     def post(self, request, *args, **kwargs):
+        """
+        ---
+        parameters:
+        - name: userid
+          description: userid
+          required: true
+          type: int
+          paramType: form
+        - name: eventid
+          description: eventid
+          required: true
+          type: int
+          paramType: form
+        """
         # Add event info
         user = User.objects.get(id=request.data['userid'])
         event = user.eventuser.event
@@ -121,12 +163,41 @@ class TaskViewset( JsonAppInterface, ViewSet ):
 
 
 class EventCheckinViewset( JsonAppInterface, ViewSet ):
+    """
+    Enables the user to perform checkin operation 
+    """
 
     def post(self, request, *args, **kwargs):
+        """
+        ---
+        parameters:
+        - name: userid
+          description: user id from which retrieve tasks
+          required: true
+          type: int
+          paramType: form
+        - name: eventid
+          required: true
+          type: int
+          paramType: form
+        - name: latitude
+          required: true
+          type: float
+          paramType: form          
+        - name: longitude
+          required: true
+          type: float
+          paramType: form
+        - name: location
+          required: false
+          type: string
+          paramType: form
+        """
+        
         
         try:
             # Adapt parameter coming from app
-            data_processed = self.parameterTranslate(request.data)
+            data_processed = self.paramterTranslateInput(request.data)
             
             # Get user and event
             event = Event.objects.get(id=data_processed['event'])
@@ -156,14 +227,34 @@ class EventCheckinViewset( JsonAppInterface, ViewSet ):
             return self.jsonAppResponse({}, status = 400)
             
 class EventCheckoutViewset( JsonAppInterface, ViewSet ):
-
+    """
+    Enables the user to perform checkout operation 
+    """
 
     def post(self, request, *args, **kwargs):
+        """
+        ---
+        parameters:
+        - name: userid
+          description: user id from which retrieve tasks
+          required: true
+          type: int
+          paramType: form
+        - name: eventid
+          required: true
+          type: int
+          paramType: form
+        - name: checkoutid
+          required: true
+          type: int
+          paramType: form        
+        """
+
 
         try:
                                   
             # Adapt parameter coming from app
-            data_processed = self.parameterTranslate(request.data)
+            data_processed = self.paramterTranslateInput(request.data)
 
             # Get user and event
             event = Event.objects.get(id=data_processed['event'])
@@ -197,11 +288,50 @@ class EventCheckoutViewset( JsonAppInterface, ViewSet ):
 
 
 class TrackDataViewset( JsonAppInterface, ViewSet ):
+    """
+    Enables the user to report
+    """
 
     def post(self, request, *args, **kwargs):
+        """
+        ---
+        parameters:
+        - name: userid
+          description: user id from which retrieve tasks
+          required: true
+          type: int
+          paramType: form
+        - name: eventid
+          required: true
+          type: int
+          paramType: form
+        - name: checkoutid
+          required: true
+          type: int
+          paramType: form
+
+        - name: note
+          required: true
+          type: string
+          paramType: form
+        - name: quantity
+          required: true
+          type: int
+          paramType: form
+        - name: total
+          required: true
+          type: int
+          paramType: form
+        - name: type
+          description: (good=1; neutral=2; bad=3)
+          required: true
+          type: int
+          paramType: form            
+        """
+        
         try:
             # Adapt parameter coming from app
-            data_processed = self.parameterTranslate(request.data)
+            data_processed = self.paramterTranslateInput(request.data)
                                              
             # Get user and event                                             
             event = Event.objects.get(id=data_processed['event'])

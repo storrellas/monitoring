@@ -86,7 +86,8 @@ class EventCheckinAppSerializer(serializers.ModelSerializer):
         fields = ('user','event','checkintime', 'latitude','longitude','location')
 
 class TrackDataCheckinAppSerializer(serializers.ModelSerializer):
-        
+
+    location = serializers.CharField(required=False,allow_blank=True)        
     class Meta:
         model = TrackData
         fields = ('user','event','latitude','longitude','location')
