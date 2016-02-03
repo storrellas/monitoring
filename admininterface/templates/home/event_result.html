@@ -133,7 +133,7 @@ $(function() {
         //creating area chart
         var graph = this;
         $.ajax({
-            url: "{% url 'api-trackdata-graph' eventid_selected %}",
+            url: "{% url 'ajax-trackdata-graph' eventid_selected %}",
             dataType: "json",
             type: "GET",
             success: function(json) {

@@ -62,8 +62,6 @@ $('document').ready(function(){
     	
         $.ajax({
             async: true,
-            //url: "<?php echo site_url('ajaxprocess/login') ?>",
-			//url: "{% url 'api-login' %}",
 			url: "{{ request.path }}",			
             dataType: "json",
             type: "POST",

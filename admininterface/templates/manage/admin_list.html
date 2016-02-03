@@ -302,7 +302,7 @@
             submitHandler: function() {
                 $.ajax({
                     async: true,
-					url: "{% url 'api-admin' %}",
+					url: "{% url 'ajax-admin' %}",
                     dataType: "json",
                     type: "POST",
                     data: {
@@ -346,7 +346,7 @@
     {
     	$.ajax({
             async: true,
-            url: "{% url 'api-admin' %}" + username + "/",
+            url: "{% url 'ajax-admin' %}" + username + "/",
             dataType: "json",
             type: "DELETE",
             success: function(json) {
@@ -380,7 +380,7 @@
             	/*
             	username_edit: {
                     remote: {
-                        url : "{% url 'api-admin-check-name' %}",
+                        url : "{% url 'ajax-admin-check-name' %}",
                         type: "post",
                         data: {
                             username: function() {
@@ -405,7 +405,7 @@
             },
             /**/
             submitHandler: function() {
-            	var url_put = "{% url 'api-admin' %}" +  $('#username_old').val() + "/"
+            	var url_put = "{% url 'ajax-admin' %}" +  $('#username_old').val() + "/"
                 if ($('#username_old').val() == $('#username_edit').val() && $('#password_edit').val() == '' && $('#confirm_edit').val() == '')
                 {
                     $('#modal-form-edit').modal('hide');

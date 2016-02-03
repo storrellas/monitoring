@@ -2,15 +2,20 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 
+
+# rest_framework imports
+from rest_framework.routers import SimpleRouter
+
 from django.views.generic import TemplateView,RedirectView
 from views import *
+from viewsets import *
 
 urlpatterns = [
     #url(r'^test/$',          TemplateView.as_view(template_name='sample.html'),      name='root'),
-    url(r'^$',                RedirectView.as_view(url='/home/'),      name='root'),
+    url(r'^$',                    RedirectView.as_view(url='/home/'),      name='root'),
     
-    url(r'^login/$',          LoginView.as_view(),        name='login'),
-    url(r'^logout/$',         LogoutView.as_view(),        name='logout'),
+    url(r'^login/$',              LoginView.as_view(),        name='login'),
+    url(r'^logout/$',             LogoutView.as_view(),        name='logout'),
     
     
     url(r'^base/$',                BaseView.as_view(template_name='base.html'),        name='base'),
@@ -30,4 +35,29 @@ urlpatterns = [
     
     url(r'^settings/changepwd/$', BaseView.as_view(template_name='settings/changepwd.html'),    name='changepwd'),    
     
+    ############
+    # AJAX enpoints
+    ############
+    url(r'^web/login/',                  'rest_framework_jwt.views.obtain_jwt_token',  name='ajax-login'),
+    url(r'^web/admin/$',                  AdminListViewset.as_view(),                  name='ajax-admin'),
+    url(r'^web/admin/(?P<pk>[0-9]+)/$',   AdminDetailViewset.as_view(),                name='ajax-admin-detail'),
+    
+    url(r'^web/eventuser/$',              EventUserListViewset.as_view(),              name='ajax-event-user'),
+    
+
+    
+    url(r'^web/eventuser/(?P<pk>[0-9]+)/$',      EventUserDetailViewset.as_view(),   name='ajax-event-user-detail'),
+    url(r'^web/eventuser/edit/$',                EventUserEditListViewset.as_view(), name='ajax-event-user-edit'),
+    url(r'^web/eventuser/edit/(?P<pk>[0-9]+)/$', EventUserEditViewset.as_view(),     name='ajax-event-user-edit-pk'),
+            
+    url(r'^web/admin/checkname/$',               CheckAdminNameViewset.as_view({'post': 'checkname'}), name='ajax-admin-check-name'),
+    
+    url(r'^web/event/multidelete/$',             EventMultiDeleteViewset.as_view({'post': 'multidelete'}), name='ajax-event-multidelete'),
+    url(r'^web/event/graph/(?P<pk>[0-9]+)/$',    TrackDataGraphViewset.as_view({'get': 'generate_graph_data'}), name='ajax-trackdata-graph'),
+    
 ]
+
+# Add routers for REST endpoints
+router = SimpleRouter()
+router.register(r'event', EventViewset,'api-event')
+urlpatterns += router.urls

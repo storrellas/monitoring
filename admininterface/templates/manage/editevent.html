@@ -8,7 +8,7 @@
 
 <script type="text/javascript">
 $('document').ready(function(){
-	
+
 	function calculate_selno(){
 		var $temp = '';
 		$('.selecttag').each(function(){
@@ -35,7 +35,12 @@ $('document').ready(function(){
 	$('.selecttag').on('click', function()
 	{
 		calculate_selno();
+		console.log( $("#selno").val() )
 	});
+
+	// Initialise value
+	calculate_selno();
+
 });
 </script>
 
@@ -103,7 +108,7 @@ $('document').ready(function(){
 											<tr>
 											{% for eventuser in eventuser_list %}
 	                                        <tr>
-	                                        	<td><input type="checkbox" checked class="selecttag" id="seltag{{ user.id }}" value="{{ user.id }}">
+	                                        	<td><input type="checkbox" checked class="selecttag" id="seltag{{ eventuser.user.id }}" value="{{ eventuser.user.id }}">
 	                                        	</td>
 	                                            <td>{{ eventuser.user.id }}</td>
 	                                            <td>{{ eventuser.user.username }}</td>
