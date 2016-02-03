@@ -107,46 +107,30 @@ class UserAppSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username')
 
-def jwt_response_payload_handler(token, user=None, request=None):
-    return {
-        'token': token,
-        #'user': UserAppSerializer(user).data,
-        'id'  : user.id,
-        'username' : user.username,
-        'status' : 200
-    }
-
 
 class TrackDataAppSerializer(serializers.ModelSerializer):
     
-    lastsubmit = serializers.SerializerMethodField('lastsubmit_field')        
+    lastsubmit = serializers.SerializerMethodField('lastsubmit_field', required=False)        
     def lastsubmit_field(self, trackdata):
-        return trackdata.trackdate.strftime("%d/%m/%y ") + trackdata.tracktime.strftime("%H:%M %p")
+        try:
+            return trackdata.trackdate.strftime("%d/%m/%y ") + trackdata.tracktime.strftime("%H:%M %p")
+        except:
+            return ""
 
-    total = serializers.SerializerMethodField('total_field')        
+    total = serializers.SerializerMethodField('total_field', required=False)        
     def total_field(self, trackdata):
-        total_dict=self.Meta.model.objects.filter(event=trackdata.event) \
-                        .aggregate(total=Sum('quantity'))
-        return total_dict['total']
-    
-    checkintime = serializers.SerializerMethodField('checkintime_field')        
-    def checkintime_field(self, trackdata):
         try:
-            return trackdata.eventcheck.checkintime.strftime("%d/%m/%y %H:%M %p")
+            total_dict=self.Meta.model.objects.filter(event=trackdata.event) \
+                            .aggregate(total=Sum('quantity'))
+            return total_dict['total']
         except:
-            return None        
+            return 0
 
-    checkouttime = serializers.SerializerMethodField('checkouttime_field')        
-    def checkouttime_field(self, trackdata):
-        try:
-            return trackdata.eventcheck.checkouttime.strftime("%d/%m/%y %H:%M %p")
-        except:
-            return None
-    
     class Meta:
         model = TrackData
-        fields = ('eventcheck', 'checkouttime', 'checkintime', \
-                  'lastsubmit','total')
+        fields = ('user','event','eventcheck', 'note', 
+                  'lastsubmit','total', 'target', 'quantity')
+
 
 class EventCheckAppSerializer(serializers.ModelSerializer):
     checkouttime = serializers.DateTimeField(format="%d/%m/%y %H:%M %p",input_formats=["%d/%m/%y %H:%M %p"])
@@ -165,7 +149,7 @@ class EventCheckAppSerializer(serializers.ModelSerializer):
     lastsubmit = serializers.SerializerMethodField('lastsubmit_field')        
     def lastsubmit_field(self, eventcheck):
         try:
-            lastsubmit = eventcheck.trackdate.strftime("%d/%m/%y ") + \
+            lastsubmit = eventcheck.trackdata.trackdate.strftime("%d/%m/%y ") + \
                             eventcheck.trackdata.tracktime.strftime("%H:%M %p")
             return lastsubmit
         except:

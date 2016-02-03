@@ -177,7 +177,21 @@ class ErrorCodeSet(object):
     ERR_USER_ALREADY_CHECKOUT  = 608
     
 
-class JsonAppResponse(object):
+class JsonAppInterface(object):
+
+    def parameterTranslate(self, data):
+        # This is a constraint of the library used in the app
+        data_processed = {}
+        for key, value in data.iteritems():
+            if key == "userid":
+                data_processed['user'] = int(value)
+            elif key == "eventid":
+                data_processed['event'] = int(value)
+            elif key == "checkoutid":
+                data_processed['eventcheck'] = int(value)
+            else:
+                data_processed[key] = value
+        return data_processed
 
     def jsonAppResponse(self, dict, status = ErrorCodeSet.ERR_USER_NO_ERROR):
         dict['status'] = status
@@ -200,7 +214,7 @@ class JsonAppResponse(object):
         json_dict['task'] = json_task        
         return self.jsonAppResponse(json_dict, status)
 
-class LoginAppViewset( JsonAppResponse, ViewSet ):
+class LoginAppViewset( JsonAppInterface, ViewSet ):
     
     def post(self, request, *args, **kwargs):
 
@@ -228,7 +242,7 @@ class LoginAppViewset( JsonAppResponse, ViewSet ):
              
 
 
-class TaskViewset( JsonAppResponse, ViewSet ):
+class TaskViewset( JsonAppInterface, ViewSet ):
 
     def post(self, request, *args, **kwargs):
         # Add event info
@@ -237,41 +251,31 @@ class TaskViewset( JsonAppResponse, ViewSet ):
         return self.jsonAppTaskResponse(request, user, event)
 
 
-class EventCheckinViewset( JsonAppResponse, ViewSet ):
+class EventCheckinViewset( JsonAppInterface, ViewSet ):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
 
     def post(self, request, *args, **kwargs):
         
         try:
-            # This is a constraint of the library used in the app
-            data_processed = {}
-            for key, value in request.data.iteritems():
-                data_processed[key] = value
-                if key == "userid":
-                    data_processed['user'] = int(value)
-                if key == "eventid":
-                    data_processed['event'] = int(value)
-                if key == "latitude" or key == "longitude":
-                    data_processed[key] = float(value)
-                                                    
-            # Create EventCheckin
-            #serializer = EventCheckinAppSerializer( data=request.data )
-            serializer = EventCheckinAppSerializer( data=data_processed )
+            # Adapt parameter coming from app
+            data_processed = self.parameterTranslate(request.data)
+            
+            # Get user and event
+            event = Event.objects.get(id=data_processed['event'])
+            user = User.objects.get(id=data_processed['user'])
 
             
                 
             # Check if already checkin
-            event = Event.objects.get(id=data_processed['event'])
-            user = User.objects.get(id=data_processed['user'])
-            eventcheck_list = EventCheck.objects.filter(event=event,user=user) \
-                        .order_by('-checkouttime').order_by('trackdata__trackdate')            
-            if eventcheck_list.count() > 0:                
-                eventcheck = eventcheck_list.first()
-                if eventcheck.completeflag == 1:
-                    return self.generateUserTask({}, status = ErrorCodes.ERR_USER_ALREADY_CHECKIN)
+            eventcheck = EventCheck.objects.filter(event=event,user=user) \
+                            .order_by('-checkouttime').first()            
+            if eventcheck is not None:                
+                if eventcheck.completeflag == 0:
+                    return self.jsonAppResponse({}, status = ErrorCodeSet.ERR_USER_ALREADY_CHECKIN)
 
-            
+            # Create serializer
+            serializer = EventCheckinAppSerializer( data=data_processed )            
             if not serializer.is_valid():                 
                 raise Exception(serializer.errors)  
             eventcheck = serializer.save()
@@ -282,83 +286,80 @@ class EventCheckinViewset( JsonAppResponse, ViewSet ):
             
         except:
             traceback.print_exc()
-            return self.jsonAppTaskResponse(request,eventcheck.user,eventcheck.event, status = 400)
+            return self.jsonAppResponse({}, status = 400)
             
-class EventCheckoutViewset( JsonAppResponse, ViewSet ):
+class EventCheckoutViewset( JsonAppInterface, ViewSet ):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
 
     def post(self, request, *args, **kwargs):
 
-        try:                                    
-            eventcheck = EventCheck.objects.get(id=request.data['checkoutid'] )                        
+        try:
+                                  
+            # Adapt parameter coming from app
+            data_processed = self.parameterTranslate(request.data)
+
+            # Get user and event
+            event = Event.objects.get(id=data_processed['event'])
+            user = User.objects.get(id=data_processed['user'])
+            
+            # Check if not checkin
+            eventcheck = EventCheck.objects.filter(event=event,user=user) \
+                            .order_by('-checkouttime').first()            
+            if eventcheck is None:                
+                if eventcheck.completeflag == 1:
+                    return self.jsonAppResponse({}, status = ErrorCodeSet.ERR_USER_ALREADY_CHECKOUT)
+            
             
             # Check if exists trackdata            
             try:
                 eventcheck.trackdata
             except:
-                return self.jsonAppTaskResponse(request,eventcheck.user,eventcheck.event, status = 607)  
+                return self.jsonAppResponse({}, status = ErrorCodeSet.ERR_USER_NO_REPORTED)  
 
-
+            # Save checkout
             eventcheck.checkouttime = datetime.now()
+            eventcheck.completeflag = 1
             eventcheck.save()
 
-
-            # Return UserTask - NOTE: This is very very weird
-            return self.jsonAppTaskResponse(request,eventcheck.user,eventcheck.event)             
-            
+            # Return Task response
+            return self.jsonAppTaskResponse(request,eventcheck.user,eventcheck.event)                         
         except:
             traceback.print_exc()
-            return self.jsonAppResponse({}, status = 400)        
+            return self.jsonAppResponse({}, status = ErrorCodeSet.ERR_USER_NOT_EXIST_CHECKIN)
+            #return self.jsonAppResponse({}, status = ErrorCodeSet.ERR_USER_CHECKOUT_FAILED)        
 
 
-class TrackDataViewset( JsonAppResponse, ViewSet ):
+class TrackDataViewset( JsonAppInterface, ViewSet ):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
 
     def post(self, request, *args, **kwargs):
         try:
-            #eventcheck = EventCheck.objects.get(id=kwargs['eventcheck_id'] )
-            eventcheck = EventCheck.objects.first()
-            
-            # This is a constraint of the library used in the app
-            data_processed = {}
-            for key, value in request.data.iteritems():
-                data_processed[key] = value
-                if key == "userid":
-                    data_processed['user'] = int(value)
-                if key == "eventid":
-                    data_processed['event'] = int(value)
-                if key == "checkoutid":
-                    data_processed['eventcheck'] = int(value)
-            
+            # Adapt parameter coming from app
+            data_processed = self.parameterTranslate(request.data)
                                              
+            # Get user and event                                             
             event = Event.objects.get(id=data_processed['event'])
             user = User.objects.get(id=data_processed['user'])
             
-            # Check if already checkin
-            event = Event.objects.get(id=data_processed['event'])
-            user = User.objects.get(id=data_processed['user'])
-            eventcheck_list = EventCheck.objects.filter(event=event,user=user) \
-                        .order_by('-checkouttime').order_by('trackdata__trackdate')
-            if eventcheck_list.count() > 0:                
-                eventcheck = eventcheck_list.first()
-                if eventcheck.completeflag == 1:
-                    return self.jsonAppTaskResponse(request,user,event, status = 608)
-            else:
-                return self.jsonAppTaskResponse(request,user,event, status = 604)
-                
-            # Capture the trackdata    
-            trackdata = TrackData(event=event, user=user, eventcheck=eventcheck)
-            serializer = TrackDataAppSerializer( instance=trackdata,data=data_processed )
+                        
+            # Check if not check in
+            eventcheck = EventCheck.objects.filter(event=event,user=user) \
+                            .order_by('-checkouttime').first()            
+            if eventcheck is not None:                
+                if eventcheck.completeflag == 1:          
+                    return self.jsonAppResponse({}, status = ErrorCodeSet.ERR_USER_NO_CHECKIN)
+                        
+            serializer = TrackDataAppSerializer( data=data_processed )
             if not serializer.is_valid():
                 raise Exception(serializer.errors)  
             
             # Save serializer
             serializer.save()
-
-            # Return UserTask - NOTE: This is very very weird
-            return self.jsonAppTaskResponse(request,eventcheck.user,eventcheck.event)             
+            
+            # Return Task response
+            return self.jsonAppTaskResponse(request, user, event)             
             
         except:
             traceback.print_exc()
