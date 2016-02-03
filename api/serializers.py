@@ -110,7 +110,9 @@ class UserAppSerializer(serializers.ModelSerializer):
 def jwt_response_payload_handler(token, user=None, request=None):
     return {
         'token': token,
-        'user': UserAppSerializer(user).data,
+        #'user': UserAppSerializer(user).data,
+        'id'  : user.id,
+        'username' : user.username,
         'status' : 200
     }
 
@@ -144,7 +146,7 @@ class TrackDataAppSerializer(serializers.ModelSerializer):
     class Meta:
         model = TrackData
         fields = ('eventcheck', 'checkouttime', 'checkintime', \
-                  'completeflag','lastsubmit','total')
+                  'lastsubmit','total')
 
 class EventCheckAppSerializer(serializers.ModelSerializer):
     checkouttime = serializers.DateTimeField(format="%d/%m/%y %H:%M %p",input_formats=["%d/%m/%y %H:%M %p"])

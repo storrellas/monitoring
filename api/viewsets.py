@@ -7,11 +7,12 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseBadRequest, HttpResponse, JsonResponse
 from django.utils.six import BytesIO
 from django.db.models import Sum
+from django.contrib.auth import authenticate
 
 # Rest framework imports
 from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.permissions import AllowAny
 from rest_framework.mixins import *
 from rest_framework.parsers import JSONParser
@@ -25,7 +26,8 @@ from serializers import *
 from models import *
 
 
-from rest_framework.authentication import BasicAuthentication, SessionAuthentication 
+from rest_framework.authentication import BasicAuthentication, SessionAuthentication
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 class CsrfExemptSessionAuthentication(SessionAuthentication):
     def enforce_csrf(self, request):
         return  # To not perform the csrf check previously happening
@@ -43,7 +45,8 @@ class AdminListViewset( generics.ListCreateAPIView ):
     model = User
     queryset = User.objects.filter(is_superuser=True)
     serializer_class = AdminSerializer      
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    #permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
     
@@ -160,9 +163,27 @@ class TrackDataGraphViewset( ViewSet ):
 ## API 
 ##############################
 
-class GenerateUserTask(object):
+class ErrorCodeSet(object):
+    ERR_USER_NO_ERROR          = 200
+    
+    ERR_USER_NOT_FOUND         = 600
+    ERR_USER_INVALID_PASSWORD  = 601
+    ERR_USER_NO_REPORTED       = 602
+    ERR_USER_NO_EVENT_MEMBER   = 603
+    ERR_USER_NO_CHECKIN        = 604
+    ERR_USER_ALREADY_CHECKIN   = 605
+    ERR_USER_NOT_EXIST_CHECKIN = 606
+    ERR_USER_CHECKOUT_FAILED   = 607
+    ERR_USER_ALREADY_CHECKOUT  = 608
+    
 
-    def generateUserTask(self,request,user,event, status = 200):
+class JsonAppResponse(object):
+
+    def jsonAppResponse(self, dict, status = ErrorCodeSet.ERR_USER_NO_ERROR):
+        dict['status'] = status
+        return JsonResponse(dict)
+
+    def jsonAppTaskResponse(self,request, user, event, status = ErrorCodeSet.ERR_USER_NO_ERROR):
         serializer = EventSerializer(user.eventuser.event)
         json_task = serializer.data
         json_task['pdfurl'] = request.scheme + '://' + request.get_host() + event.pdfdocument.url
@@ -176,24 +197,47 @@ class GenerateUserTask(object):
         
         # Add status
         json_dict = {}
-        json_dict['status'] = status 
-        json_dict['task'] = json_task
-        
-        return JsonResponse(json_dict)
+        json_dict['task'] = json_task        
+        return self.jsonAppResponse(json_dict, status)
 
-class TaskViewset( GenerateUserTask, ViewSet ):
-    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+class LoginAppViewset( JsonAppResponse, ViewSet ):
+    
+    def post(self, request, *args, **kwargs):
 
-    def get(self, request, *args, **kwargs):
-        id = kwargs['pk']
+        # Get paramters
+        username = request.data['username']
+        password = request.data['password']
+
+        try:
+            User.objects.get(username=username)
+        except:
+            return self.jsonAppResponse({}, status = ErrorCodeSet.ERR_USER_NOT_FOUND)
         
+
+        # Check if user exists
+        user = authenticate (username=username, password=password)
+        if user is None:
+            return self.jsonAppResponse({}, status=ErrorCodeSet.ERR_USER_INVALID_PASSWORD)
+        serializer = UserAppSerializer(user)
+                
+        # Add status
+        json_dict = {}
+        json_dict['id']       = serializer.data['id']
+        json_dict['username'] = serializer.data['username']        
+        return self.jsonAppResponse(json_dict)
+             
+
+
+class TaskViewset( JsonAppResponse, ViewSet ):
+
+    def post(self, request, *args, **kwargs):
         # Add event info
-        user = User.objects.get(id=id)
+        user = User.objects.get(id=request.data['userid'])
         event = user.eventuser.event
-        return self.generateUserTask(request,user,event)
+        return self.jsonAppTaskResponse(request, user, event)
 
 
-class EventCheckinViewset( GenerateUserTask, ViewSet ):
+class EventCheckinViewset( JsonAppResponse, ViewSet ):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
 
@@ -225,37 +269,35 @@ class EventCheckinViewset( GenerateUserTask, ViewSet ):
             if eventcheck_list.count() > 0:                
                 eventcheck = eventcheck_list.first()
                 if eventcheck.completeflag == 1:
-                    return self.generateUserTask(request,user,event, status = 605)
+                    return self.generateUserTask({}, status = ErrorCodes.ERR_USER_ALREADY_CHECKIN)
 
             
             if not serializer.is_valid():                 
                 raise Exception(serializer.errors)  
             eventcheck = serializer.save()
-            
-            # Return serializer.data
-            #return JsonResponse(serializer.data)
+
 
             # Return UserTask - NOTE: This is very very weird
-            return self.generateUserTask(request,eventcheck.user,eventcheck.event)             
+            return self.jsonAppTaskResponse(request,eventcheck.user,eventcheck.event)             
             
         except:
             traceback.print_exc()
-            return self.generateUserTask(request,eventcheck.user,eventcheck.event, status = 400)
+            return self.jsonAppTaskResponse(request,eventcheck.user,eventcheck.event, status = 400)
             
-class EventCheckoutViewset( GenerateUserTask, ViewSet ):
+class EventCheckoutViewset( JsonAppResponse, ViewSet ):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
 
     def post(self, request, *args, **kwargs):
 
         try:                                    
-            eventcheck = EventCheck.objects.get(id=kwargs['eventcheck_id'] )                        
+            eventcheck = EventCheck.objects.get(id=request.data['checkoutid'] )                        
             
             # Check if exists trackdata            
             try:
                 eventcheck.trackdata
             except:
-                return self.generateUserTask(request,eventcheck.user,eventcheck.event, status = 607)  
+                return self.jsonAppTaskResponse(request,eventcheck.user,eventcheck.event, status = 607)  
 
 
             eventcheck.checkouttime = datetime.now()
@@ -263,14 +305,14 @@ class EventCheckoutViewset( GenerateUserTask, ViewSet ):
 
 
             # Return UserTask - NOTE: This is very very weird
-            return self.generateUserTask(request,eventcheck.user,eventcheck.event)             
+            return self.jsonAppTaskResponse(request,eventcheck.user,eventcheck.event)             
             
         except:
             traceback.print_exc()
-            return self.generateUserTask(request,eventcheck.user,eventcheck.event, status = 400)    
+            return self.jsonAppResponse({}, status = 400)        
 
 
-class TrackDataViewset( GenerateUserTask, ViewSet ):
+class TrackDataViewset( JsonAppResponse, ViewSet ):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
 
@@ -287,6 +329,8 @@ class TrackDataViewset( GenerateUserTask, ViewSet ):
                     data_processed['user'] = int(value)
                 if key == "eventid":
                     data_processed['event'] = int(value)
+                if key == "checkoutid":
+                    data_processed['eventcheck'] = int(value)
             
                                              
             event = Event.objects.get(id=data_processed['event'])
@@ -300,23 +344,23 @@ class TrackDataViewset( GenerateUserTask, ViewSet ):
             if eventcheck_list.count() > 0:                
                 eventcheck = eventcheck_list.first()
                 if eventcheck.completeflag == 1:
-                    return self.generateUserTask(request,user,event, status = 608)
+                    return self.jsonAppTaskResponse(request,user,event, status = 608)
             else:
-                return self.generateUserTask(request,user,event, status = 604)
+                return self.jsonAppTaskResponse(request,user,event, status = 604)
                 
             # Capture the trackdata    
             trackdata = TrackData(event=event, user=user, eventcheck=eventcheck)
             serializer = TrackDataAppSerializer( instance=trackdata,data=data_processed )
-            if not serializer.is_valid():                 
+            if not serializer.is_valid():
                 raise Exception(serializer.errors)  
             
             # Save serializer
             serializer.save()
 
             # Return UserTask - NOTE: This is very very weird
-            return self.generateUserTask(request,eventcheck.user,eventcheck.event)             
+            return self.jsonAppTaskResponse(request,eventcheck.user,eventcheck.event)             
             
         except:
             traceback.print_exc()
-            return self.generateUserTask(request,eventcheck.user,eventcheck.event, status = 400)
+            return self.jsonAppResponse({}, status = 400)
     

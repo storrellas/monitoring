@@ -14,37 +14,39 @@ urlpatterns = [
     # Examples:
     # url(r'^$', 'samplingcontrol.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
-    url(r'^login/', 'rest_framework_jwt.views.obtain_jwt_token',  name='api-login'),       
+    url(r'^web/login/', 'rest_framework_jwt.views.obtain_jwt_token',  name='api-login'),       
     url(r'^$', RedirectView.as_view(url='/api/docs/',),        name='api-docs'),
-    url(r'^docs/', include('rest_framework_swagger.urls'),        name='api-docs'),
+    url(r'^web/docs/', include('rest_framework_swagger.urls'),        name='api-docs'),
     
-    url(r'^admin/$', AdminListViewset.as_view(),                  name='api-admin'),
-    url(r'^admin/(?P<pk>[0-9]+)/$', AdminDetailViewset.as_view(), name='api-admin-detail'),
+    url(r'^web/admin/$', AdminListViewset.as_view(),                  name='api-admin'),
+    url(r'^web/admin/(?P<pk>[0-9]+)/$', AdminDetailViewset.as_view(), name='api-admin-detail'),
     
-    url(r'^eventuser/$',                     EventUserListViewset.as_view(),     name='api-event-user'),
+    url(r'^web/eventuser/$',                     EventUserListViewset.as_view(),     name='api-event-user'),
     
 
     
-    url(r'^eventuser/(?P<pk>[0-9]+)/$',      EventUserDetailViewset.as_view(),   name='api-event-user-detail'),
-    url(r'^eventuser/edit/$',                EventUserEditListViewset.as_view(), name='api-event-user-edit'),
-    url(r'^eventuser/edit/(?P<pk>[0-9]+)/$', EventUserEditViewset.as_view(),     name='api-event-user-edit-pk'),
+    url(r'^web/eventuser/(?P<pk>[0-9]+)/$',      EventUserDetailViewset.as_view(),   name='api-event-user-detail'),
+    url(r'^web/eventuser/edit/$',                EventUserEditListViewset.as_view(), name='api-event-user-edit'),
+    url(r'^web/eventuser/edit/(?P<pk>[0-9]+)/$', EventUserEditViewset.as_view(),     name='api-event-user-edit-pk'),
             
-    url(r'^admin/checkname/$', CheckAdminNameViewset.as_view({'post': 'checkname'}), name='api-admin-check-name'),
+    url(r'^web/admin/checkname/$', CheckAdminNameViewset.as_view({'post': 'checkname'}), name='api-admin-check-name'),
     
-    url(r'^event/multidelete/$', EventMultiDeleteViewset.as_view({'post': 'multidelete'}), name='api-event-multidelete'),
-    url(r'^event/graph/(?P<pk>[0-9]+)/$',   TrackDataGraphViewset.as_view({'get': 'generate_graph_data'}), name='api-trackdata-graph'),
+    url(r'^web/event/multidelete/$', EventMultiDeleteViewset.as_view({'post': 'multidelete'}), name='api-event-multidelete'),
+    url(r'^web/event/graph/(?P<pk>[0-9]+)/$',   TrackDataGraphViewset.as_view({'get': 'generate_graph_data'}), name='api-trackdata-graph'),
     
     ############################3
     # Backend endpoints
     ############################3
     
     # Returns the task for the user
-    url(r'^task/(?P<pk>[0-9]+)/$', TaskViewset.as_view({'get': 'get'}), name='api-task'),
+    url(r'^task/$', TaskViewset.as_view({'post': 'post'}), name='api-task'),
+    
+    url(r'^login/', LoginAppViewset.as_view({'post': 'post'}),  name='api-dfs-login'),
     
     # Track    
     url(r'^trackdata/checkin/$', EventCheckinViewset.as_view({'post': 'post'}), name='api-task'),
-    url(r'^trackdata/checkout/(?P<eventcheck_id>[0-9]+)/$', EventCheckoutViewset.as_view({'post': 'post'}), name='api-task'),
-    url(r'^trackdata/report/(?P<eventcheck_id>[0-9]+)/$', TrackDataViewset.as_view({'post': 'post'}), name='api-task'),
+    url(r'^trackdata/checkout/$', EventCheckoutViewset.as_view({'post': 'post'}), name='api-task'),
+    url(r'^trackdata/report/$', TrackDataViewset.as_view({'post': 'post'}), name='api-task'),
 ]
 
 # Add routers for REST endpoints
