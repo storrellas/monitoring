@@ -11,6 +11,9 @@ from models import *
 import logging
 log = logging.getLogger(__name__)
 
+class EventAppSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
    
 class UserAppSerializer(serializers.ModelSerializer):
     class Meta:

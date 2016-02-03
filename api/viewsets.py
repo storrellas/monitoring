@@ -67,7 +67,7 @@ class JsonAppInterface(object):
         return JsonResponse(dict)
 
     def jsonAppTaskResponse(self,request, user, event, status = ErrorCodeSet.ERR_USER_NO_ERROR):
-        serializer = EventSerializer(user.eventuser.event)
+        serializer = EventAppSerializer(user.eventuser.event)
         json_task = serializer.data
         json_task['pdfurl'] = request.scheme + '://' + request.get_host() + event.pdfdocument.url
 

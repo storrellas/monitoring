@@ -38,26 +38,26 @@ urlpatterns = [
     ############
     # AJAX enpoints
     ############
-    url(r'^web/login/',                  'rest_framework_jwt.views.obtain_jwt_token',  name='ajax-login'),
-    url(r'^web/admin/$',                  AdminListViewset.as_view(),                  name='ajax-admin'),
-    url(r'^web/admin/(?P<pk>[0-9]+)/$',   AdminDetailViewset.as_view(),                name='ajax-admin-detail'),
+    url(r'^ajax/login/',                  'rest_framework_jwt.views.obtain_jwt_token',  name='ajax-login'),
+    url(r'^ajax/admin/$',                  AdminListViewset.as_view(),                  name='ajax-admin'),
+    url(r'^ajax/admin/(?P<pk>[0-9]+)/$',   AdminDetailViewset.as_view(),                name='ajax-admin-detail'),
     
-    url(r'^web/eventuser/$',              EventUserListViewset.as_view(),              name='ajax-event-user'),
+    url(r'^ajax/eventuser/$',              EventUserListViewset.as_view(),              name='ajax-event-user'),
     
 
     
-    url(r'^web/eventuser/(?P<pk>[0-9]+)/$',      EventUserDetailViewset.as_view(),   name='ajax-event-user-detail'),
-    url(r'^web/eventuser/edit/$',                EventUserEditListViewset.as_view(), name='ajax-event-user-edit'),
-    url(r'^web/eventuser/edit/(?P<pk>[0-9]+)/$', EventUserEditViewset.as_view(),     name='ajax-event-user-edit-pk'),
+    url(r'^ajax/eventuser/(?P<pk>[0-9]+)/$',      EventUserDetailViewset.as_view(),   name='ajax-event-user-detail'),
+    url(r'^ajax/eventuser/edit/$',                EventUserEditListViewset.as_view(), name='ajax-event-user-edit'),
+    url(r'^ajax/eventuser/edit/(?P<pk>[0-9]+)/$', EventUserEditViewset.as_view(),     name='ajax-event-user-edit-pk'),
             
-    url(r'^web/admin/checkname/$',               CheckAdminNameViewset.as_view({'post': 'checkname'}), name='ajax-admin-check-name'),
+    url(r'^ajax/admin/checkname/$',               CheckAdminNameViewset.as_view({'post': 'checkname'}), name='ajax-admin-check-name'),
     
-    url(r'^web/event/multidelete/$',             EventMultiDeleteViewset.as_view({'post': 'multidelete'}), name='ajax-event-multidelete'),
-    url(r'^web/event/graph/(?P<pk>[0-9]+)/$',    TrackDataGraphViewset.as_view({'get': 'generate_graph_data'}), name='ajax-trackdata-graph'),
+    url(r'^ajax/event/multidelete/$',             EventMultiDeleteViewset.as_view({'post': 'multidelete'}), name='ajax-event-multidelete'),
+    url(r'^ajax/event/graph/(?P<pk>[0-9]+)/$',    TrackDataGraphViewset.as_view({'get': 'generate_graph_data'}), name='ajax-trackdata-graph'),
     
 ]
 
 # Add routers for REST endpoints
 router = SimpleRouter()
-router.register(r'event', EventViewset,'api-event')
+router.register(r'ajax/event', EventViewset,'api-event')
 urlpatterns += router.urls
