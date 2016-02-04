@@ -49,7 +49,7 @@ class UserAppSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'event','auth_token')
 
-class EventCheckAppSerializer(serializers.ModelSerializer):
+class EventCheckDetailAppSerializer(serializers.ModelSerializer):
     lastsubmit = serializers.SerializerMethodField('lastsubmit_field', required=False)        
     def lastsubmit_field(self, obj):
         return obj.trackdate.strftime("%d/%m/%y ") + \
@@ -61,25 +61,6 @@ class EventCheckAppSerializer(serializers.ModelSerializer):
         model = EventCheck
         fields = ('id', 'quantity', 'target', 'lastsubmit', 'completeflag', 
                   'checkintime', 'checkouttime')
-
-class EventCheckInAppSerializer(serializers.ModelSerializer):
-    lastsubmit = serializers.SerializerMethodField('lastsubmit_field', required=False)        
-    def lastsubmit_field(self, obj):
-        try:
-            return obj.trackdate.strftime("%d/%m/%y ") + \
-                            obj.tracktime.strftime("%H:%M %p")
-        except:
-            return None
-
-    checkintime = serializers.DateTimeField(format="%d/%m/%y %H:%M %p",input_formats=["%d/%m/%y %H:%M %p"], required=False)       
-    checkouttime = serializers.DateTimeField(format="%d/%m/%y %H:%M %p",input_formats=["%d/%m/%y %H:%M %p"], required=False)
-    quantity = serializers.IntegerField(required=False)
-    target = serializers.IntegerField(required=False)
-
-    class Meta:
-        model = EventCheck
-        fields = ('id', 'user', 'event', 'quantity', 'target', 'lastsubmit', 'completeflag',\
-                  'checkintime', 'checkouttime','latitude', 'longitude', 'location')
 
 class EventAppSerializer(serializers.ModelSerializer):
 
@@ -96,7 +77,7 @@ class EventAppSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         eventcheck = EventCheck.objects.filter(event=obj,user=user) \
                             .order_by('-checkintime').first()        
-        return EventCheckAppSerializer(eventcheck).data
+        return EventCheckDetailAppSerializer(eventcheck).data
 
     total = serializers.SerializerMethodField('total_field')        
     def total_field(self, obj):
@@ -113,5 +94,23 @@ class EventAppSerializer(serializers.ModelSerializer):
         model = Event
         fields = ('id','title','description', 'videourl', 
                   'pdfurl', 'eventcheck', 'total')
+
+
+class EventCheckAppSerializer(serializers.ModelSerializer):
+    lastsubmit = serializers.SerializerMethodField('lastsubmit_field', required=False)        
+    def lastsubmit_field(self, obj):
+        try:
+            return obj.trackdate.strftime("%d/%m/%y ") + \
+                            obj.tracktime.strftime("%H:%M %p")
+        except:
+            return None
+    checkintime = serializers.DateTimeField(format="%d/%m/%y %H:%M %p",input_formats=["%d/%m/%y %H:%M %p"], required=False)       
+    checkouttime = serializers.DateTimeField(format="%d/%m/%y %H:%M %p",input_formats=["%d/%m/%y %H:%M %p"], required=False)
+    
+    class Meta:
+        model = EventCheck
+        fields = ('id', 'user', 'event', 'quantity', 'target', 'type', 'note', 'lastsubmit', 'completeflag',\
+                  'checkintime', 'checkouttime','latitude', 'longitude', 'location')
+
 
    

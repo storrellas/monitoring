@@ -27,10 +27,12 @@ class EventUser(models.Model):
     
 class EventCheck(models.Model):
     
-    GOOD    = 1
-    NEUTRAL = 2
-    BAD     = 3
+    UNDEFINED = 0
+    GOOD      = 1
+    NEUTRAL   = 2
+    BAD       = 3
     FEEDBACK = (
+        (UNDEFINED, 0),
         (GOOD, 1),
         (NEUTRAL, 2),
         (BAD, 3),
@@ -41,7 +43,7 @@ class EventCheck(models.Model):
     
     quantity     = models.IntegerField(default=0)    
     target       = models.IntegerField(default=0)
-    type         = models.IntegerField(choices=FEEDBACK, default=NEUTRAL)
+    type         = models.IntegerField(choices=FEEDBACK, default=UNDEFINED)
     note         = models.CharField(default='',max_length=400)
     trackdate    = models.DateField(auto_now=True)
     tracktime    = models.TimeField(auto_now=True)

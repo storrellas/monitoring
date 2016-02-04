@@ -20,7 +20,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework import generics
 from rest_framework import mixins
 from rest_framework.renderers import JSONRenderer
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, APIException
 
 # Project imports
 from serializers import *
@@ -71,27 +71,64 @@ class EventAppViewset( generics.RetrieveAPIView ):
 class EventCheckInAppViewset(generics.CreateAPIView):
     model = EventCheck
     queryset = EventCheck.objects.all()
-    serializer_class = EventCheckInAppSerializer
+    serializer_class = EventCheckAppSerializer
             
     def create(self,request, *args, **kwargs):
-        serializer = EventCheckInAppSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data)
-        return APIException('Didnt work')
+        
+        # Check if already checkin
+        event=Event.objects.get(id=request.data['event'])
+        user=User.objects.get(id=request.data['user'])
+        eventcheck = EventCheck.objects.filter(event=event,user=user) \
+                    .order_by('-checkintime').first()
+        if eventcheck.completeflag == False:
+            raise APIException("You already made checkin")
+        
+        # Continue with flow
+        return super(EventCheckInAppViewset,self).create(request, *args, **kwargs)
+
     
     
 class EventCheckOutAppViewset(generics.UpdateAPIView):
     model = EventCheck
     queryset = EventCheck.objects.all()
-    serializer_class = EventCheckInAppSerializer
+    serializer_class = EventCheckAppSerializer
     
-    def update(request, *args, **kwargs):
-        serializer = EventCheckInAppSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data)
-        return APIException('Didnt work')
+    def update(self,request, *args, **kwargs):
+
+        # Check if not checkin
+        event=Event.objects.get(id=request.data['event'])
+        user=User.objects.get(id=request.data['user'])
+        eventcheck = EventCheck.objects.filter(event=event,user=user) \
+                    .order_by('-checkintime').first()
+        if eventcheck.completeflag == True:
+            raise APIException("You did not check in or you already checkout")
+        if eventcheck.type == EventCheck.UNDEFINED:
+            raise APIException("You did not report")
+
+              
+        # Mark as completed
+        instance=self.get_object()
+        instance.completeflag = True
+        instance.checkouttime = datetime.now()
+        instance.save()
+        
+        return super(EventCheckOutAppViewset,self).update(request, *args, **kwargs)
+
     
 
-  
+class EventCheckReportAppViewset(generics.UpdateAPIView):
+    model = EventCheck
+    queryset = EventCheck.objects.all()    
+    serializer_class = EventCheckAppSerializer
+    
+    def update(self,request, *args, **kwargs):        
+        
+        # Check if not checkin
+        event=Event.objects.get(id=request.data['event'])
+        user=User.objects.get(id=request.data['user'])
+        eventcheck = EventCheck.objects.filter(event=event,user=user) \
+                    .order_by('-checkintime').first()
+        if eventcheck.completeflag == True:
+            raise APIException("You did not check in")
+        
+        return super(EventCheckReportAppViewset,self).update(request, *args, **kwargs)

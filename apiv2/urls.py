@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^event/(?P<pk>[0-9]+)/$', EventAppViewset.as_view(),                       name='api-v2-event'),
     url(r'^eventcheck/checkin/$',                EventCheckInAppViewset.as_view(),  name='api-v2-eventcheckin'),
     url(r'^eventcheck/checkout/(?P<pk>[0-9]+)/$', EventCheckOutAppViewset.as_view(), name='api-v2-eventcheckout'),
+    url(r'^eventcheck/report/(?P<pk>[0-9]+)/$', EventCheckReportAppViewset.as_view(), name='api-v2-report'),
     
 ]
 
