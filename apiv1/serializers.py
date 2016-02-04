@@ -5,7 +5,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.db.models import Sum
 
-from models import *
+from admininterface.models import *
 
 # Configure logger
 import logging

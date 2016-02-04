@@ -23,7 +23,7 @@ from rest_framework.renderers import JSONRenderer
 
 # Project imports
 from serializers import *
-from models import *
+from admininterface.models import *
 
 
 # Configure logger

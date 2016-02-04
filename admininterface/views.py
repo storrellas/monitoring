@@ -17,8 +17,8 @@ from braces.views import LoginRequiredMixin
 
 # Project imports
 from forms import *
-from api.models import *
-from api.admin import TrackDataResource
+from models import *
+from admin import EventCheckResource
 
 # Configure logger
 import logging
@@ -42,7 +42,6 @@ class LoginView(View):
         # Check form    
         user_form = UserForm(request.POST)
         if not user_form.is_valid():
-            #raise Http404(event_form.errors)
             print user_form.errors
             return HttpResponseBadRequest(user_form.errors)             
         
@@ -52,13 +51,12 @@ class LoginView(View):
         user = authenticate(username=user_form.data['username'], 
                             password=user_form.data['password'])
         if user is not None:
-            if user.is_active:
-                log.info("Logging in user " + user_form.data['username'])
+            if user.is_active and (user.is_superuser or user.groups.filter(name='Company').exists()):
                 login(request, user)                
                 return JsonResponse( user_form.data )
 
                 
-        return HttpResponse(status = 400)
+        return HttpResponseBadRequest()
 
 
 class LogoutView(RedirectView):
@@ -224,7 +222,7 @@ class EventEditView( LoginRequiredMixin, DetailView ):
 class EventAnalysisCSVView( LoginRequiredMixin, View ):
     
     def get(self,request,*args,**kwargs):
-        file_to_send = ContentFile(TrackDataResource().export().csv)
+        file_to_send = ContentFile(EventCheckResource().export().csv)
         response     = HttpResponse(file_to_send,'text/csv')
         response['Content-Length']      = file_to_send.size    
         response['Content-Disposition'] = 'attachment; filename="event.csv"'        
@@ -232,9 +230,9 @@ class EventAnalysisCSVView( LoginRequiredMixin, View ):
 
 class EventAnalysisView( LoginRequiredMixin, ListView ):
     template_name='home/event_analysis.html'
-    model = TrackData
+    model = EventCheck
     paginate_by = 10
-    context_object_name = 'trackdata_list'
+    context_object_name = 'eventcheck_list'
     event = None
     
     def get_queryset(self):
@@ -251,7 +249,7 @@ class EventAnalysisView( LoginRequiredMixin, ListView ):
         context['event_list'] = Event.objects.all()
         
 
-        analytics = TrackData.objects.filter(event=self.event) \
+        analytics = EventCheck.objects.filter(event=self.event) \
                         .aggregate(Sum('quantity'), Sum('target'))
         try:
             context['sampling']    = analytics['quantity__sum']
@@ -284,8 +282,8 @@ class EventResultView( LoginRequiredMixin, TemplateView ):
         event = Event.objects.get( id = event_id )        
 
         # Capture data for event_header.html
-        trackdata_list = TrackData.objects.filter(event=event) 
-        analytics = trackdata_list.aggregate(Sum('quantity'), Sum('target'))
+        eventcheck_list = EventCheck.objects.filter(event=event) 
+        analytics = eventcheck_list.aggregate(Sum('quantity'), Sum('target'))
         try:
             context['sampling']    = analytics['quantity__sum']
             context['target']      = analytics['target__sum']
@@ -299,13 +297,13 @@ class EventResultView( LoginRequiredMixin, TemplateView ):
         
         # Add data for feedback graph
         feedback = {}
-        feedback['Good'] = trackdata_list.filter(type=TrackData.GOOD).count()
-        feedback['Neutral'] = trackdata_list.filter(type=TrackData.NEUTRAL).count()
-        feedback['Bad'] = trackdata_list.filter(type=TrackData.BAD).count()
+        feedback['Good'] = eventcheck_list.filter(type=EventCheck.GOOD).count()
+        feedback['Neutral'] = eventcheck_list.filter(type=EventCheck.NEUTRAL).count()
+        feedback['Bad'] = eventcheck_list.filter(type=EventCheck.BAD).count()
         context['feedback'] = feedback
 
         # Generate graph data
-        graph_data = trackdata_list.values('trackdate') \
+        graph_data = eventcheck_list.values('trackdate') \
                      .annotate(quantity = Sum('quantity'), target = Sum('target') )
         #print graph_data
         context['graph_data'] = graph_data

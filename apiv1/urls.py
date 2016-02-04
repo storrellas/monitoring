@@ -16,14 +16,14 @@ urlpatterns = [
     # url(r'^blog/', include('blog.urls')),
     
            
-    url(r'^$', RedirectView.as_view(url='/api/docs/',),        name='api-docs'),
+    url(r'^$', RedirectView.as_view(url='/api/v1/docs/',),        name='api-docs'),
     url(r'^docs/', include('rest_framework_swagger.urls'),        name='api-docs'),
     
 
     
-    ############################3
-    # Backend endpoints
-    ############################3
+    ############################
+    # Backend endpoints - v1
+    ############################
     
     # Returns the task for the user
     url(r'^task/$', TaskViewset.as_view({'post': 'post'}), name='api-task'),

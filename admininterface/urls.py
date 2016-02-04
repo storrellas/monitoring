@@ -53,7 +53,7 @@ urlpatterns = [
     url(r'^ajax/admin/checkname/$',               CheckAdminNameViewset.as_view({'post': 'checkname'}), name='ajax-admin-check-name'),
     
     url(r'^ajax/event/multidelete/$',             EventMultiDeleteViewset.as_view({'post': 'multidelete'}), name='ajax-event-multidelete'),
-    url(r'^ajax/event/graph/(?P<pk>[0-9]+)/$',    TrackDataGraphViewset.as_view({'get': 'generate_graph_data'}), name='ajax-trackdata-graph'),
+    url(r'^ajax/event/graph/(?P<pk>[0-9]+)/$',    EventCheckGraphViewset.as_view({'get': 'generate_graph_data'}), name='ajax-eventcheck-graph'),
     
 ]
 

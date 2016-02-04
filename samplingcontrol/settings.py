@@ -37,9 +37,11 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',    
     'rest_framework',
     'rest_framework_swagger',
+    'rest_framework.authtoken',
     'import_export',
     'admininterface',
-    'api'
+    #'apiv1',
+    'apiv2'
     
 )
 
@@ -133,7 +135,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        #'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
 }
 

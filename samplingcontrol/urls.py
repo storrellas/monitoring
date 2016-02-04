@@ -10,8 +10,21 @@ urlpatterns = [
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^', include('admininterface.urls')),
-    url(r'^api/', include('api.urls')),
+    #url(r'^api/v1/', include('apiv1.urls')),
+    url(r'^api/v2/', include('apiv2.urls')),
         
 ] + \
 static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + \
 static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+###########################
+# Create groups
+###########################
+"""
+from django.contrib.auth.models import Group 
+Group.objects.get_or_create(name="Supervisor")
+Group.objects.get_or_create(name="Company")
+Group.objects.get_or_create(name="EventUser")
+"""
+
+

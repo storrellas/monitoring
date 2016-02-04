@@ -131,21 +131,21 @@ class EventMultiDeleteViewset( ViewSet ):
         return JsonResponse({})
         
         
-class TrackDataGraphViewset( ViewSet ):
+class EventCheckGraphViewset( ViewSet ):
 
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
     def generate_graph_data(self, request, *args, **kwargs):
         event = Event.objects.get(id= kwargs['pk'] )
-        trackdata_list = TrackData.objects.filter(event=event)
+        eventcheck_list = EventCheck.objects.filter(event=event)
          
         # Generate graph data
-        graph_data = trackdata_list.values('trackdate') \
+        graph_data = eventcheck_list.values('trackdate') \
                      .annotate(quantity = Sum('quantity'), target = Sum('target') )         
         
         
         
-        serializer = TrackDataSerializer(graph_data, many=True)
+        serializer = EventCheckSerializer(graph_data, many=True)
         json = JSONRenderer().render(serializer.data)
 
         

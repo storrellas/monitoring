@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.conf import settings
 
-from api.models import *
+from models import *
 
 # Configure logger
 import logging
