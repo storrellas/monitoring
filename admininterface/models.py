@@ -62,5 +62,7 @@ class EventCheck(models.Model):
         else: 
             return self.user.username + "," + self.event.title
 
-
+class EventCheckImage(models.Model):
+    photo    = models.ImageField(upload_to='event/photo/',blank=True,null=True)
+    eventcheck = models.ForeignKey(EventCheck)
     

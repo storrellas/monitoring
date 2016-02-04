@@ -21,6 +21,7 @@ from rest_framework import generics
 from rest_framework import mixins
 from rest_framework.renderers import JSONRenderer
 from rest_framework.exceptions import ValidationError, APIException
+from rest_framework.parsers import FileUploadParser
 
 # Project imports
 from serializers import *
@@ -132,3 +133,58 @@ class EventCheckReportAppViewset(generics.UpdateAPIView):
             raise APIException("You did not check in")
         
         return super(EventCheckReportAppViewset,self).update(request, *args, **kwargs)
+    
+
+class FileUploadSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = EventCheckImage
+        fields = ('photo', )
+
+
+class EventCheckPhotoAppViewset( ViewSet ):
+    parser_classes = (FileUploadParser,)
+
+    def post(self, request, format=None, *args, **kwargs):
+        """
+        serializer = FileUploadSerializer(request.data, request.FILES)
+        print serializer.is_valid()
+        serializer.save()
+        """
+
+        
+        file_obj = request.data['file']
+        print kwargs['pk']
+        print file_obj
+        print "Getting name"
+        print file_obj.name
+
+        
+        print request.FILES
+        
+        obj = EventCheckImage(photo=request.FILES['file'], eventcheck=EventCheck.objects.first())
+        obj.save()
+        print obj
+        
+        
+        # ...
+        # do some stuff with uploaded file
+        # ...
+        
+        return Response(status=204)
+
+ 
+class EventCheckPhotoAppViewset(ViewSet):
+
+    def post(self, request, *args,**kwargs):
+        # Capture eventcheck
+        eventcheck = EventCheck.objects.get(id=kwargs['pk'])
+        
+        # Capture form
+        serializer = UploadFileSerializer(request.POST, request.FILES)
+        if serializer.is_valid():
+
+            obj = EventCheckImage(photo=request.FILES['file'], eventcheck=eventcheck)
+            obj.save()
+
+        return Response(status=204)

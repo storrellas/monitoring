@@ -4,6 +4,7 @@ import traceback
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.db.models import Sum
+from django.forms.fields import FileField
 
 from admininterface.models import *
 
@@ -112,5 +113,6 @@ class EventCheckAppSerializer(serializers.ModelSerializer):
         fields = ('id', 'user', 'event', 'quantity', 'target', 'type', 'note', 'lastsubmit', 'completeflag',\
                   'checkintime', 'checkouttime','latitude', 'longitude', 'location')
 
-
+class UploadFileSerializer(serializers.Serializer):
+    file = FileField()
    
