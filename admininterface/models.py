@@ -21,10 +21,36 @@ class Data(models.Model):
     data     = models.CharField(max_length=400)
     
 class EventUser(models.Model):
+    MALE = 'MALE'
+    MALE = 'FEMALE'
+    OTHER = 'OTHER'
+    GENDER = (
+              ('male', 'MALE'),
+              ('female', 'FEMALE'),
+              ('other', 'OTHER')
+              )
+    
     user     = models.OneToOneField(User)
     event    = models.ForeignKey(Event, null=True, blank=True,on_delete=models.SET_NULL)
-    state    = models.IntegerField(default=0)
+    phone    = models.CharField(max_length=400, default='')
     description = models.CharField(max_length=400, default='')
+    gender    = models.CharField(max_length=10, choices=GENDER, default=OTHER)
+    score     = models.IntegerField(default=0)
+    picture   = models.FileField(upload_to='eventuser/')
+    
+class Company(models.Model):
+    user     = models.OneToOneField(User)
+    address  = models.ForeignKey(Event, null=True, blank=True,on_delete=models.SET_NULL)
+    cif      = models.CharField(max_length=400, default='')
+    contanct = models.CharField(max_length=400, default='')
+    phone    = models.CharField(max_length=400, default='')
+    
+class SuperVisor(models.Model):
+    user     = models.OneToOneField(User)
+    address  = models.ForeignKey(Event, null=True, blank=True,on_delete=models.SET_NULL)
+    cif      = models.CharField(max_length=400, default='')
+    contanct = models.CharField(max_length=400, default='')
+    phone    = models.CharField(max_length=400, default='')
     
 class EventCheck(models.Model):
     
