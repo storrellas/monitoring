@@ -68,7 +68,7 @@ class EventCheckImage(models.Model):
     eventcheck    = models.ForeignKey(EventCheck)
 
 class Product(models.Model):
-    event    = models.ForeignKey(Event,null=True, blank=True)
+    event    = models.ForeignKey(Event,null=True, blank=True, related_name='products')
     name     = models.CharField(default='', max_length=400) 
     brand    = models.CharField(default='', max_length=400)
     format   = models.CharField(default='', max_length=400)

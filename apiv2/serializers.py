@@ -29,6 +29,11 @@ class UserAppSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'event','auth_token')
 
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product    
+        fields = ('id', 'name','brand','format')
+    
 class EventCheckDetailAppSerializer(serializers.ModelSerializer):
     lastsubmit = serializers.SerializerMethodField('lastsubmit_field', required=False)        
     def lastsubmit_field(self, obj):
@@ -37,6 +42,8 @@ class EventCheckDetailAppSerializer(serializers.ModelSerializer):
 
     checkintime = serializers.DateTimeField(format="%d/%m/%y %H:%M %p",input_formats=["%d/%m/%y %H:%M %p"], required=False)       
     checkouttime = serializers.DateTimeField(format="%d/%m/%y %H:%M %p",input_formats=["%d/%m/%y %H:%M %p"], required=False)
+   
+    
     class Meta:
         model = EventCheck
         fields = ('id', 'quantity', 'target', 'lastsubmit', 'completeflag', 'brief_opened', 
@@ -70,10 +77,12 @@ class EventAppSerializer(serializers.ModelSerializer):
         except:
             return 0
        
+    # Include related field
+    product = ProductSerializer(source='products',many=True)
     class Meta:
         model = Event
         fields = ('id','title','description', 'videourl', 
-                  'pdfurl', 'eventcheck', 'total')
+                  'pdfurl', 'eventcheck', 'total','product')
 
 
 class EventCheckAppSerializer(serializers.ModelSerializer):
@@ -94,4 +103,6 @@ class EventCheckAppSerializer(serializers.ModelSerializer):
 
 class UploadFileSerializer(serializers.Serializer):
     file = FileField()
+    
+
    
