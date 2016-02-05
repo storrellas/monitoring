@@ -59,13 +59,15 @@ class AdminSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'password','eventid')
 
+        
 class EventUserSerializer(serializers.ModelSerializer):
         
-    def create(self, validated_data):       
+    def create(self, validated_data):
+   
         obj = self.Meta.model.objects.create_user(username = validated_data['username'],                                             
-                                                  password=validated_data['password'],
-                                                  first_name=validated_data['first_name'])
+                                                  password=validated_data['password'])
         eventuser = EventUser(user=obj)
+        eventuser.description = self.initial_data['description']
         eventuser.save()       
         return obj        
     
@@ -74,15 +76,35 @@ class EventUserSerializer(serializers.ModelSerializer):
         instance.save()                 
         return instance                
     
+    description = serializers.SerializerMethodField('description_field')        
+    def description_field(self, user):
+        try:                            
+            return user.eventuser.description
+        except:
+            return None
+    
     class Meta:
         model = User
-        fields = ('username', 'password','first_name')
+        fields = ('username', 'password','description')
 
 class EventUserEditSerializer(serializers.ModelSerializer):
-            
+
+    def update(self, instance, validated_data):
+        super(EventUserEditSerializer,self).update(instance, validated_data)
+        instance.eventuser.description = self.initial_data['description']
+        instance.eventuser.save()
+        return instance    
+
+    description = serializers.SerializerMethodField('description_field')        
+    def description_field(self, user):
+        try:                            
+            return user.eventuser.description
+        except:
+            return None
+                
     class Meta:
         model = User
-        fields = ('username', 'first_name')
+        fields = ('username', 'description')
 
 
 class EventSerializer(serializers.ModelSerializer):

@@ -67,7 +67,7 @@ class EventUserListViewset( generics.ListCreateAPIView ):
     serializer_class = EventUserSerializer      
     permission_classes = [IsAuthenticatedOrReadOnly]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
-    
+        
 class EventUserDetailViewset( generics.RetrieveUpdateDestroyAPIView ):
 
     #A simple ViewSet for viewing and editing accounts.
@@ -76,6 +76,7 @@ class EventUserDetailViewset( generics.RetrieveUpdateDestroyAPIView ):
     serializer_class = EventUserSerializer        
     permission_classes = [IsAuthenticatedOrReadOnly]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+
 
 class EventUserEditListViewset( generics.ListAPIView ):
 
