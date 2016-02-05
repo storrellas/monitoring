@@ -41,31 +41,31 @@
 										<th>Feedback</th>
 										<th>Address</th>
 									</tr>											
-										{% for trackdata in trackdata_list %}
+										{% for eventcheck in eventcheck_list %}
                                        <tr>
-                                           <td>{{ trackdata.id }}</td>
-                                           <td>{{ trackdata.trackdate |date:"d/m/Y" }}</td>
-                                           <td>{{ trackdata.user.username }}</td>
-                                           <td>{{ trackdata.eventcheck.checkintime|date:"H:m" }}</td>
-                                           <td>{{ trackdata.eventcheck.checkouttime|date:"H:m" }}</td>
-                                           <td>{{ trackdata.quantity }}</td>
-                                           <td>{{ trackdata.target }}</td>
-                                           <td>{{ trackdata.target|percentage:trackdata.quantity }}</td>
+                                           <td>{{ eventcheck.id }}</td>
+                                           <td>{{ eventcheck.trackdate |date:"d/m/Y" }}</td>
+                                           <td>{{ eventcheck.user.username }}</td>
+                                           <td>{{ eventcheck.eventcheck.checkintime|date:"H:m" }}</td>
+                                           <td>{{ eventcheck.eventcheck.checkouttime|date:"H:m" }}</td>
+                                           <td>{{ eventcheck.quantity }}</td>
+                                           <td>{{ eventcheck.target }}</td>
+                                           <td>{{ eventcheck.target|percentage:eventcheck.quantity }}</td>
                                            <td
 											style="padding-top: 1px; padding-bottom: 0px; text-align: center;">
 											<img src="
-												{% ifequal trackdata.type trackdata.GOOD %}
+												{% ifequal eventcheck.type eventcheck.GOOD %}
 												{% static 'inspinia_admin/img/icon/em1.png'%}												
 												{% endifequal %}
-												{% ifequal trackdata.type trackdata.NEUTRAL %}
+												{% ifequal eventcheck.type eventcheck.NEUTRAL %}
 												{% static 'inspinia_admin/img/icon/em2.png'%}												
 												{% endifequal %}
-												{% ifequal trackdata.type trackdata.BAD %}
+												{% ifequal eventcheck.type eventcheck.BAD %}
 												{% static 'inspinia_admin/img/icon/em3.png'%}												
 												{% endifequal %}
 												" style="width: 30px; height: 30px">
 											</td>
-                                           <td>{{ trackdata.eventcheck.location }}</td>
+                                           <td>{{ eventcheck.location }}</td>
 <!--	                                            <td>-->
 <!--	                                            	<a class="btn btn-sm btn-white btn-action" href="<?php echo site_url("event/edit/".$item['eventid'])?>" data-toggle="tooltip" data-placement="bottom" title="Edit"><img src="<?php echo base_url();?>inspinia_admin/img/icon/edit-1.png"></a>-->
 <!--	                                                <a class="btn btn-sm btn-white btn-action" onclick="on_delete('<?php echo $item['eventid']?>');" data-toggle="tooltip" data-placement="bottom" title="Delete"><img src="<?php echo base_url();?>inspinia_admin/img/icon/delete.png"></a>-->

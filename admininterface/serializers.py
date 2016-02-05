@@ -98,3 +98,5 @@ class EventCheckSerializer(serializers.Serializer):
     trackdate = serializers.DateField(format='%Y-%m-%d')
     quantity = serializers.IntegerField()
     target = serializers.IntegerField()
+    
+        

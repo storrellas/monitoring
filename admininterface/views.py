@@ -24,7 +24,7 @@ from admin import EventCheckResource
 import logging
 log = logging.getLogger(__name__)
 
-# Create your views here.
+
 class LoginView(View):
     """
     Provides users the ability to login
@@ -310,6 +310,28 @@ class EventResultView( LoginRequiredMixin, TemplateView ):
 
         return context
 
+class ChangePwdView(LoginRequiredMixin, TemplateView):
+    template_name='settings/changepwd.html'
+    form = UserForm
+    model = User
+    queryset = User.objects.filter(is_superuser=True)
 
-        
          
+    def get_context_data(self, **kwargs):
+        context = super(ChangePwdView, self).get_context_data(**kwargs)
+        context['userid'] = self.request.user.id
+
+    def post(self, request, *args, **kwargs):
+        
+        user_form = self.form(request.POST)
+        if not user_form.is_valid():
+            print user_form.errors
+            return HttpResponseBadRequest(user_form.errors)   
+        
+        user = User.objects.get(username=user_form.data['username'])
+        user.set_password(user_form.data['password'])
+        user.save()
+        
+        
+        
+        return JsonResponse({})

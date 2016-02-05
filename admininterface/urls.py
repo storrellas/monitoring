@@ -33,7 +33,7 @@ urlpatterns = [
     url(r'^manage/users/(?P<user_id>[0-9]+)/$',     EventUserView.as_view(),    name='users_0'),
     
     
-    url(r'^settings/changepwd/$', BaseView.as_view(template_name='settings/changepwd.html'),    name='changepwd'),    
+    url(r'^settings/changepwd/$', ChangePwdView.as_view(),    name='changepwd'),    
     
     ############
     # AJAX enpoints
@@ -43,8 +43,6 @@ urlpatterns = [
     url(r'^ajax/admin/(?P<pk>[0-9]+)/$',   AdminDetailViewset.as_view(),                name='ajax-admin-detail'),
     
     url(r'^ajax/eventuser/$',              EventUserListViewset.as_view(),              name='ajax-event-user'),
-    
-
     
     url(r'^ajax/eventuser/(?P<pk>[0-9]+)/$',      EventUserDetailViewset.as_view(),   name='ajax-event-user-detail'),
     url(r'^ajax/eventuser/edit/$',                EventUserEditListViewset.as_view(), name='ajax-event-user-edit'),
