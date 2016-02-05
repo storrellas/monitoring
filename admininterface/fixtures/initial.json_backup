@@ -1,0 +1,203 @@
+[
+{
+  "model": "admininterface.event",
+  "pk": 1,
+  "fields": {
+    "title": "MyEvent",
+    "description": "First event",
+    "register_date": "2016-01-22T14:04:43.515Z",
+    "videourl": "http://www.elpais.es",
+    "pdfdocument": "event/Jellyfish.jpg"
+  }
+},
+{
+  "model": "admininterface.event",
+  "pk": 2,
+  "fields": {
+    "title": "SecondEvent",
+    "description": "This is the second event",
+    "register_date": "2016-01-27T13:39:50.695Z",
+    "videourl": "http://migranne.com",
+    "pdfdocument": "event/Tulips.jpg"
+  }
+},
+{
+  "model": "admininterface.data",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "event": 1,
+    "data": "Dont know what to put here"
+  }
+},
+{
+  "model": "admininterface.data",
+  "pk": 2,
+  "fields": {
+    "user": 7,
+    "event": null,
+    "data": ""
+  }
+},
+{
+  "model": "admininterface.eventuser",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "event": 1,
+    "state": 0
+  }
+},
+{
+  "model": "admininterface.eventuser",
+  "pk": 2,
+  "fields": {
+    "user": 3,
+    "event": 1,
+    "state": 0
+  }
+},
+{
+  "model": "admininterface.eventuser",
+  "pk": 6,
+  "fields": {
+    "user": 4,
+    "event": null,
+    "state": 0
+  }
+},
+{
+  "model": "admininterface.eventuser",
+  "pk": 7,
+  "fields": {
+    "user": 5,
+    "event": null,
+    "state": 0
+  }
+},
+{
+  "model": "admininterface.eventuser",
+  "pk": 8,
+  "fields": {
+    "user": 6,
+    "event": null,
+    "state": 0
+  }
+},
+{
+  "model": "admininterface.eventcheck",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "event": 1,
+    "checkintime": "2016-01-22T14:04:43.517Z",
+    "checkouttime": "2016-01-22T14:04:43.517Z",
+    "completeflag": 1,
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "location": ""
+  }
+},
+{
+  "model": "admininterface.eventcheck",
+  "pk": 2,
+  "fields": {
+    "user": 2,
+    "event": 1,
+    "checkintime": "2016-01-29T07:43:36.229Z",
+    "checkouttime": "2016-01-29T07:43:36.229Z",
+    "completeflag": 1,
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "location": ""
+  }
+},
+{
+  "model": "admininterface.eventcheck",
+  "pk": 3,
+  "fields": {
+    "user": 2,
+    "event": 1,
+    "checkintime": "2016-01-29T13:17:02.401Z",
+    "checkouttime": "2016-02-02T12:18:59.911Z",
+    "completeflag": 1,
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "location": ""
+  }
+},
+{
+  "model": "admininterface.eventcheck",
+  "pk": 22,
+  "fields": {
+    "user": 3,
+    "event": 1,
+    "checkintime": "2016-02-02T13:24:28.234Z",
+    "checkouttime": null,
+    "completeflag": 0,
+    "latitude": 41.414762,
+    "longitude": 2.131821,
+    "location": "Carrer d'Adri\u00e0 Margarit, 24, 08035 Barcelona, Barcelona, Spain"
+  }
+},
+{
+  "model": "admininterface.trackdata",
+  "pk": 3,
+  "fields": {
+    "user": 2,
+    "event": 1,
+    "eventcheck": 1,
+    "quantity": 10,
+    "target": 5,
+    "type": 1,
+    "note": "notes",
+    "trackdate": "2016-01-22",
+    "tracktime": "12:39:45.388"
+  }
+},
+{
+  "model": "admininterface.trackdata",
+  "pk": 4,
+  "fields": {
+    "user": 2,
+    "event": 1,
+    "eventcheck": 2,
+    "quantity": 41,
+    "target": 37,
+    "type": 2,
+    "note": "",
+    "trackdate": "2016-01-29",
+    "tracktime": "13:22:45.388"
+  }
+},
+{
+  "model": "admininterface.trackdata",
+  "pk": 5,
+  "fields": {
+    "user": 2,
+    "event": 1,
+    "eventcheck": 3,
+    "quantity": 12,
+    "target": 8,
+    "type": 2,
+    "note": "",
+    "trackdate": "2016-02-02",
+    "tracktime": "12:18:59.883"
+  }
+},
+{
+  "model": "admininterface.trackdata",
+  "pk": 16,
+  "fields": {
+    "user": 3,
+    "event": 1,
+    "eventcheck": 22,
+    "quantity": 25,
+    "target": 14,
+    "type": 2,
+    "note": "dbx",
+    "trackdate": "2016-02-02",
+    "tracktime": "13:43:50.617"
+  }
+}
+]
