@@ -12,30 +12,9 @@ from admininterface.models import *
 import logging
 log = logging.getLogger(__name__)
 
-"""
-class EventAppSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Event
-
-class EventUserAppSerializer(serializers.ModelSerializer):
-    event = EventAppSerializer()
-    class Meta:
-        model = EventUser
-        fields = ('event', )
-
-class UserAppSerializer(serializers.ModelSerializer):
-    
-    event = serializers.SerializerMethodField('event_field', required=False)        
-    def event_field(self, obj):
-        try:
-            return EventAppSerializer(obj.eventuser.event).data
-        except:
-            return None
-    
-    class Meta:
-        model = User
-        fields = ('id', 'username', 'event')
-"""        
+class UserInputAppSerializer(serializers.Serializer):
+    username = serializers.CharField(required=True)
+    password = serializers.CharField(required=True)
 
 class UserAppSerializer(serializers.ModelSerializer):
     
@@ -45,7 +24,7 @@ class UserAppSerializer(serializers.ModelSerializer):
             return obj.eventuser.event.id
         except:
             return None
-    
+
     class Meta:
         model = User
         fields = ('id', 'username', 'event','auth_token')
@@ -60,7 +39,7 @@ class EventCheckDetailAppSerializer(serializers.ModelSerializer):
     checkouttime = serializers.DateTimeField(format="%d/%m/%y %H:%M %p",input_formats=["%d/%m/%y %H:%M %p"], required=False)
     class Meta:
         model = EventCheck
-        fields = ('id', 'quantity', 'target', 'lastsubmit', 'completeflag', 
+        fields = ('id', 'quantity', 'target', 'lastsubmit', 'completeflag', 'brief_opened', 
                   'checkintime', 'checkouttime')
 
 class EventAppSerializer(serializers.ModelSerializer):
@@ -110,7 +89,7 @@ class EventCheckAppSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = EventCheck
-        fields = ('id', 'user', 'event', 'quantity', 'target', 'type', 'note', 'lastsubmit', 'completeflag',\
+        fields = ('id', 'user', 'event', 'quantity', 'target', 'type', 'note', 'lastsubmit', 'completeflag','brief_opened',\
                   'checkintime', 'checkouttime','latitude', 'longitude', 'location')
 
 class UploadFileSerializer(serializers.Serializer):

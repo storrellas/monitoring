@@ -47,16 +47,26 @@ class LoginAppViewset( ViewSet ):
           required: true
           type: string
         """
-        # Get paramters
-        username = request.data['username']
-        password = request.data['password']
+
         
+        print request.data
+        #serializer = LoginUserAppSerializer(data=request.data)
+        serializer = UserInputAppSerializer(data=request.data)
+        if not serializer.is_valid():
+            print serializer.errors
+            raise ValidationError("Credentials were not correct")
+        
+        print serializer.validated_data
+        
+        # Authenticate user
+        username = serializer.validated_data['username']
+        password = serializer.validated_data['password']        
         user = authenticate (username=username, password=password)
         if user is None:
-            if user.groups.filter(name='EventUser').exists() == False:
-                dict = {}
-                dict['error'] = "Credentials not valid"
-                raise ValidationError( dict )
+            raise ValidationError("Credentials were not valid" )
+        
+        if user.groups.filter(name='EventUser').exists() == False:
+            raise ValidationError( "User is not EventUser" )
             
         # Return userdata            
         serializer = UserAppSerializer(user)            

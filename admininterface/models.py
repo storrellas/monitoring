@@ -45,6 +45,7 @@ class EventCheck(models.Model):
     target       = models.IntegerField(default=0)
     type         = models.IntegerField(choices=FEEDBACK, default=UNDEFINED)
     note         = models.CharField(default='',max_length=400)
+    brief_opened = models.BooleanField(default=False)
     trackdate    = models.DateField(auto_now=True)
     tracktime    = models.TimeField(auto_now=True)
 
@@ -54,7 +55,7 @@ class EventCheck(models.Model):
 
     latitude     = models.FloatField(default=0.0)
     longitude    = models.FloatField(default=0.0)
-    location     = models.CharField(default='', max_length=400)
+    location     = models.CharField(default='', max_length=400)    
 
     def __unicode__(self):
         if self.trackdate is not None and self.tracktime is not None:
@@ -63,6 +64,16 @@ class EventCheck(models.Model):
             return self.user.username + "," + self.event.title
 
 class EventCheckImage(models.Model):
-    photo    = models.ImageField(upload_to='event/photo/',blank=True,null=True)
-    eventcheck = models.ForeignKey(EventCheck)
+    photo         = models.ImageField(upload_to='event/photo/',blank=True,null=True)
+    eventcheck    = models.ForeignKey(EventCheck)
+
+class Product(models.Model):
+    event    = models.ForeignKey(Event,null=True, blank=True)
+    name     = models.CharField(default='', max_length=400) 
+    brand    = models.CharField(default='', max_length=400)
+    format   = models.CharField(default='', max_length=400)
+    
+    
+    
+    
     
