@@ -35,10 +35,10 @@
 									name="confirm_password" id="confirm_password">
 							</div>
 
-							<btn class="btn block full-width m-b btn-primary"
+							<div class="btn block full-width m-b btn-primary"
 								type="submit" onclick="on_save()">
 								<strong>Save</strong>
-							</btn>
+							</div>
 
 						</form>
 					</div>
@@ -60,6 +60,7 @@
 		//         }, "Enter symbol, digit and alphabet");
 	});
 	function on_save() {
+		
 		var checked = false;
 		$.ajax({
 			async: false,
@@ -76,104 +77,68 @@
 			},
 			error : function(xhr, errStr) {
 			}
-		});
+		});	
+		if(checked == false){
+			$('#old_password,#new_password,#confirm_password').val('')
+			return;
+		}			
 		
-		$.ajax({
-			async : true,
-			url   : "{% url 'changepwd' %}",
-			dataType : "json",
-			type : "POST",
-			data : {
-            	csrfmiddlewaretoken : $('#pwdform :first-child').val(),
-				username : "{{ request.user.username }}",
-				password : $('#new_password').val()
-			},
-			success : function(json) {
-				alert('Password changed.');
-			},
-			error : function(xhr, errStr) {
-			}
-		});
-		return;
-		$.ajax({
-			async : true,
-			//url : "<?php echo site_url('ajaxprocess/change_password') ?>",
-			url   : "{% url 'changepwd' %}",
-			dataType : "json",
-			type : "POST",
-			data : {
-				username : "{{ request.user.username }}",
-				password : $('#new_password').val()
-			},
-			success : function(json) {
-				alert('Password changed.');
-				location.href = location.href;
-			},
-			error : function(xhr, errStr) {
-			}
-		});
-
-		return;
-
-		// This does not work		
-		$('#pwdform')
-				.validate(
-						{
-							errorPlacement : function(error, element) {
-								element.before(error);
-							},
-							rules : {
-								old_password : {
-									remote : {
-										//url : "<?php echo site_url('ajaxprocess/check_oldpassword'); ?>",
-										url  : "{% url 'ajax-login' %}",
-										type : "post",
-										data : {
-											username : "{{ request.user.username }}",
-											password : function() {
-												return $('#old_password').val();
-											}
-										}
-									}
-								}
-								,
-								
-								new_password : {
-									required : true,
-								//                     minlength : 8,
-								//                     maxlength : 32,
-								//                     regx: "Please enter a valid password (least 1 symbol() and least 1 digit and alphabet)"
-								},
-								confirm_password : {
-									equalTo : "#new_password"
-								}
-								
-							},
-							submitHandler : function() {
-								console.log("Verified! ----")
-								/*
-								$.ajax({
-											async : true,
-											//url : "<?php echo site_url('ajaxprocess/change_password') ?>",
-											dataType : "json",
-											type : "POST",
-											data : {
-												username : "{{ request.user.username }}",
-												password : $('#new_password').val()
-											},
-											success : function(json) {
-												alert('Password changed.');
-												location.href = location.href;
-											},
-											error : function(xhr, errStr) {
-											}
-										});
-								/**/
+		$('#pwdform').validate({
+			rules : {
+				/*
+				old_password : {
+					remote : {
+						//url : "<?php echo site_url('ajaxprocess/check_oldpassword'); ?>",
+						url  : "{% url 'ajax-login' %}",
+						type : "post",
+						data : {
+							username : "{{ request.user.username }}",
+							password : function() {
+								return $('#old_password').val();
 							}
-						});
+						}
+					}
+				},
+				/**/
+				new_password : {
+					required : true,
+				//                     minlength : 8,
+				//                     maxlength : 32,
+				//                     regx: "Please enter a valid password (least 1 symbol() and least 1 digit and alphabet)"
+				},
+				confirm_password : {
+					equalTo : "#new_password"
+				}
+				
+			 },						
+			 submitHandler: function(form) {
+			 
+				$.ajax({
+					async : true,
+					//url : "<?php echo site_url('ajaxprocess/change_password') ?>",
+					url   : "{% url 'changepwd' %}",
+					dataType : "json",
+					type : "POST",
+					data : {
+		            	csrfmiddlewaretoken : $('#pwdform :first-child').val(),
+						username : "{{ request.user.username }}",
+						password : $('#new_password').val()
+					},
+					success : function(json) {
+						alert('Password changed.');
+						location.href = location.href;
+					},
+					error : function(xhr, errStr) {
+					}
+				});
+			 
+			 }
+			});
+
+			$('#pwdform').submit()
 		
-		console.log("Verified!")
 	}
+
 </script>
 
 {% endblock %}

@@ -24,6 +24,7 @@ class EventUser(models.Model):
     user     = models.OneToOneField(User)
     event    = models.ForeignKey(Event, null=True, blank=True,on_delete=models.SET_NULL)
     state    = models.IntegerField(default=0)
+    description = models.CharField(max_length=400, default='')
     
 class EventCheck(models.Model):
     

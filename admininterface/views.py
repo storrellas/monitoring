@@ -327,10 +327,11 @@ class ChangePwdView(LoginRequiredMixin, TemplateView):
         if not user_form.is_valid():
             print user_form.errors
             return HttpResponseBadRequest(user_form.errors)   
-        
+        # Setting new password
         user = User.objects.get(username=user_form.data['username'])
         user.set_password(user_form.data['password'])
         user.save()
+        
         
         
         
