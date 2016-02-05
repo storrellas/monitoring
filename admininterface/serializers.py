@@ -59,52 +59,60 @@ class AdminSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'password','eventid')
 
+class EventUserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EventUser
+        fields = ('description',)
         
 class EventUserSerializer(serializers.ModelSerializer):
         
     def create(self, validated_data):
-   
         obj = self.Meta.model.objects.create_user(username = validated_data['username'],                                             
-                                                  password=validated_data['password'])
+                                    password=validated_data['password'])
+        # Generate eventuser
         eventuser = EventUser(user=obj)
-        eventuser.description = self.initial_data['description']
-        eventuser.save()       
-        return obj        
-    
+        eventuser.save()
+        serializer = EventUserProfileSerializer(instance=eventuser,
+                                                data=validated_data['eventuser'])
+        if not serializer.is_valid():
+            serializer.errors
+            obj.delete()
+            return None
+        serializer.save()
+        return obj
+       
     def update(self, instance, validated_data):
         instance.set_password(validated_data['password'])
-        instance.save()                 
-        return instance                
-    
-    description = serializers.SerializerMethodField('description_field')        
-    def description_field(self, user):
-        try:                            
-            return user.eventuser.description
-        except:
-            return None
-    
+        instance.save()   
+        return instance             
+
+    eventuser = EventUserProfileSerializer(required=False)
     class Meta:
         model = User
-        fields = ('username', 'password','description')
+        fields = ('username', 'password', 'eventuser')
 
 class EventUserEditSerializer(serializers.ModelSerializer):
 
+    
     def update(self, instance, validated_data):
-        super(EventUserEditSerializer,self).update(instance, validated_data)
-        instance.eventuser.description = self.initial_data['description']
-        instance.eventuser.save()
-        return instance    
-
-    description = serializers.SerializerMethodField('description_field')        
-    def description_field(self, user):
-        try:                            
-            return user.eventuser.description
-        except:
+        #super(EventUserEditSerializer,self).update(instance, validated_data)
+        instance.username = validated_data['username']
+        instance.save()
+        
+        
+        serializer = EventUserProfileSerializer(instance=instance.eventuser,
+                                                data=validated_data['eventuser'])
+        if not serializer.is_valid():
+            serializer.errors
+            obj.delete()
             return None
-                
+                       
+        return instance
+        
+    eventuser = EventUserProfileSerializer(required=False)                
     class Meta:
         model = User
-        fields = ('username', 'description')
+        fields = ('username', 'description', 'eventuser')
 
 
 class EventSerializer(serializers.ModelSerializer):

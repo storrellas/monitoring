@@ -1,4 +1,5 @@
-from apiv2.serializers import *
+#from apiv2.serializers import *
+from admininterface.serializers import *
 from admininterface.models import *
 from django.contrib.auth.models import User, Group
 from django.db.models import Sum

@@ -348,27 +348,26 @@ $('document').ready(function(){
 	            }
 	        },
 	        submitHandler: function(){
-                $.ajax({
-                    async: true,
-                    url: "{% url 'ajax-event-user'%}",
-                    dataType: "json",
-                    type: "POST",
-                    data: {
-                        username:   $('#createNewUser #username').val(),
-                        password:   $('#createNewUser #cpassword_edit').val(),
-                        description: $('#createNewUser #description').val(),
-                    },
-                    success: function(json) {
-                    	location.reload()
-                    	return;
-                    },
-                    error: function(xhr, errStr) {
-                        alert(errStr);
-                    }
-                });
-	        	
-	        	
-	        	
+	        	var postData = {
+	        		    username: $('#createNewUser #username').val(),
+	        		    password: $('#createNewUser #cpassword_edit').val(),
+	        		    description :$('#createNewUser #description').val()
+	        		}
+        		$.ajax({
+        		  async: true,
+        		  url: "{% url 'ajax-event-user'%}",
+        		  dataType: "json",
+        		  type: "POST",
+        		  data : JSON.stringify(postData),
+        		  datatype : "application/json",
+        		  success: function(json) {
+        		    location.reload()
+        		    return;
+        		  },
+        		  error: function(xhr, errStr) {
+        		    alert(errStr);
+        		  }
+        		});	        	
 	        }
 	    });
 	}
@@ -450,7 +449,27 @@ $('document').ready(function(){
 	            },
 	        },
 	
-	        submitHandler: function() {	        	 
+	        submitHandler: function() {	
+	        	var postData = {
+	        		    username: $("#eusername").val(),
+	        		    description :$("#edescription").val()
+	        		}
+        		$.ajax({
+          		  async: true,
+          		  url: "{% url 'ajax-event-user-edit' %}" + $("#euserid").val() + "/",
+          		  dataType: "json",
+          		  type: "PUT",
+          		  data : JSON.stringify(postData),
+          		  datatype : "application/json",
+          		  success: function(json) {
+          		    location.reload()
+          		    return;
+          		  },
+          		  error: function(xhr, errStr) {
+          		    alert(errStr);
+          		  }
+          		});	
+	        	/*
                 $.ajax({
                     async: true,
                     url: "{% url 'ajax-event-user-edit' %}" + $("#euserid").val() + "/",
@@ -468,6 +487,7 @@ $('document').ready(function(){
                         alert(errStr);
                     }
                 });
+	        	/**/
 	        }
 	    });
 	}

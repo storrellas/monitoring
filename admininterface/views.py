@@ -310,6 +310,8 @@ class EventResultView( LoginRequiredMixin, TemplateView ):
 
         return context
 
+
+
 class ChangePwdView(LoginRequiredMixin, TemplateView):
     template_name='settings/changepwd.html'
     form = UserForm
@@ -332,7 +334,5 @@ class ChangePwdView(LoginRequiredMixin, TemplateView):
         user.set_password(user_form.data['password'])
         user.save()
         
-        
-        
-        
+                        
         return JsonResponse({})

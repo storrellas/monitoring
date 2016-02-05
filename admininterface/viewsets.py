@@ -1,4 +1,5 @@
 import traceback
+import json
 from StringIO import StringIO
 from datetime import datetime
 
@@ -59,6 +60,8 @@ class AdminDetailViewset( generics.RetrieveUpdateDestroyAPIView ):
     permission_classes = [IsAuthenticatedOrReadOnly]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
+
+
 class EventUserListViewset( generics.ListCreateAPIView ):
 
     #A simple ViewSet for viewing and editing accounts.
@@ -68,6 +71,16 @@ class EventUserListViewset( generics.ListCreateAPIView ):
     permission_classes = [IsAuthenticatedOrReadOnly]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
         
+    def create(self,request,*args, **kwargs):        
+        dict = json.loads(str(request.body))
+        dict['eventuser'] = {'description': dict['description']}
+        
+        serializer = EventUserSerializer(data=dict)
+        if not serializer.is_valid():
+            log.info( serializer.errors )
+        serializer.save()        
+        return JsonResponse(serializer.data)
+        
 class EventUserDetailViewset( generics.RetrieveUpdateDestroyAPIView ):
 
     #A simple ViewSet for viewing and editing accounts.
@@ -76,7 +89,6 @@ class EventUserDetailViewset( generics.RetrieveUpdateDestroyAPIView ):
     serializer_class = EventUserSerializer        
     permission_classes = [IsAuthenticatedOrReadOnly]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
-
 
 class EventUserEditListViewset( generics.ListAPIView ):
 
@@ -93,6 +105,20 @@ class EventUserEditViewset( generics.UpdateAPIView ):
     serializer_class = EventUserEditSerializer    
     permission_classes = [AllowAny]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+
+    def update(self,request,*args, **kwargs):
+        # Get the instance
+        instance = User.objects.get(id=kwargs['pk'])
+        
+        dict = json.loads(str(request.body))
+        dict['eventuser'] = {'description': dict['description']}
+
+        
+        serializer = EventUserEditSerializer(instance=instance,data=dict)
+        if not serializer.is_valid():
+            log.info( serializer.errors )
+        serializer.save()        
+        return JsonResponse(serializer.data)
 
 class CheckAdminNameViewset( ViewSet ):
     
