@@ -27,10 +27,8 @@ urlpatterns = [
     url(r'^event/add/$',                    EventAddView.as_view(),    name='add_event'),
     url(r'^event/edit/(?P<pk>[0-9]+)/$',    EventEditView.as_view(template_name='manage/editevent.html'),    name='edit_event'),
     
-    url(r'^admin/$',              BaseView.as_view(template_name='base.html'),    name='admin'),
-    url(r'^users/$',              BaseView.as_view(template_name='manage/users.html'),    name='users'),
-    url(r'^admin/admins/(?P<admin_id>[0-9]+)/$',    AdminView.as_view(),    name='admin_0'),
-    url(r'^manage/users/(?P<user_id>[0-9]+)/$',     EventUserView.as_view(),    name='users_0'),
+    url(r'^manage/admins/$',    AdminView.as_view(),    name='admin_list'),
+    url(r'^manage/users/$',     EventUserView.as_view(),    name='user_list'),
     
     
     url(r'^settings/changepwd/$', ChangePwdView.as_view(),    name='changepwd'),    

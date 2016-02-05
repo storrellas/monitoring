@@ -54,8 +54,8 @@
 {% url 'edit_event' as edit_event_url %}
 
 {# Users section #}
-{% url 'admin' as admins_url %}
-{% url 'users' as users_url %}
+{% url 'admin_list' as admins_url %}
+{% url 'user_list' as users_url %}
 {% url 'changepwd' as changepwd_url %}
 
 {% ifequal request.path login_url %}
@@ -104,10 +104,10 @@
 	>
 		<a href="#"><i class="fa fa-users"></i> <span class="nav-label">Users</span><span class="fa arrow"></span> </a>
 		<ul class="nav nav-second-level">
-			<li {% if admins_url in request.path %} class="active" {% endif %}><a
-				href="{% url 'admin_0' 0 %}">Admin Users</a></li>
-			<li {% if users_0 in request.path %} class="active" {% endif %}><a
-				href="{% url 'users_0' 0 %}">Event Users</a></li>
+			<li {% ifequal admins_url request.path %} class="active" {% endifequal %}><a
+				href="{% url 'admin_list' %}">Admin Users</a></li>
+			<li {% ifequal users_url request.path %} class="active" {% endifequal %}><a
+				href="{% url 'user_list' %}">Event Users</a></li>
 		</ul>
 	</li>
 	
