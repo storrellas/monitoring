@@ -46,7 +46,7 @@
 {# Dashboard section #}
 {% url 'base' as base_url %}
 {% url 'home' as home_url %}
-{% url 'event_analysis' as analysis_url %}
+{% url 'home_results' as analysis_url %}
 
 {# Events section #}
 {% url 'events' as events_url %}
@@ -80,9 +80,9 @@
 		<a href="#"><i class="fa fa-home"></i> <span class="nav-label">Dashboard</span><span class="fa arrow"></span> </a>
 		<ul class="nav nav-second-level">
 			<li {% if home_url == request.path %} class="active" {% endif %}>
-				<a href="{% url 'home' %}">Result</a></li>
+				<a href="{{ home_url }}">Analysis</a></li>
 			<li {% if analysis_url in request.path %} class="active" {% endif %}>
-				<a href="{% url 'event_analysis' %}">Analysis</a></li>
+				<a href="{{ analysis_url }}">Result</a></li>
 		</ul>
 	</li>
 	

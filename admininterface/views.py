@@ -219,7 +219,7 @@ class EventEditView( LoginRequiredMixin, DetailView ):
         
         return redirect(reverse('event'))
 
-class EventAnalysisCSVView( LoginRequiredMixin, View ):
+class EventResultCSVView( LoginRequiredMixin, View ):
     
     def get(self,request,*args,**kwargs):
         file_to_send = ContentFile(EventCheckResource().export().csv)
@@ -228,8 +228,8 @@ class EventAnalysisCSVView( LoginRequiredMixin, View ):
         response['Content-Disposition'] = 'attachment; filename="event.csv"'        
         return response
 
-class EventAnalysisView( LoginRequiredMixin, ListView ):
-    template_name='home/event_analysis.html'
+class EventResultView( LoginRequiredMixin, ListView ):
+    template_name='home/event_result.html'
     model = EventCheck
     paginate_by = 10
     context_object_name = 'eventcheck_list'
@@ -245,7 +245,7 @@ class EventAnalysisView( LoginRequiredMixin, ListView ):
         return self.model.objects.filter(event=self.event).order_by('id')
     
     def get_context_data(self, **kwargs):
-        context = super(EventAnalysisView, self).get_context_data(**kwargs)
+        context = super(EventResultView, self).get_context_data(**kwargs)
         context['event_list'] = Event.objects.all()
         
 
@@ -265,13 +265,13 @@ class EventAnalysisView( LoginRequiredMixin, ListView ):
 
 
 
-class EventResultView( LoginRequiredMixin, TemplateView ):
-    template_name='home/event_result.html'
+class EventAnalysisView( LoginRequiredMixin, TemplateView ):
+    template_name='home/event_analysis.html'
 
     
     
     def get_context_data(self, **kwargs):
-        context = super(EventResultView, self).get_context_data(**kwargs)
+        context = super(EventAnalysisView, self).get_context_data(**kwargs)
         context['event_list'] = Event.objects.all()
 
         # Capture selected event

@@ -8,16 +8,6 @@ from rest_framework.routers import SimpleRouter
 from django.views.generic import TemplateView,RedirectView
 from views import *
 from viewsets import *
-"""
-urlpatterns = [
-   
-    #url(r'^test/$',          TemplateView.as_view(template_name='sample.html'),      name='root'),
-    url(r'^$',                    RedirectView.as_view(url='/home/'),      name='root'),
-    url(r'^login/$',              LoginView.as_view(),        name='login'),    
-    url(r'^home/$',               BaseView.as_view(template_name='sample.html'),   name='home'),    
-]
-"""
-
 
 urlpatterns = [
    
@@ -28,9 +18,9 @@ urlpatterns = [
     url(r'^logout/$',             LogoutView.as_view(),        name='logout'),
     
     url(r'^base/$',                BaseView.as_view(template_name='base.html'),        name='base'),
-    url(r'^home/$',                EventResultView.as_view(template_name='home/event_result.html'),   name='home'),
-    url(r'^home/analysis/$',       EventAnalysisView.as_view(),    name='event_analysis'),
-    url(r'^home/analysis/csv/$',   EventAnalysisCSVView.as_view(),    name='event_analysis_csv'),
+    url(r'^home/$',                EventAnalysisView.as_view(),    name='home'),
+    url(r'^home/result/$',         EventResultView.as_view(),   name='home_results'),
+    url(r'^home/result/csv/$',     EventResultCSVView.as_view(),    name='event_analysis_csv'),
         
     url(r'^event/$',                        EventView.as_view(),    name='event'),
     url(r'^event/add/$',                    EventAddView.as_view(),    name='add_event'),

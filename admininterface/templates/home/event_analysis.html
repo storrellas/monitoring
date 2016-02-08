@@ -1,85 +1,72 @@
 {% extends 'base.html' %}
 
-{% load static %}
 {% load staticfiles %}
 {% load tags %}
 
 {% block contents %}
 
-	
+		
 <div class="row" style="margin-top: 10px">
 	<div class="col-lg-12">
 		<div class="ibox float-e-margins">
-
 				
-				{% include 'home/event_header.html' with export_to_csv=True %}
+				{% include 'home/event_header.html' with export_to_csv=False %}
 				
 				<div class="row">
-					<div class="ibox-content">
-						<div style="clear:both;"></div>
-                           <div class="tooltip-demo photo_table_wrapper">
-							<table class="table table-bordered" style="margin-bottom: 0px;" id="photo_table">
-								<col width="50px"/>
-								<col width="140px"/>
-								<col width="140px"/>
-								<col width="90px"/>
-								<col width="90px"/>
-								<col width="80px"/>
-								<col width="80px"/>
-								<col width="80px"/>
-								<col width="80px"/>
-								<tbody id="users_body">
-									<tr>
-										<th>No</th>
-										<th>Date</th>
-										<th>Username</th>
-										<th>Checkin</th>
-										<th>Checkout</th>
-										<th>Quantity</th>
-										<th>Target</th>
-										<th>Percent(%)</th>
-										<th>Feedback</th>
-										<th>Address</th>
-									</tr>											
-										{% for eventcheck in eventcheck_list %}
-                                       <tr>
-                                           <td>{{ eventcheck.id }}</td>
-                                           <td>{{ eventcheck.trackdate |date:"d/m/Y" }}</td>
-                                           <td>{{ eventcheck.user.username }}</td>
-                                           <td>{{ eventcheck.eventcheck.checkintime|date:"H:m" }}</td>
-                                           <td>{{ eventcheck.eventcheck.checkouttime|date:"H:m" }}</td>
-                                           <td>{{ eventcheck.quantity }}</td>
-                                           <td>{{ eventcheck.target }}</td>
-                                           <td>{{ eventcheck.target|percentage:eventcheck.quantity }}</td>
-                                           <td
-											style="padding-top: 1px; padding-bottom: 0px; text-align: center;">
-											<img src="
-												{% ifequal eventcheck.type eventcheck.GOOD %}
-												{% static 'inspinia_admin/img/icon/em1.png'%}												
-												{% endifequal %}
-												{% ifequal eventcheck.type eventcheck.NEUTRAL %}
-												{% static 'inspinia_admin/img/icon/em2.png'%}												
-												{% endifequal %}
-												{% ifequal eventcheck.type eventcheck.BAD %}
-												{% static 'inspinia_admin/img/icon/em3.png'%}												
-												{% endifequal %}
-												" style="width: 30px; height: 30px">
-											</td>
-                                           <td>{{ eventcheck.location }}</td>
-<!--	                                            <td>-->
-<!--	                                            	<a class="btn btn-sm btn-white btn-action" href="<?php echo site_url("event/edit/".$item['eventid'])?>" data-toggle="tooltip" data-placement="bottom" title="Edit"><img src="<?php echo base_url();?>inspinia_admin/img/icon/edit-1.png"></a>-->
-<!--	                                                <a class="btn btn-sm btn-white btn-action" onclick="on_delete('<?php echo $item['eventid']?>');" data-toggle="tooltip" data-placement="bottom" title="Delete"><img src="<?php echo base_url();?>inspinia_admin/img/icon/delete.png"></a>-->
-<!--	                                            </td>-->
-                                       </tr>
-										{% endfor %}											
-											
-											
-											
-											
-								</tbody>
-							</table>
-							{% include 'manage/pagination.html' %}
+            				<div class="col-lg-6">
+						<div class="card-box">
+							<!-- /primary heading -->
+							<div class="portlet-heading">
+								<h3 class="portlet-title text-dark"> Sampling Analysis</h3>
+							</div>
+							<div id="portlet2" class="panel-collapse collapse in">
+								<div class="portlet-body">
+									<div class="text-center">
+										<ul class="list-inline chart-detail-list">
+											<li>
+				                                  <h5><i class="fa fa-circle m-r-5" style="color: #5d9cec;"></i>Sampling</h5>
+				                              </li>
+				                              <li>
+				                                  <h5><i class="fa fa-circle m-r-5" style="color: #5fbeaa;"></i>Target</h5>
+				                              </li>
+										</ul>
+									</div>
+									<div id="morris-area-with-dotted" style="height: 300px;"></div>
+								</div>
+							</div>
 						</div>
+						<!-- /Portlet -->
+					</div>
+					
+            				
+            				<!-- Donut Chart -->
+					<div class="col-lg-6">
+						<div class="card-box">
+							<!-- /primary heading -->
+							<div class="portlet-heading">
+								<h3 class="portlet-title text-dark"> Feedback Analysis </h3>
+							</div>
+							<div id="portlet3" class="panel-collapse collapse in">
+								<div class="portlet-body">
+									<div id="morris-donut-example" style="height: 300px;"></div>
+
+									<div class="text-center">
+										<ul class="list-inline chart-detail-list">
+											<li>
+												<h5><i class="fa fa-circle m-r-5" style="color: #5fbeaa;"></i>Good</h5>
+											</li>
+											<li>
+												<h5><i class="fa fa-circle m-r-5" style="color: #5d9cec;"></i>Normal</h5>
+											</li>
+											<li>
+												<h5><i class="fa fa-circle m-r-5" style="color: #dcdcdc;"></i>Bad</h5>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- /Portlet -->
 					</div>
 				</div>
 			</div>
@@ -87,15 +74,111 @@
 	</div>
 </div>
 
+<script src="{% static 'inspinia_admin/js/plugins/sparkline/jquery.sparkline.min.js' %}"></script>
+<script src="{% static 'inspinia_admin/js/custom/jquery.min.js' %}"></script>
+<script src="{% static 'inspinia_admin/js/custom/wow.min.js' %}"></script>
+<script src="{% static 'inspinia_admin/js/custom/waves.js' %}"></script>
+<script src="{% static 'inspinia_admin/js/custom/jquery.app.js' %}"></script>
+<script src="{% static 'inspinia_admin/js/custom/morris/morris.min.js' %}"></script>
+<script src="{% static 'inspinia_admin/js/custom/raphael/raphael-min.js' %}"></script>
 
 <script type="text/javascript">
-function on_export()
-{
-    location.href="{% url 'event_analysis_csv' %}";
-}
-function on_change()
-{
-	$("#viewResult").submit();
-}
+$(function() {
+	$("#sparkline7").sparkline([52,12,44], {
+        type: 'pie',
+        height: '150px',
+        sliceColors: ['#1ab394','#b3b3b3','#e4f0fb']
+    });
+});
+</script>
+
+<script type="text/javascript">
+!function($) {
+    "use strict";
+
+    var Dashboard1 = function() {
+    	this.$realData = []
+    };
+
+    //creates area chart with dotted
+    Dashboard1.prototype.createAreaChartDotted = function(element, pointSize, lineWidth, data, xkey, ykeys, labels, Pfillcolor, Pstockcolor, lineColors) {
+        Morris.Area({
+            element: element,
+            pointSize: 3,
+            lineWidth: 0,
+            data: data,
+            xkey: xkey,
+            xLabels: "day",
+            ykeys: ykeys,
+            labels: labels,
+            hideHover: 'auto',
+            pointFillColors: Pfillcolor,
+            pointStrokeColors: Pstockcolor,
+            resize: true,
+            gridLineColor: '#eef0f2',
+            lineColors: lineColors
+        });
+   },
+ 	//creates Donut chart
+   Dashboard1.prototype.createDonutChart = function(element, data, colors) {
+       Morris.Donut({
+           element: element,
+           data: data,
+           resize: true, //defaulted to true
+           colors: colors
+       });
+   },
+
+    Dashboard1.prototype.init = function() {
+	    // Currently no events
+	    if( {{ eventid_selected }} == 0 ) return;
+	   
+	   
+        //creating area chart
+        var graph = this;
+        $.ajax({
+            url: "{% url 'ajax-eventcheck-graph' eventid_selected %}",
+            dataType: "json",
+            type: "GET",
+            success: function(json) {
+				console.log("Success!!" + json)
+		        graph.createAreaChartDotted('morris-area-with-dotted', 0, 0, json, 
+		        							'trackdate', ['target', 'quantity'], 
+		        							['Sampling', 'Target'],
+		        							['#ffffff'],['#999999'], 
+		        							['#5fbeaa', '#5d9cec']);
+            },
+            error: function(xhr, errStr) {
+                alert(errStr);
+            }
+        });
+        /**/
+        
+      	// Creating donut chart      
+		var $donutData = [
+			{% for key, value in feedback.items %}
+			{label: "{{key}}",    value: {{ value }} },
+			{% endfor %}
+		];
+      	
+        this.createDonutChart('morris-donut-example', $donutData, ['#5fbeaa', '#5d9cec', '#ebeff2']);
+    },
+    //init
+    $.Dashboard1 = new Dashboard1, $.Dashboard1.Constructor = Dashboard1
+}(window.jQuery),
+
+//initializing
+function($) {
+    "use strict";
+    $.Dashboard1.init();
+}(window.jQuery);
+
+</script>
+
+<script type="text/javascript">
+	function on_change()
+	{
+		$("#viewResult").submit();
+	}
 </script>
 {% endblock %}
