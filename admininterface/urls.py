@@ -8,6 +8,7 @@ from rest_framework.routers import SimpleRouter
 from django.views.generic import TemplateView,RedirectView
 from views import *
 from viewsets import *
+from django.contrib.auth.decorators import user_passes_test
 
 urlpatterns = [
    
