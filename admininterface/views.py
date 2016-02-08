@@ -50,7 +50,7 @@ class LoginView(View):
         user = authenticate(username=user_form.data['username'], 
                             password=user_form.data['password'])
         if user is not None:
-            if user.is_active and (user.is_superuser or user.groups.filter(name='Company').exists()):
+            if user.is_active and (user.is_superuser or user.role == User.COMPANY):
                 login(request, user)                
                 return JsonResponse( user_form.data )
 

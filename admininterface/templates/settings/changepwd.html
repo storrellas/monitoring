@@ -85,21 +85,6 @@
 		
 		$('#pwdform').validate({
 			rules : {
-				/*
-				old_password : {
-					remote : {
-						//url : "<?php echo site_url('ajaxprocess/check_oldpassword'); ?>",
-						url  : "{% url 'ajax-login' %}",
-						type : "post",
-						data : {
-							username : "{{ request.user.username }}",
-							password : function() {
-								return $('#old_password').val();
-							}
-						}
-					}
-				},
-				/**/
 				new_password : {
 					required : true,
 				//                     minlength : 8,

@@ -45,7 +45,6 @@ class AdminListViewset( generics.ListCreateAPIView ):
     model = User
     queryset = User.objects.filter(is_superuser=True)
     serializer_class = AdminSerializer      
-    #permission_classes = [IsAuthenticatedOrReadOnly]
     permission_classes = [IsAuthenticated]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
@@ -56,10 +55,8 @@ class AdminDetailViewset( generics.RetrieveUpdateDestroyAPIView ):
     model = User
     queryset = User.objects.filter(is_superuser=True)
     serializer_class = AdminSerializer        
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
-
-
 
 class EventUserListViewset( generics.ListCreateAPIView ):
 
@@ -67,7 +64,7 @@ class EventUserListViewset( generics.ListCreateAPIView ):
     model = User
     queryset = User.objects.filter(is_superuser=False)
     serializer_class = EventUserSerializer      
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
                
 
@@ -75,7 +72,7 @@ class EventUserDetailViewset( generics.RetrieveUpdateDestroyAPIView ):
     model = User
     queryset = User.objects.filter()
     serializer_class = EventUserSerializer   
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
 class CheckAdminNameViewset( ViewSet ):
@@ -88,14 +85,12 @@ class CheckAdminNameViewset( ViewSet ):
             return HttpResponseBadRequest()
         except: 
             return HttpResponse()
-
-
         
 class EventViewset( ModelViewSet ):
     model = Event
     queryset = Event.objects.all()
     serializer_class = EventSerializer    
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)        
         
 class EventMultiDeleteViewset( ViewSet ):

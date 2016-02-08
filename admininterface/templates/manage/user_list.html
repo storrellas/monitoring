@@ -91,8 +91,6 @@ $('document').ready(function(){
 										<div class="col-sm-12">
 											<h3 class="m-t-none m-b">Create User</h3>
 											<form role="form" id="createNewUser">
-												<input type="hidden" id="INSERTRESULT"
-													value="<?php echo $result?>">
 												<div class="form-group">
 													<label><b class="required">*</b>Username:</label> <input
 														type="text" placeholder="" class="form-control required"
@@ -144,9 +142,6 @@ $('document').ready(function(){
 											<h3 class="m-t-none m-b">Edit User</h3>
 											<form role="form" id="editUser" method="post"
 												enctype="multipart/form-data">
-												<input type="hidden" id="INSERTRESULT1"
-													value="<?php echo $result?>"> <input type="hidden"
-													id="euserid">
 												<div class="form-group">
 													<label><b class="required">*</b>Username:</label> <input
 														type="text" placeholder="" class="form-control required"
@@ -270,11 +265,6 @@ $('document').ready(function(){
 								</tr>
 								{% for user in event_user_list %}
 								<tr>
-									<td style="display: none;"><input type="hidden"
-										id="username<?php echo $userItem['userid']?>"
-										value="<?php echo $userItem['username'];?>"> <input
-										type="hidden" id="description<?php echo $userItem['userid']?>"
-										value="<?php echo $userItem['description'];?>"></td>
 									<td>
 										{{ user.id }}
 									</td>

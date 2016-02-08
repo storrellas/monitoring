@@ -46,8 +46,8 @@
                                            <td>{{ eventcheck.id }}</td>
                                            <td>{{ eventcheck.trackdate |date:"d/m/Y" }}</td>
                                            <td>{{ eventcheck.user.username }}</td>
-                                           <td>{{ eventcheck.eventcheck.checkintime|date:"H:m" }}</td>
-                                           <td>{{ eventcheck.eventcheck.checkouttime|date:"H:m" }}</td>
+                                           <td>{{ eventcheck.checkintime|date:"H:m" }}</td>
+                                           <td>{{ eventcheck.checkouttime|date:"H:m" }}</td>
                                            <td>{{ eventcheck.quantity }}</td>
                                            <td>{{ eventcheck.target }}</td>
                                            <td>{{ eventcheck.target|percentage:eventcheck.quantity }}</td>

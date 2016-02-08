@@ -312,22 +312,6 @@
                     },
                     success: function(json) {
                     	location.reload()
-                    	return;
-                    	/*
-                        if (json['result'] >= 0)
-                        {
-                            $('#modal-form-new').modal('hide');
-                            $('#modal-form-new').on('hidden.bs.modal', function(e) {
-                                location.href = "<?php echo site_url('admin/admins/0') ?>";
-                            });
-                        }
-                        else
-                        {
-                            $('#username').val('');
-                            $('#password').val('');
-                            $('#confirm').val('');
-                        }
-                    	/**/
                     },
                     error: function(xhr, errStr) {
                         $('#username').val('');

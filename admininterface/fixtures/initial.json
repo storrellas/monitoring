@@ -4,7 +4,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$24000$phminvGvyboZ$E+bZEc10tGELn0WLs4ymlUrUGUbptqxnLrGxGGT+v8w=",
-    "last_login": "2016-02-08T08:22:44.140Z",
+    "last_login": "2016-02-08T12:24:40.448Z",
     "is_superuser": true,
     "username": "admin",
     "first_name": "",
@@ -14,6 +14,7 @@
     "date_joined": "2016-02-08T08:06:06.557Z",
     "phone": "",
     "email": "",
+    "role": "NONE",
     "cif": "",
     "gender": "",
     "score": "",
@@ -37,6 +38,7 @@
     "date_joined": "2016-02-08T09:08:18.964Z",
     "phone": "",
     "email": "",
+    "role": "EVENTUSER",
     "cif": "",
     "gender": "",
     "score": "",
@@ -60,6 +62,31 @@
     "date_joined": "2016-02-08T09:40:45.039Z",
     "phone": "",
     "email": "",
+    "role": "EVENTUSER",
+    "cif": "",
+    "gender": "",
+    "score": "",
+    "picture": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "admininterface.user",
+  "pk": 4,
+  "fields": {
+    "password": "pbkdf2_sha256$24000$8wKOJBpHwmpw$CWUAmvdYPXmeC89ZJrdmFw+emG85ktwEeUwKRBB8CP8=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "nike",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2016-02-08T12:41:00.128Z",
+    "phone": "",
+    "email": "",
+    "role": "COMPANY",
     "cif": "",
     "gender": "",
     "score": "",
@@ -76,7 +103,10 @@
     "description": "First event",
     "register_date": "2016-01-22T14:04:43.515Z",
     "videourl": "http://www.elpais.es",
-    "pdfdocument": "event/Jellyfish.jpg"
+    "pdfdocument": "event/Jellyfish.jpg",
+    "user": [
+      2
+    ]
   }
 },
 {
@@ -87,22 +117,10 @@
     "description": "This is the second event",
     "register_date": "2016-01-27T13:39:50.695Z",
     "videourl": "http://migranne.com",
-    "pdfdocument": "event/Tulips.jpg"
+    "pdfdocument": "event/Tulips.jpg",
+    "user": []
   }
 },
-
-{
-  "model": "admininterface.product",
-  "pk": 1,
-  "fields": {
-    "event": 1,
-    "name": "MyProduct",
-    "brand": "MyBrand",
-    "format": ""
-  }
-},
-
-
 {
   "model": "admininterface.eventcheck",
   "pk": 3,
@@ -187,7 +205,16 @@
     "location": "Carrer d'Adri\u00e0 Margarit, 24, 08035 Barcelona, Barcelona, Spain"
   }
 },
-
+{
+  "model": "admininterface.product",
+  "pk": 1,
+  "fields": {
+    "event": 1,
+    "name": "MyProduct",
+    "brand": "MyBrand",
+    "format": ""
+  }
+},
 {
   "model": "admininterface.product",
   "pk": 2,
@@ -208,5 +235,4 @@
     "format": ""
   }
 }
-
 ]
