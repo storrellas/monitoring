@@ -76,7 +76,7 @@
   "pk": 4,
   "fields": {
     "password": "pbkdf2_sha256$24000$8wKOJBpHwmpw$CWUAmvdYPXmeC89ZJrdmFw+emG85ktwEeUwKRBB8CP8=",
-    "last_login": null,
+    "last_login": "2016-02-08T12:43:40.291Z",
     "is_superuser": false,
     "username": "nike",
     "first_name": "",
@@ -84,6 +84,30 @@
     "is_staff": false,
     "is_active": true,
     "date_joined": "2016-02-08T12:41:00.128Z",
+    "phone": "",
+    "email": "",
+    "role": "COMPANY",
+    "cif": "",
+    "gender": "",
+    "score": "",
+    "picture": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "admininterface.user",
+  "pk": 5,
+  "fields": {
+    "password": "pbkdf2_sha256$24000$4HeNpURtRAd4$TP57rj5e1hs2M+1fzCQ5IXm/p/b1Kz+mwpqK/Y9oMhk=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "yahoo",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2016-02-08T12:47:42.749Z",
     "phone": "",
     "email": "",
     "role": "COMPANY",
@@ -105,7 +129,8 @@
     "videourl": "http://www.elpais.es",
     "pdfdocument": "event/Jellyfish.jpg",
     "user": [
-      2
+      2,
+      5
     ]
   }
 },
@@ -118,7 +143,9 @@
     "register_date": "2016-01-27T13:39:50.695Z",
     "videourl": "http://migranne.com",
     "pdfdocument": "event/Tulips.jpg",
-    "user": []
+    "user": [
+      4
+    ]
   }
 },
 {

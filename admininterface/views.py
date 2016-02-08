@@ -219,14 +219,6 @@ class EventEditView( LoginRequiredMixin, DetailView ):
         
         return redirect(reverse('event'))
 
-class EventResultCSVView( LoginRequiredMixin, View ):
-    
-    def get(self,request,*args,**kwargs):
-        file_to_send = ContentFile(EventCheckResource().export().csv)
-        response     = HttpResponse(file_to_send,'text/csv')
-        response['Content-Length']      = file_to_send.size    
-        response['Content-Disposition'] = 'attachment; filename="event.csv"'        
-        return response
 
 class EventResultView( LoginRequiredMixin, ListView ):
     template_name='home/event_result.html'
@@ -236,17 +228,24 @@ class EventResultView( LoginRequiredMixin, ListView ):
     event = None
     
     def get_queryset(self):
-        try:
-            event_id = self.request.GET['eventid']            
-        except:
-            event_id = Event.objects.first().id
-        self.event = Event.objects.get( id = event_id )
-        
+                    
+        # An event was selected
+        if 'event_id' in self.request.GET.keys():
+            event_id = self.request.GET['eventid']
+            self.event = Event.objects.get( id = event_id )            
+        else:
+            if self.request.user.is_superuser == True:
+                self.event = Event.objects.first()
+            else:
+                self.event = Event.objects.filter(user=self.request.user).first()          
         return self.model.objects.filter(event=self.event).order_by('id')
     
     def get_context_data(self, **kwargs):
         context = super(EventResultView, self).get_context_data(**kwargs)
-        context['event_list'] = Event.objects.all()
+        if request.user.is_superuser:
+            context['event_list'] = Event.objects.all()
+        else:
+            context['event_list'] = Event.objects.filter(user=self.request.user)
         
 
         analytics = EventCheck.objects.filter(event=self.event) \
@@ -263,33 +262,32 @@ class EventResultView( LoginRequiredMixin, ListView ):
 
         return context
 
-
-
 class EventAnalysisView( LoginRequiredMixin, TemplateView ):
-    template_name='home/event_analysis.html'
-
-    
+    template_name='home/event_analysis.html'    
     
     def get_context_data(self, **kwargs):
         context = super(EventAnalysisView, self).get_context_data(**kwargs)
-        context['event_list'] = Event.objects.all()
+        if self.request.user.is_superuser:
+            context['event_list'] = Event.objects.all()
+        else:
+            context['event_list'] = Event.objects.filter(user=self.request.user)
 
-        # Capture selected event
-        try:
-            event_id = self.request.GET['eventid']            
-        except:
-            if Event.objects.count() > 0:
-                event_id = Event.objects.first().id
-            else:
-                event_id = None
         
+        # An event was selected
+        if 'event_id' in self.request.GET.keys():
+            event_id = self.request.GET['eventid']
+            event = Event.objects.get( id = event_id )            
+        else:
+            if self.request.user.is_superuser == True:
+                event = Event.objects.first()
+            else:
+                event = Event.objects.filter(user=self.request.user).first()
+
         # There are no event currently
-        if event_id is None:
+        if event is None:
             context['eventid_selected'] = 0
             return context
         
-        event = Event.objects.get( id = event_id )        
-
         # Capture data for event_header.html
         eventcheck_list = EventCheck.objects.filter(event=event) 
         analytics = eventcheck_list.aggregate(Sum('quantity'), Sum('target'))
@@ -319,6 +317,17 @@ class EventAnalysisView( LoginRequiredMixin, TemplateView ):
 
 
         return context
+
+class EventResultCSVView( LoginRequiredMixin, View ):
+    
+    def get(self,request,*args,**kwargs):
+        file_to_send = ContentFile(EventCheckResource().export().csv)
+        response     = HttpResponse(file_to_send,'text/csv')
+        response['Content-Length']      = file_to_send.size    
+        response['Content-Disposition'] = 'attachment; filename="event.csv"'        
+        return response
+    
+
 
 
 

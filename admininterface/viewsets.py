@@ -116,7 +116,7 @@ class EventCheckGraphViewset( ViewSet ):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
     def generate_graph_data(self, request, *args, **kwargs):
-        event = Event.objects.get(id= kwargs['pk'] )
+        event = Event.objects.get( id=kwargs['pk'] )
         eventcheck_list = EventCheck.objects.filter(event=event)
          
         # Generate graph data
