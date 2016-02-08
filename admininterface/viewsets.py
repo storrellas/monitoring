@@ -4,7 +4,6 @@ from StringIO import StringIO
 from datetime import datetime
 
 # Django imports
-from django.contrib.auth.models import User
 from django.http import HttpResponseBadRequest, HttpResponse, JsonResponse
 from django.utils.six import BytesIO
 from django.db.models import Sum
@@ -70,55 +69,15 @@ class EventUserListViewset( generics.ListCreateAPIView ):
     serializer_class = EventUserSerializer      
     permission_classes = [IsAuthenticatedOrReadOnly]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
-        
-    def create(self,request,*args, **kwargs):        
-        dict = json.loads(str(request.body))
-        dict['eventuser'] = {'description': dict['description']}
-        
-        serializer = EventUserSerializer(data=dict)
-        if not serializer.is_valid():
-            log.info( serializer.errors )
-        serializer.save()        
-        return JsonResponse(serializer.data)
-        
+               
+
 class EventUserDetailViewset( generics.RetrieveUpdateDestroyAPIView ):
-
-    #A simple ViewSet for viewing and editing accounts.
     model = User
     queryset = User.objects.filter(is_superuser=False)
-    serializer_class = EventUserSerializer        
-    permission_classes = [IsAuthenticatedOrReadOnly]
-    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
-
-class EventUserEditListViewset( generics.ListAPIView ):
-
-    #A simple ViewSet for viewing and editing accounts.
-    model = User
-    queryset = User.objects.filter(is_superuser=False)
-    serializer_class = EventUserEditSerializer      
-    permission_classes = [IsAuthenticatedOrReadOnly]
-    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
-
-class EventUserEditViewset( generics.UpdateAPIView ):
-    model = User
-    queryset = User.objects.filter(is_superuser=False)
-    serializer_class = EventUserEditSerializer    
+    serializer_class = EventUserSerializer   
     permission_classes = [AllowAny]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
-    def update(self,request,*args, **kwargs):
-        # Get the instance
-        instance = User.objects.get(id=kwargs['pk'])
-        
-        dict = json.loads(str(request.body))
-        dict['eventuser'] = {'description': dict['description']}
-
-        
-        serializer = EventUserEditSerializer(instance=instance,data=dict)
-        if not serializer.is_valid():
-            log.info( serializer.errors )
-        serializer.save()        
-        return JsonResponse(serializer.data)
 
 class CheckAdminNameViewset( ViewSet ):
     
@@ -130,6 +89,8 @@ class CheckAdminNameViewset( ViewSet ):
             return HttpResponseBadRequest()
         except: 
             return HttpResponse()
+
+
         
 class EventViewset( ModelViewSet ):
     model = Event
@@ -138,7 +99,6 @@ class EventViewset( ModelViewSet ):
     permission_classes = [AllowAny]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)        
         
-
 class EventMultiDeleteViewset( ViewSet ):
 
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
@@ -155,8 +115,7 @@ class EventMultiDeleteViewset( ViewSet ):
         # Delete corresponding items        
         for item in serializer.data:
             Event.objects.get(id=item['id']).delete()   
-        return JsonResponse({})
-        
+        return JsonResponse({})       
         
 class EventCheckGraphViewset( ViewSet ):
 

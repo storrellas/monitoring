@@ -6,9 +6,8 @@ from django.shortcuts import redirect
 from django.views.generic import View
 from django.http import Http404, HttpResponseBadRequest, HttpResponseNotFound,HttpResponse,JsonResponse
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
+
 from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.core.files.base import ContentFile
 
@@ -73,12 +72,13 @@ class LogoutView(RedirectView):
 class BaseView( LoginRequiredMixin, TemplateView ): 
     template_name='base.html'
     
-    """
+    
     def get(self, request, *args, **kwargs):
+        print request.user
         context = self.get_context_data()
         log.info( "Calling BaseView :" + str(request.user.username) + ":" )    
         return super(BaseView, self).render_to_response(context)
-    """
+    
 
 
 
@@ -181,9 +181,9 @@ class EventEditView( LoginRequiredMixin, DetailView ):
         context = super(EventEditView, self).get_context_data(**kwargs)
         
         event = kwargs['object']
-        eventuser_list = event.eventuser_set.all()
+        eventuser_list = event.user.all()
         context['eventuser_list'] = eventuser_list
-        context['user_list'] = User.objects.filter(eventuser__event__isnull=True,
+        context['user_list'] = User.objects.filter(event__isnull=True,
                                                    is_superuser=False)                
         context['selno'] = str(eventuser_list.values_list('id', flat=True))[1:-1]      
         return context
@@ -278,7 +278,16 @@ class EventResultView( LoginRequiredMixin, TemplateView ):
         try:
             event_id = self.request.GET['eventid']            
         except:
-            event_id = Event.objects.first().id
+            if Event.objects.count() > 0:
+                event_id = Event.objects.first().id
+            else:
+                event_id = None
+        
+        # There are no event currently
+        if event_id is None:
+            context['eventid_selected'] = 0
+            return context
+        
         event = Event.objects.get( id = event_id )        
 
         # Capture data for event_header.html
@@ -307,6 +316,7 @@ class EventResultView( LoginRequiredMixin, TemplateView ):
                      .annotate(quantity = Sum('quantity'), target = Sum('target') )
         #print graph_data
         context['graph_data'] = graph_data
+
 
         return context
 

@@ -1,433 +1,85 @@
 [
 {
+  "model": "admininterface.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$24000$phminvGvyboZ$E+bZEc10tGELn0WLs4ymlUrUGUbptqxnLrGxGGT+v8w=",
+    "last_login": "2016-02-08T08:22:44.140Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2016-02-08T08:06:06.557Z",
+    "phone": "",
+    "email": "",
+    "cif": "",
+    "gender": "",
+    "score": "",
+    "picture": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "admininterface.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$24000$tYXsrWuZhxK2$ad7YAjJt9V5vuc7XGHbdhbJNKoWoU0VeFfjtycznEW8=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "camile",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2016-02-08T09:08:18.964Z",
+    "phone": "",
+    "email": "",
+    "cif": "",
+    "gender": "",
+    "score": "",
+    "picture": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "admininterface.user",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$24000$jKnieeBw8BTN$6o46y5BtemyRKgdtpZKRWFT9YXS99A5AnDv7wS4HDJ0=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "edu",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2016-02-08T09:40:45.039Z",
+    "phone": "",
+    "email": "",
+    "cif": "",
+    "gender": "",
+    "score": "",
+    "picture": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
   "model": "admininterface.event",
   "pk": 1,
   "fields": {
     "title": "MyEvent",
-    "description": "First event",
-    "register_date": "2016-01-22T14:04:43.515Z",
-    "videourl": "http://www.elpais.es",
-    "pdfdocument": "event/Jellyfish.jpg"
-  }
-},
-{
-  "model": "admininterface.event",
-  "pk": 2,
-  "fields": {
-    "title": "SecondEvent",
-    "description": "This is the second event",
-    "register_date": "2016-01-27T13:39:50.695Z",
-    "videourl": "http://migranne.com",
-    "pdfdocument": "event/Tulips.jpg"
-  }
-},
-{
-  "model": "admininterface.data",
-  "pk": 1,
-  "fields": {
-    "user": 1,
-    "event": 1,
-    "data": "Dont know what to put here"
-  }
-},
-{
-  "model": "admininterface.data",
-  "pk": 2,
-  "fields": {
-    "user": 7,
-    "event": null,
-    "data": ""
-  }
-},
-{
-  "model": "admininterface.eventuser",
-  "pk": 1,
-  "fields": {
-    "user": 2,
-    "event": 1,
-    "state": 0
-  }
-},
-{
-  "model": "admininterface.eventuser",
-  "pk": 2,
-  "fields": {
-    "user": 3,
-    "event": 1,
-    "state": 0
-  }
-},
-{
-  "model": "admininterface.eventuser",
-  "pk": 6,
-  "fields": {
-    "user": 4,
-    "event": null,
-    "state": 0
-  }
-},
-{
-  "model": "admininterface.eventuser",
-  "pk": 7,
-  "fields": {
-    "user": 5,
-    "event": null,
-    "state": 0
-  }
-},
-{
-  "model": "admininterface.eventuser",
-  "pk": 8,
-  "fields": {
-    "user": 6,
-    "event": null,
-    "state": 0
-  }
-},
-{
-  "model": "admininterface.eventcheck",
-  "pk": 3,
-  "fields": {
-    "user": 2,
-    "event": 1,
-    "quantity": 10,
-    "target": 5,
-    "type": 1,
-    "note": "notes",
-    "brief_opened": false,
-    "trackdate": "2016-01-22",
-    "tracktime": "12:39:45.388",
-    "checkintime": "2016-01-22T14:04:43.517Z",
-    "checkouttime": "2016-01-22T14:04:43.517Z",
-    "completeflag": true,
-    "latitude": 0.0,
-    "longitude": 0.0,
-    "location": ""
-  }
-},
-{
-  "model": "admininterface.eventcheck",
-  "pk": 4,
-  "fields": {
-    "user": 2,
-    "event": 1,
-    "quantity": 41,
-    "target": 37,
-    "type": 2,
-    "note": "",
-    "brief_opened": false,
-    "trackdate": "2016-01-29",
-    "tracktime": "13:22:45.388",
-    "checkintime": "2016-01-22T14:04:43.517Z",
-    "checkouttime": "2016-01-22T14:04:43.517Z",
-    "completeflag": true,
-    "latitude": 0.0,
-    "longitude": 0.0,
-    "location": ""
-  }
-},
-{
-  "model": "admininterface.eventcheck",
-  "pk": 5,
-  "fields": {
-    "user": 2,
-    "event": 1,
-    "quantity": 12,
-    "target": 8,
-    "type": 2,
-    "note": "",
-    "brief_opened": false,
-    "trackdate": "2016-02-02",
-    "tracktime": "12:18:59.883",
-    "checkintime": "2016-01-22T14:04:43.517Z",
-    "checkouttime": "2016-01-22T14:04:43.517Z",
-    "completeflag": true,
-    "latitude": 0.0,
-    "longitude": 0.0,
-    "location": ""
-  }
-},
-{
-  "model": "admininterface.eventcheck",
-  "pk": 16,
-  "fields": {
-    "user": 3,
-    "event": 1,
-    "quantity": 25,
-    "target": 14,
-    "type": 2,
-    "note": "dbx",
-    "brief_opened": false,
-    "trackdate": "2016-02-02",
-    "tracktime": "13:43:50.617",
-    "checkintime": "2016-02-02T13:24:28.234Z",
-    "checkouttime": null,
-    "completeflag": false,
-    "latitude": 41.414762,
-    "longitude": 2.131821,
-    "location": "Carrer d'Adri\u00e0 Margarit, 24, 08035 Barcelona, Barcelona, Spain"
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 1,
-  "fields": {
-    "photo": "event/photo/abc_cYcjTuc",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 2,
-  "fields": {
-    "photo": "event/photo/abc",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 3,
-  "fields": {
-    "photo": "event/photo/abc_PNVfCOk",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 4,
-  "fields": {
-    "photo": "event/photo/abc_G29JUrv",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 5,
-  "fields": {
-    "photo": "event/photo/abc_2uWGZQY",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 6,
-  "fields": {
-    "photo": "event/photo/1",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 7,
-  "fields": {
-    "photo": "event/photo/1_9NcDxDt",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 8,
-  "fields": {
-    "photo": "event/photo/1_OAuOAuf",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 9,
-  "fields": {
-    "photo": "event/photo/abc",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 10,
-  "fields": {
-    "photo": "event/photo/abc_KIPVMON",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 11,
-  "fields": {
-    "photo": "event/photo/abc_gdNndap",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 12,
-  "fields": {
-    "photo": "event/photo/abc",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 13,
-  "fields": {
-    "photo": "event/photo/abc_c8YgeKq",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 14,
-  "fields": {
-    "photo": "event/photo/abc_8JWCJf6",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 15,
-  "fields": {
-    "photo": "event/photo/abc_lyL0z7K",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 16,
-  "fields": {
-    "photo": "event/photo/abc_Ocp7HdS",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 17,
-  "fields": {
-    "photo": "event/photo/abc_CcAGwG0",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 18,
-  "fields": {
-    "photo": "event/photo/abc",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 19,
-  "fields": {
-    "photo": "event/photo/abc_s10kVH0",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 20,
-  "fields": {
-    "photo": "event/photo/abc_vFGuTWX",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 21,
-  "fields": {
-    "photo": "event/photo/test.txt",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 22,
-  "fields": {
-    "photo": "event/photo/test.txt",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 23,
-  "fields": {
-    "photo": "event/photo/test_4N9RRIf.txt",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 24,
-  "fields": {
-    "photo": "event/photo/test.txt",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 25,
-  "fields": {
-    "photo": "event/photo/test_HDQxQdr.txt",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 26,
-  "fields": {
-    "photo": "event/photo/test_4wCYI6e.txt",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 27,
-  "fields": {
-    "photo": "event/photo/test.txt",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 28,
-  "fields": {
-    "photo": "event/photo/test_AyuBrRo.txt",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.eventcheckimage",
-  "pk": 29,
-  "fields": {
-    "photo": "event/photo/test.txt",
-    "eventcheck": 3
-  }
-},
-{
-  "model": "admininterface.product",
-  "pk": 1,
-  "fields": {
-    "event": 1,
-    "name": "MyProduct",
-    "brand": "MyBrand",
-    "format": ""
-  }
-},
-{
-  "model": "admininterface.product",
-  "pk": 2,
-  "fields": {
-    "event": 1,
-    "name": "MySecond",
-    "brand": "MySecond",
-    "format": ""
-  }
-},
-{
-  "model": "admininterface.product",
-  "pk": 3,
-  "fields": {
-    "event": 2,
-    "name": "MyOther",
-    "brand": "MyOther",
-    "format": ""
+    "description": "MyDescription",
+    "register_date": "2016-02-08T09:53:40.574Z",
+    "videourl": "",
+    "pdfdocument": "",
+    "user": [
+      2
+    ]
   }
 }
 ]

@@ -11,7 +11,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^', include('admininterface.urls')),
     #url(r'^api/v1/', include('apiv1.urls')),
-    url(r'^api/v2/', include('apiv2.urls')),
+    #url(r'^api/v2/', include('apiv2.urls')),
         
 ] + \
 static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + \

@@ -3,7 +3,6 @@ from StringIO import StringIO
 from datetime import datetime
 
 # Django imports
-from django.contrib.auth.models import User
 from django.http import HttpResponseBadRequest, HttpResponse, JsonResponse
 from django.utils.six import BytesIO
 from django.db.models import Sum

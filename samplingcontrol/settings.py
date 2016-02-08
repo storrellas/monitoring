@@ -90,6 +90,9 @@ DATABASES = {
     }
 }
 
+# Sampling user model
+AUTH_USER_MODEL = 'admininterface.User'
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 

@@ -72,8 +72,15 @@ $('document').ready(function(){
 								<label class="col-sm-2 control-label" style="text-align: right;">
 									<b class="required">*</b>PDF:</label>
 								<div class="col-sm-9">
-									<input type="text" placeholder="" class="form-control" name="pdfurl" id="pdfurl" 
-											disabled value="{{ request.scheme }}://{{ request.get_host }}{{ event.pdfdocument.url }}">
+								<input type="text" placeholder="" class="form-control" name="pdfurl" id="pdfurl" disabled
+								value="
+								{% if event.pdfdocument.name != '' %}
+									{{ request.scheme }}://{{ request.get_host }}{{ event.pdfdocument.url }}
+								{% endif %}
+								">
+								
+								
+
 								</div>
 							</div>
 							
@@ -110,8 +117,8 @@ $('document').ready(function(){
 	                                        <tr>
 	                                        	<td><input type="checkbox" checked class="selecttag" id="seltag{{ eventuser.user.id }}" value="{{ eventuser.user.id }}">
 	                                        	</td>
-	                                            <td>{{ eventuser.user.id }}</td>
-	                                            <td>{{ eventuser.user.username }}</td>
+	                                            <td>{{ eventuser.id }}</td>
+	                                            <td>{{ eventuser.username }}</td>
 	                                        </tr>
 											{% endfor %}											
 											{% for user in user_list %}

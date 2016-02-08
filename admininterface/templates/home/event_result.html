@@ -130,6 +130,10 @@ $(function() {
    },
 
     Dashboard1.prototype.init = function() {
+	    // Currently no events
+	    if( eventid_selected == 0 ) return;
+	   
+	   
         //creating area chart
         var graph = this;
         $.ajax({

@@ -2,7 +2,6 @@ from __future__ import unicode_literals
 import traceback
 
 from rest_framework import serializers
-from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.forms.fields import FileField
 
