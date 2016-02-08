@@ -45,9 +45,21 @@ class User(AbstractBaseUser,PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)    
     phone       = models.CharField( max_length=30, blank=True)
     email       = models.CharField( max_length=30, blank=True)
+
+    NONE       = 'none'
+    COMPANY    = 'COMPANY'
+    SUPERVISOR = 'SUPEVISOR'
+    EVENTUSER  = 'EVENTUSER'
+    ROLE = (
+        (NONE,      'none'),
+        (COMPANY,    'company'),
+        (SUPERVISOR, 'supervisor'),
+        (EVENTUSER,  'eventuser'),                
+    )
+    role    = models.CharField(max_length=30, choices=ROLE, default=NONE, blank=True )
     
     # Company
-    cif    = models.CharField( max_length=30, blank=True)
+    cif    = models.CharField( max_length=30, blank=True )
 
     # EventUser
     gender     = models.CharField( max_length=30, blank=True)

@@ -1,0 +1,26 @@
+[
+{
+  "model": "authtoken.token",
+  "pk": "639ff4a7de60183a525b4b6a877839fc27d942de",
+  "fields": {
+    "user": 2,
+    "created": "2016-02-08T10:10:00.094Z"
+  }
+},
+{
+  "model": "authtoken.token",
+  "pk": "8126547c3cf87a0e9244b5a8e9018f56a8261259",
+  "fields": {
+    "user": 1,
+    "created": "2016-02-08T10:10:00.112Z"
+  }
+},
+{
+  "model": "authtoken.token",
+  "pk": "fa80d4a81584faff44f511564b1cd7d250821b4d",
+  "fields": {
+    "user": 3,
+    "created": "2016-02-08T10:10:00.109Z"
+  }
+}
+]

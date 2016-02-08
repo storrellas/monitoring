@@ -73,11 +73,10 @@ class EventUserListViewset( generics.ListCreateAPIView ):
 
 class EventUserDetailViewset( generics.RetrieveUpdateDestroyAPIView ):
     model = User
-    queryset = User.objects.filter(is_superuser=False)
+    queryset = User.objects.filter()
     serializer_class = EventUserSerializer   
     permission_classes = [AllowAny]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
-
 
 class CheckAdminNameViewset( ViewSet ):
     

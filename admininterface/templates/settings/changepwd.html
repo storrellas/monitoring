@@ -115,10 +115,9 @@
 			 
 				$.ajax({
 					async : true,
-					//url : "<?php echo site_url('ajaxprocess/change_password') ?>",
-					url   : "{% url 'changepwd' %}",
+					url   : "{% url 'ajax-event-user-edit-pk' userid %}",
 					dataType : "json",
-					type : "POST",
+					type : "PUT",
 					data : {
 		            	csrfmiddlewaretoken : $('#pwdform :first-child').val(),
 						username : "{{ request.user.username }}",
