@@ -43,9 +43,7 @@ class LoginView(View):
         if not user_form.is_valid():
             print user_form.errors
             return HttpResponseBadRequest(user_form.errors)             
-        
-        log.info("Logging in " + user_form.data['username'])
-        
+                
         # Authenticate user        
         user = authenticate(username=user_form.data['username'], 
                             password=user_form.data['password'])
@@ -90,9 +88,6 @@ class AdminView( LoginRequiredMixin, SuperuserRequiredMixin, ListView ):
     context_object_name = 'admin_list'
     
     
-    #def get_queryset(self):
-    #    return User.objects.filter(is_superuser=True).order_by('id')    
-    
     def get_context_data(self, **kwargs):
         context = super(AdminView, self).get_context_data(**kwargs)        
         context['event_list'] = Event.objects.all()        
@@ -101,7 +96,7 @@ class AdminView( LoginRequiredMixin, SuperuserRequiredMixin, ListView ):
 
 class EventUserView( AdminView ):    
     template_name='manage/user_list.html'  
-    queryset = User.objects.filter(is_superuser=False)
+    queryset = User.objects.filter(is_superuser=False, role=User.EVENTUSER)
     context_object_name = 'event_user_list'
     
     def get_queryset(self):
@@ -147,7 +142,7 @@ class EventAddView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateView ):
     def get_context_data(self, **kwargs):
         context = super(EventAddView, self).get_context_data(**kwargs)
       
-        context['user_list'] = User.objects.filter(eventuser__event__isnull=True,
+        context['user_list'] = User.objects.filter(event__isnull=True,
                                                    is_superuser=False)
         #context['user_list'] = User.objects.filter(is_superuser=False)        
         return context
@@ -161,15 +156,14 @@ class EventAddView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateView ):
                 
         # Save the form        
         event = form.save()      
+        
+        """
         if request.POST['selno'] != '':            
             selno_list = str(request.POST['selno']).split(',')
             for id in selno_list:
                 user = User.objects.get(id=int(id))
-                eventuser = EventUser.objects.get(user=user)
-                eventuser.event = event        
-                eventuser.save()
-        
-        
+                event.user.add(user)
+        """        
         return redirect(reverse('event'))
     
 class EventEditView( LoginRequiredMixin, SuperuserRequiredMixin, DetailView ):
