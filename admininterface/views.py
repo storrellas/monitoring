@@ -12,7 +12,7 @@ from django.db.models import Sum
 from django.core.files.base import ContentFile
 
 # Thrid-party libs
-from braces.views import LoginRequiredMixin
+from braces.views import LoginRequiredMixin, SuperuserRequiredMixin
 
 # Project imports
 from forms import *
@@ -82,7 +82,7 @@ class BaseView( LoginRequiredMixin, TemplateView ):
 
 
 
-class AdminView( LoginRequiredMixin, ListView ):
+class AdminView( LoginRequiredMixin, SuperuserRequiredMixin, ListView ):
     template_name='manage/admin_list.html'  
     model = User
     paginate_by = 10
@@ -132,7 +132,7 @@ class EventUserView( AdminView ):
         return context    
             
     
-class EventView( LoginRequiredMixin, ListView ):
+class EventView( LoginRequiredMixin, SuperuserRequiredMixin, ListView ):
     template_name='manage/event_list.html'
     model = Event
     paginate_by = 10
@@ -140,7 +140,7 @@ class EventView( LoginRequiredMixin, ListView ):
     queryset = Event.objects.all().order_by('id')
 
             
-class EventAddView( LoginRequiredMixin, TemplateView ):
+class EventAddView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateView ):
     template_name='manage/addevent.html'
     model = Event
     
@@ -172,7 +172,7 @@ class EventAddView( LoginRequiredMixin, TemplateView ):
         
         return redirect(reverse('event'))
     
-class EventEditView( LoginRequiredMixin, DetailView ):
+class EventEditView( LoginRequiredMixin, SuperuserRequiredMixin, DetailView ):
     template_name='manage/editevent.html'
     model = Event
     context_object_name = 'event'
@@ -326,10 +326,6 @@ class EventResultCSVView( LoginRequiredMixin, View ):
         response['Content-Length']      = file_to_send.size    
         response['Content-Disposition'] = 'attachment; filename="event.csv"'        
         return response
-    
-
-
-
 
 class ChangePwdView(LoginRequiredMixin, TemplateView):
     template_name='settings/changepwd.html'
