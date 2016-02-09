@@ -165,7 +165,7 @@ $('document').ready(function(){
         {
         	$.ajax({
                 async: true,
-				url: "{% url 'api-event-list'  %}" + $eventid + '/',
+				url: "{% url 'ajax-event-list'  %}" + $eventid + '/',
                 dataType: "json",
                 type: "DELETE",
                 data: {

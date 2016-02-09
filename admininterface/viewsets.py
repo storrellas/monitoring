@@ -10,6 +10,7 @@ from django.db.models import Sum
 from django.contrib.auth import authenticate
 
 # Rest framework imports
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
@@ -58,6 +59,13 @@ class AdminDetailViewset( generics.RetrieveUpdateDestroyAPIView ):
     permission_classes = [IsAuthenticated]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
+class CompanyUserEventViewset( ViewSet ):
+    
+    def event_list(self,request,pk, *args, **kwargs):
+        user = User.objects.get(id=pk)
+        serializer = EventCompanySerializer( user.event.all(), many=True )                
+        return JsonResponse(serializer.data, safe=False )
+
 class EventUserListViewset( generics.ListCreateAPIView ):
 
     #A simple ViewSet for viewing and editing accounts.
@@ -85,6 +93,7 @@ class CheckAdminNameViewset( ViewSet ):
             return HttpResponseBadRequest()
         except: 
             return HttpResponse()
+
         
 class EventViewset( ModelViewSet ):
     model = Event
@@ -137,3 +146,5 @@ class EventCheckGraphViewset( ViewSet ):
                                    "target" : str(item['target']),
                                   })
         return JsonResponse( json_response, safe=False )
+
+

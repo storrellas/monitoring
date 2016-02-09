@@ -36,11 +36,15 @@
 			{% include "home/includes/menu_dashboard_subitems.html" with url_home=home_url analysis_url=analysis_url%}
 			</ul>
         </li>
-        {% if request.user.is_superuser %}
-	        <li><a href="{% url 'event' %}">
-	        		<i class="fa fa-clipboard"></i> Events {{ request.user }}
+        {% if request.user.is_superuser %}        
+	        <li><a href="{% url 'product' %}">
+	        		<i class="fa fa-folder"></i> Products
 	        	</a>
 	        </li>
+			<li><a href="{% url 'event' %}">
+	        		<i class="fa fa-clipboard"></i> Events
+	        	</a>
+	        </li>	        
 	        <li class="dropdown visible-sm">
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Users <span class="caret"></span></a>
 	          <ul class="dropdown-menu">

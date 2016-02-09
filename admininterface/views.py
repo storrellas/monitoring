@@ -8,7 +8,7 @@ from django.http import Http404, HttpResponseBadRequest, HttpResponseNotFound,Ht
 from django.contrib.auth import authenticate, login, logout
 
 from django.utils.decorators import method_decorator
-from django.db.models import Sum
+from django.db.models import Sum, Q
 from django.core.files.base import ContentFile
 
 # Thrid-party libs
@@ -84,7 +84,7 @@ class AdminView( LoginRequiredMixin, SuperuserRequiredMixin, ListView ):
     template_name='manage/admin_list.html'  
     model = User
     paginate_by = 10
-    queryset = User.objects.filter(is_superuser=True).order_by('id')
+    queryset = User.objects.filter(Q(is_superuser=True)|Q(role=User.COMPANY)).order_by('id')
     context_object_name = 'admin_list'
     
     
@@ -157,9 +157,10 @@ class EventAddView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateView ):
         event = form.save()  
         
         # Add users to event        
-        company_owner = event.user.filter(role=User.COMPANY)
+        company_owner = event.user.filter(role=User.COMPANY).first()
         event.user.clear()
-        event.user.add(company_owner)                
+        if company_owner is not None:
+            event.user.add(company_owner)             
         if request.POST['selno'] != '':            
             selno_list = str(request.POST['selno']).split(',')
             for id in selno_list:
@@ -199,9 +200,10 @@ class EventEditView( LoginRequiredMixin, SuperuserRequiredMixin, DetailView ):
 
 
         # Add users to event
-        company_owner = event.user.filter(role=User.COMPANY)
+        company_owner = event.user.filter(role=User.COMPANY).first()
         event.user.clear()
-        event.user.add(company_owner)
+        if company_owner is not None:
+            event.user.add(company_owner)
         if request.POST['selno'] != '':            
             selno_list = str(request.POST['selno']).split(',')
             for id in selno_list:
@@ -234,10 +236,10 @@ class EventResultView( LoginRequiredMixin, ListView ):
     
     def get_context_data(self, **kwargs):
         context = super(EventResultView, self).get_context_data(**kwargs)
-        #if request.user.is_superuser:
-        context['event_list'] = Event.objects.all()
-        #else:
-        #    context['event_list'] = Event.objects.filter(user=self.request.user)
+        if request.user.is_superuser:
+            context['event_list'] = Event.objects.all()
+        else:
+            context['event_list'] = Event.objects.filter(user=self.request.user)
         
 
         analytics = EventCheck.objects.filter(event=self.event) \
@@ -329,3 +331,19 @@ class ChangePwdView(LoginRequiredMixin, TemplateView):
         context = super(ChangePwdView, self).get_context_data(**kwargs)
         context['userid'] = self.request.user.id
         return context
+    
+class ProductView( LoginRequiredMixin, ListView ):
+    template_name='manage/product_list.html'
+    model = Product
+    paginate_by = 10
+    context_object_name = 'product_list'
+    queryset = Product.objects.all()
+    
+    def get_context_data(self, **kwargs):
+        context = super(ProductView, self).get_context_data(**kwargs)
+        context['company_list'] = User.objects.filter(role=User.COMPANY)
+        return context
+    
+    
+    
+    

@@ -196,11 +196,13 @@
 										{{ user.username }}
 									</td>
 									<td>
-										{% if not user.data %}
-											All
-										{% else %}
-											{{ user.data.event.title }}	
-										{% endif %}																																							
+										{% with user.event.all|length as event_count %}
+										{% ifequal event_count 0 %}Admin{% endifequal%} 										 
+										{% endwith%}
+										
+										{% for event in user.event.all %}
+										{{ event.title }}{% ifequal forloop.last False %},{% endifequal %}
+										{% endfor %}
 									</td>
 									
 									<td

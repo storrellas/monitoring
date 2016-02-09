@@ -25,62 +25,19 @@ $('document').ready(function(){
 					<div class="row">
 						<div class="col-lg-12">
 							<h5 style="margin-top: 6px">
-								Total Users:
-								{{ event_user_list|length }}
+								Total Products:
+								{{ product_list|length }}
 							</h5>
 							<a data-toggle="modal" class="btn btn-primary"
 								style="float: right; margin-right: 10px" href="#modal-form-new"
 								{% if notrequest.user.is_superuser %}
 								disabled
-								{% endif %}
-										>Add
-								User</a>
+								{% endif %}>
+								Add Product</a>
 						</div>
 					</div>
 				</div>
 				<div class="ibox-content">
-					<!-- modal form 'edit Password' -->
-					<div id="modal-form-editpass" class="modal fade" aria-hidden="true">
-						<div class="modal-smalldialog">
-							<div class="modal-content">
-								<div class="modal-body">
-									<div class="row">
-										<div class="col-sm-12">
-											<h3 class="m-t-none m-b">Change Password</h3>
-											<form role="form" id="updatePasswordForm">
-												<input type="hidden" id="upuserid" value="">
-												<input type="hidden" id="upusername" value="">
-												<input type="hidden" id="updescription" value="">
-												<div class="form-group">
-													<label>Password*</label> <input type="password"
-														placeholder="Password" class="form-control required"
-														name="uppassword" id="uppassword">
-												</div>
-												<div class="form-group">
-													<label>Confirm*</label> <input type="password"
-														placeholder="Confirm password"
-														class="form-control required" name="upconfirmpass"
-														id="upconfirmpass">
-												</div>
-												<div>
-													<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
-														type="submit" onclick="on_editpass_done()">
-														<strong>Change</strong>
-													</button>
-													<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
-														style="margin-right: 20px;" type="button"
-														onclick="on_cancel_editpass()">
-														<strong>Cancel</strong>
-													</button>
-												</div>
-											</form>
-										</div>
-
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
 
 					<!-- modal form 'new' -->
 					<div id="modal-form-new" class="modal fade" aria-hidden="true">
@@ -89,29 +46,33 @@ $('document').ready(function(){
 								<div class="modal-body">
 									<div class="row">
 										<div class="col-sm-12">
-											<h3 class="m-t-none m-b">Create User</h3>
+											<h3 class="m-t-none m-b">Create Product</h3>
 											<form role="form" id="createNewUser">
 												<div class="form-group">
-													<label><b class="required">*</b>Username:</label> <input
+													<label><b class="required">*</b>Name:</label> <input
 														type="text" placeholder="" class="form-control required"
-														name="username" id="username">
+														name="name" id="cname">
 												</div>
 												<div class="form-group">
-													<label><b class="required">*</b>Password:</label> <input
-														type="password" placeholder=""
-														class="form-control required" name="cpassword_edit"
-														id="cpassword_edit">
+													<label>Brand:</label> 
+													<input type="text" placeholder=""
+														class="form-control" name="brand"
+														id="cbrand">
 												</div>
 												<div class="form-group">
-													<label><b class="required">*</b>Confirm Password:</label> <input
-														type="password" placeholder=""
-														class="form-control required" name="ccpassword_edit"
-														id="ccpassword_edit">
+													<label>Format:</label>
+													<input type="text" placeholder=""
+														class="form-control" name="format"
+														id="cformat">
 												</div>
 												<div class="form-group">
-													<label>Description:</label>
-													<textarea class="form-control" name="description"
-														id="description" style="width: 100%; height: 100px;"></textarea>
+													<label>Company:</label> <select class="form-control"
+														name="companyid" id="eventid">
+														<option value="0" selected>None</option>
+														{% for company in company_list %}
+															<option value='{{ company }}'>{{ company.username }}</option>
+														{% endfor %}
+													</select>
 												</div>
 												<div>
 													<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
@@ -259,32 +220,30 @@ $('document').ready(function(){
 								style="height: 450px; overflow-y: auto; overflow-x: hidden; display: block;">
 								<tr>
 									<th style="width: 70px">No</th>
-									<th style="width: 200px">Username</th>
-									<th style="width: 400px">Description</th>
-									<th style="width: 280px">Actions</th>
+									<th style="width: 200px">Name</th>
+									<th style="width: 400px">Brand</th>
+									<th style="width: 280px">Format</th>
+									<th style="width: 280px">Event</th>
+									<th style="width: 280px">Action</th>
 								</tr>
-								{% for user in event_user_list %}
+								{% for product in product_list %}
 								<tr>
 									<td>
-										{{ user.id }}
+										{{ product.id }}
 									</td>
 									<td>
-										{{ user.username }}
+										{{ product.name }}
 									</td>
 									<td>
-										{{ user.eventuser.description }}
+										{{ product.brand }}
 									</td>
-									<td
-										style="padding-top: 1px; padding-bottom: 0px; text-align: center;">
-										<a class="btn btn-sm btn-white btn-action"
-										onclick="on_editpass('{{ user.id }}','{{user.username}}','{{ user.first_name }}');"
-										data-toggle="tooltip" data-placement="bottom"
-										title="Change Password"
-										{% if not request.user.is_superuser %}
-										disabled
-										{% endif %}> 
-										<img src="{% static 'inspinia_admin/img/icon/change_password.png' %}">
-									</a> 
+									<td>
+										{{ product.format }}
+									</td>
+									<td>
+										{{ product.event }}
+									</td>
+									<td style="padding-top: 1px; padding-bottom: 0px; text-align: center;">										 
 									<a class="btn btn-sm btn-white btn-action"
 										onclick="on_edit('{{ user.id }}');"
 										data-toggle="tooltip" data-placement="bottom" title="Edit"
