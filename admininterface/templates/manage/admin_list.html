@@ -185,41 +185,43 @@
 										<td style="display: none">
 											{{ user.username }}
 										</td>
-										<td  class="textleft">
+										<td>
 											{{ user.id }}
 										</td>
 
-										<td  class="textleft">
+										<td class="textleft">
 											{{ user.username }}
 										</td>
 										<td  class="textleft">
-											{% if not user.data %}
-												All
-											{% else %}
-												{{ user.data.event.title }}	
-											{% endif %}																																							
+											{% with user.event.all|length as event_count %}
+											{% ifequal event_count 0 %}Admin{% endifequal%} 										 
+											{% endwith%}
+											
+											{% for event in user.event.all %}
+											{{ event.title }}{% ifequal forloop.last False %},{% endifequal %}
+											{% endfor %}
 										</td>
 										
 										<td class="actions">
-											{% if not user.data.count %}
-												<a class="btn btn-sm btn-white btn-action"
-												onclick="on_edit('{{ user.id }}', '{{ user.username }}', 0);"
-												data-toggle="tooltip" data-placement="bottom" title="Edit">															
-											{% else %}
-												<a class="btn btn-sm btn-white btn-action"
-												onclick="on_edit('{{ user.username }}', {{ user.data.first.event.id }});"
-												data-toggle="tooltip" data-placement="bottom" title="Edit">
+												{% if not user.data.count %}
+													<a class="btn btn-sm btn-white btn-action"
+													onclick="on_edit('{{ user.id }}', '{{ user.username }}', 0);"
+													data-toggle="tooltip" data-placement="bottom" title="Edit">															
+												{% else %}
+													<a class="btn btn-sm btn-white btn-action"
+													onclick="on_edit('{{ user.username }}', {{ user.data.first.event.id }});"
+													data-toggle="tooltip" data-placement="bottom" title="Edit">
+												{% endif %}
+												<img src="{% static 'inspinia_admin/img/icon/change-account.png' %}">
+											</a> 
+											{% if request.user != user %}
+											<a class="btn btn-sm btn-white btn-action"
+												onclick="on_delete('{{ user.id }}');"
+												data-toggle="tooltip" data-placement="bottom" title="Delete">
+													<img
+													src="{% static 'inspinia_admin/img/icon/delete.png' %}">
+											</a>
 											{% endif %}
-											<img src="{% static 'inspinia_admin/img/icon/change-account.png' %}">
-										</a> 
-										{% if request.user != user %}
-										<a class="btn btn-sm btn-white btn-action"
-											onclick="on_delete('{{ user.id }}');"
-											data-toggle="tooltip" data-placement="bottom" title="Delete">
-												<img
-												src="{% static 'inspinia_admin/img/icon/delete.png' %}">
-										</a>
-										{% endif %}
 										</td>
 									</tr>
 								{% endfor %}

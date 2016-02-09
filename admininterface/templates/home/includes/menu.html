@@ -41,6 +41,15 @@
 	        	</a>
 	        </li>
 	        <li class="dropdown visible-sm {% if request.path == admins_url or request.path == users_url  %}active{% endif %}">
+	        <li class="{% if request.path == product_url %}active{% endif %}"><a href="{% url 'product' %}">
+	        		<i class="fa fa-folder"></i> Products
+	        	</a>
+	        </li>
+			<li class="{% if request.path == event_url %}active{% endif %}"><a href="{% url 'event' %}">
+	        		<i class="fa fa-clipboard"></i> Events
+	        	</a>
+	        </li>	
+	        <li class="dropdown visible-sm">
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Users <span class="caret"></span></a>
 	          <ul class="dropdown-menu">
 	            {% include "home/includes/menu_users_subitems.html" with admins_url=admins_url users_url=users_url%}

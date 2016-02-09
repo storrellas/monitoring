@@ -117,9 +117,7 @@ $('document').ready(function(){
                                           {% endif %}
                                           <td>{{ event.videourl }}</td>
                                           <td>
-                                          {% for eventuser in event.eventuser_set.all %}
-                                          		{{ eventuser.user.username }}{% ifnotequal forloop.last True %},{% endifnotequal %}                                          		                                          		
-                                          {% endfor %}
+                                          {{ event|eventuser_list }}                                       
                                           </td>
                                           <td>
                                           	<a class="btn btn-sm btn-white btn-action" href="{% url 'edit_event' event.id %}" data-toggle="tooltip" 
@@ -167,7 +165,7 @@ $('document').ready(function(){
         {
         	$.ajax({
                 async: true,
-				url: "{% url 'api-event-list'  %}" + $eventid + '/',
+				url: "{% url 'ajax-event-list'  %}" + $eventid + '/',
                 dataType: "json",
                 type: "DELETE",
                 data: {

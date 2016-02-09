@@ -52,67 +52,14 @@ class EventUserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'password')        
         
-"""
-class EventUserProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('description',)
-        
-class EventUserSerializer(serializers.ModelSerializer):
-        
-    def create(self, validated_data):
-        obj = self.Meta.model.objects.create_user(username = validated_data['username'],                                             
-                                    password=validated_data['password'])
-        # Generate eventuser
-        eventuser = EventUser(user=obj)
-        eventuser.save()
-        serializer = EventUserProfileSerializer(instance=eventuser,
-                                                data=validated_data['eventuser'])
-        if not serializer.is_valid():
-            serializer.errors
-            obj.delete()
-            return None
-        serializer.save()
-        return obj
-       
-    def update(self, instance, validated_data):
-        instance.set_password(validated_data['password'])
-        instance.save()   
-        return instance             
-
-    eventuser = EventUserProfileSerializer(required=False)
-    class Meta:
-        model = User
-        fields = ('username', 'password', 'eventuser')
-
-class EventUserEditSerializer(serializers.ModelSerializer):
-
-    
-    def update(self, instance, validated_data):
-        #super(EventUserEditSerializer,self).update(instance, validated_data)
-        instance.username = validated_data['username']
-        instance.save()
-        
-        
-        serializer = EventUserProfileSerializer(instance=instance.eventuser,
-                                                data=validated_data['eventuser'])
-        if not serializer.is_valid():
-            serializer.errors
-            obj.delete()
-            return None
-                       
-        return instance
-        
-    eventuser = EventUserProfileSerializer(required=False)                
-    class Meta:
-        model = User
-        fields = ('username', 'description', 'eventuser')
-"""
-
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
 
+class EventCompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields=('id', 'title')
 
 class EventIdSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -122,5 +69,9 @@ class EventCheckSerializer(serializers.Serializer):
     trackdate = serializers.DateField(format='%Y-%m-%d')
     quantity = serializers.IntegerField()
     target = serializers.IntegerField()
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
 
         

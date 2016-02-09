@@ -4,7 +4,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$24000$phminvGvyboZ$E+bZEc10tGELn0WLs4ymlUrUGUbptqxnLrGxGGT+v8w=",
-    "last_login": "2016-02-08T12:24:40.448Z",
+    "last_login": "2016-02-09T07:11:51.408Z",
     "is_superuser": true,
     "username": "admin",
     "first_name": "",
@@ -76,7 +76,7 @@
   "pk": 4,
   "fields": {
     "password": "pbkdf2_sha256$24000$8wKOJBpHwmpw$CWUAmvdYPXmeC89ZJrdmFw+emG85ktwEeUwKRBB8CP8=",
-    "last_login": "2016-02-08T12:43:40.291Z",
+    "last_login": "2016-02-09T07:11:41.460Z",
     "is_superuser": false,
     "username": "nike",
     "first_name": "",
@@ -100,7 +100,7 @@
   "pk": 5,
   "fields": {
     "password": "pbkdf2_sha256$24000$4HeNpURtRAd4$TP57rj5e1hs2M+1fzCQ5IXm/p/b1Kz+mwpqK/Y9oMhk=",
-    "last_login": null,
+    "last_login": "2016-02-08T13:02:25.387Z",
     "is_superuser": false,
     "username": "yahoo",
     "first_name": "",
@@ -111,6 +111,30 @@
     "phone": "",
     "email": "",
     "role": "COMPANY",
+    "cif": "",
+    "gender": "",
+    "score": "",
+    "picture": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "admininterface.user",
+  "pk": 6,
+  "fields": {
+    "password": "pbkdf2_sha256$24000$FNE7hmfKeljZ$3bOJiucxQ0hePXDbfJsnX5uFEqG7bbBBSsSlJ1LDhho=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "sergi",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2016-02-09T07:47:06.070Z",
+    "phone": "",
+    "email": "",
+    "role": "EVENTUSER",
     "cif": "",
     "gender": "",
     "score": "",
