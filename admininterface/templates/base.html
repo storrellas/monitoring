@@ -1,11 +1,11 @@
+{% load staticfiles %}
+{% load tags %}
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-{% load staticfiles %}
-{% load tags %}
+<link rel="shortcut icon" type="image/ico" href="{% static 'inspinia_admin/img/logo/favicon.gif' %}" />
 
 <title>Sampling Admin</title>
 
@@ -56,12 +56,25 @@
 {# Users section #}
 {% url 'admin_list' as admins_url %}
 {% url 'user_list' as users_url %}
-{% url 'changepwd' as changepwd_url %}
+{% url 'c' as changepwd_url %}
 
-{% ifequal request.path login_url %}
-{% else %}
+{% block fullscreencontents %}
+<!-- Place here the contents of your block -->
+{% endblock %}
 
-<nav class="navbar-default navbar-static-side" role="navigation">
+{% ifnotequal request.path login_url %}
+<div class="row">
+	<div class="col-md-2">
+		{% include "home/includes/menu.html" %}
+	</div>
+	<div class="col-md-10 main-content">
+		{% block contents %}
+		<!-- Place here the contents of your block -->
+		{% endblock %}
+	</div>
+</div>
+
+<!--nav class="navbar-default navbar-static-side" role="navigation">
 <div class="sidebar-collapse">
 <ul class="nav" id="side-menu">
 	<li class="nav-header">
@@ -124,28 +137,23 @@
 </ul>
 
 </div>
-</nav>
-{% endifequal %}
+</nav-->
+{% endifnotequal %}
 
 {% ifnotequal request.path login_url %}
-<div id="wrapper">
+{% comment %}
+	https://docs.djangoproject.com/es/1.9/ref/templates/builtins/#ifequal-and-ifnotequal
+{%endcomment%}
+<!--div id="wrapper">
 	<div id="page-wrapper" class="gray-bg">
 		<div class="row border-bottom">
 			<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
-				<div class="navbar-header">
-					<a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#">
-						<i class="fa fa-bars"></i>
-					</a>
-				</div>
 				<ul class="nav navbar-top-links navbar-right">
 					<li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> Log out</a></li>
 				</ul>
 			</nav>
-		</div>
+		</div-->
 {% endifnotequal %}
-{% block contents%}
-<!-- Place here the contents of your block -->
-{% endblock %}
 {% ifnotequal request.path login_url %}
 	</div>
 </div>

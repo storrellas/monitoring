@@ -1,0 +1,64 @@
+{% load staticfiles %}
+{% load tags %}
+{% url 'login' as login_url %}
+
+<nav class="navbar navbar-default navmobile">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header visible-sm visible-xs">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">
+      	<img src="{% static 'inspinia_admin/img/logo/adminlogo40x40.gif' %}">
+      </a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <img src="{% static 'inspinia_admin/img/logo/apptoplogo.png' %}" class="logo-big visible-md visible-lg">
+      <ul class="nav navbar-nav">
+        <li class="dropdown active visible-sm">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dashboard <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+          	{% include "home/includes/menu_dashboard_subitems.html" with url_home=home_url analysis_url=analysis_url %}
+          </ul>
+        </li>
+        <li class="hidden-sm">
+			<a href="#">
+				<i class="fa fa-home"></i>
+				<span class="nav-label">Dashboard</span>
+			</a>
+			<ul class="nav nav-second-level">
+			{% include "home/includes/menu_dashboard_subitems.html" with url_home=home_url analysis_url=analysis_url%}
+			</ul>
+        </li>
+        {% if request.user.is_superuser %}
+	        <li><a href="{% url 'event' %}">
+	        		<i class="fa fa-clipboard"></i> Events {{ request.user }}
+	        	</a>
+	        </li>
+	        <li class="dropdown visible-sm">
+	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Users <span class="caret"></span></a>
+	          <ul class="dropdown-menu">
+	            {% include "home/includes/menu_users_subitems.html" with admins_url=admins_url users_url=users_url%}
+	          </ul>
+	        </li>
+	        <li class="hidden-sm">
+				<a href="#"><i class="fa fa-users"></i> <span class="nav-label">Users</span></a>
+				<ul class="nav nav-second-level">
+				{% include "home/includes/menu_users_subitems.html" %}
+				</ul>
+	        </li>
+	     {% endif %}
+        <li><a href="{% url 'changepwd' %}">Change password</a></li>
+      </ul>
+      <ul class="nav navbar-nav logout" >
+      	<li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i>Logout</a></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+	</nav>
