@@ -154,5 +154,3 @@ class ProductViewset( ModelViewSet ):
     permission_classes = [IsAuthenticated]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
-    def create(self, request, *args, **kwargs):
-        return JsonResponse({})

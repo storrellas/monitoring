@@ -19,16 +19,15 @@
             dataType: "json",
             type: "GET",
             success: function(json) {
-                console.log("Got it!")
-                
-                $event_container.find(".form-control:first").hide()
-                $event.show()
-                
+                // Add items to select
                 $.each(json, function(index,value){
-                	console.log(value)
                     $event.append($('<option>', { value : value.id }).text(value.title));                 	
                 });
-                
+            	
+            	// Show select and hide loading
+                $event_container.find(".form-control:first").hide()
+                $event.show()
+                                
             },
             error: function(xhr, errStr) {
              	console.log(errStr);
@@ -92,7 +91,7 @@
 									<div class="row">
 										<div class="col-sm-12">
 											<h3 class="m-t-none m-b">Create Product</h3>
-											<form role="form" id="createNewUser">
+											<form role="form" id="create">
 												<div class="form-group">
 													<label><b class="required">*</b>Name:</label> <input
 														type="text" placeholder="" class="form-control required"
@@ -127,10 +126,10 @@
 																										
 												</div>
 												<div>
-													<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
+													<div class="btn btn-sm btn-primary pull-right m-t-n-xs"
 														type="submit" onclick="on_create()">
 														<strong>Create</strong>
-													</button>
+													</div>
 													<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
 														style="margin-right: 20px;" type="button"
 														onclick="on_cancel_new()">
@@ -332,31 +331,32 @@
 <script type="text/javascript">
 	function on_create()
 	{
-		$('#createNewUser').validate({
+		var $modal = $('#modal-form-new')
+		var $form = $modal.find('form:first')
+		$form.validate({
 	        errorPlacement: function (error, element) {
 	            element.before(error);
 	        },
 	        rules: {
-	            username: {
+	            name: {
 	            	required: true
 	            },
-	            cpassword_edit: {
-	            	required: true
-	            },
-	            
-	            ccpassword_edit: {
-	            	equalTo: "#cpassword_edit"
-	            }
 	        },
 	        submitHandler: function(){
-	        	var postData = {
-	        		    username: $('#createNewUser #username').val(),
-	        		    password: $('#createNewUser #cpassword_edit').val(),
-	        		    description :$('#createNewUser #description').val()
-	        		}
+				// Generate data
+				var postData = {
+					name: $modal.find("input[name='name']").val(),
+					brand: $modal.find("input[name='brand']").val(),
+					format: $modal.find("input[name='format']").val(),
+				}
+	        	if( $modal.find("select[name='event']").val() != 0 ){
+	        		$.extend(postData,{ event : parseInt($modal.find("select[name='event']").val()) })
+	        	}
+	        	
+	        	
         		$.ajax({
         		  async: true,
-        		  url: "{% url 'ajax-event-user'%}",
+        		  url: "{% url 'ajax-product-list' %}",
         		  dataType: "json",
         		  type: "POST",
         		  data : postData,
@@ -368,9 +368,11 @@
         		  error: function(xhr, errStr) {
         		    alert(errStr);
         		  }
-        		});	        	
+        		});	 
+	        	/**/
 	        }
 	    });
+		$form.submit()
 	}
 	function on_cancel_new()
     {
