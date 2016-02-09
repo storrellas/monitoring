@@ -48,7 +48,10 @@
 {% url 'home' as home_url %}
 {% url 'home_results' as analysis_url %}
 
+
 {# Events section #}
+{% url 'product' as product_url %}
+{% url 'event' as event_url %}
 {% url 'events' as events_url %}
 {% url 'add_event' as add_event_url %}
 {% url 'edit_event' as edit_event_url %}
@@ -56,7 +59,7 @@
 {# Users section #}
 {% url 'admin_list' as admins_url %}
 {% url 'user_list' as users_url %}
-{% url 'c' as changepwd_url %}
+{% url 'changepwd' as changepwd_url %}
 
 {% block fullscreencontents %}
 <!-- Place here the contents of your block -->

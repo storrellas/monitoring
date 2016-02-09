@@ -1,7 +1,12 @@
 .logo-super {
 	color: #18a689;
 }
-
+.textleft{
+	text-align: left !important;
+}
+.textright{
+	text-align: right !important;
+}
 .logo-sub {
 	color: #26d7d9;
 	text-align: right;
@@ -159,13 +164,26 @@ form#viewResult{
 	display: inline-block;
 }
 @media ( min-width: 768px){
+
+	.datetableresults{
+		margin-left: 35px;
+		margin-right: 35px;
+	}
 	#viewResult .form-control{
 		width: 300px;
+	}
+	.passwordchange div{
+		width: 400px;
 	}
 }
 @media ( max-width: 768px){
 	#viewResult .form-control{
-		width: 190px;
+		width: 180px;
+	}
+}
+@media ( min-width: 992px){
+	.searchformUserList button{
+		margin-top: 25px;
 	}
 }
 
@@ -173,3 +191,68 @@ form#viewResult{
 	padding: 0px 10px 0px 0px;
 	margin-top: 10px;
 }
+
+.searchformUserList label, .searchformUserList input, .searchformUserList select{
+	display: block;
+}
+.searchformUserList label{
+	float: left;
+}
+
+.tabledata{
+	border: 0px;	
+	margin: 10px 15px 0px 15px;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid #bbb;
+}
+.tabledata td, .tabledata th{
+	border-top: 1px solid #ddd;
+    padding: 4px 8px;
+}
+.tabledata th{
+	padding: 4px 10px 4px 10px;
+	font-size: 14px;
+}
+.tabledata tbody tr:nth-child(even)  td { background-color: #f5f5f5; }
+@media screen and (min-width: 768px) {
+	.tabledata {
+		width: 100%;
+	}
+	.tabledata .actions{
+		text-align: right !important;
+	}
+	.tabledata th.textright{
+		padding-right: 10px;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.tabledata {
+		overflow-x: auto;
+		display: block;
+	}
+	.navbar-brand img{
+		margin-left: auto;
+	}
+}
+
+.tabledata .btn{
+	border: 0px;
+	width: auto;
+}
+.tabledata .nodatarow{
+	background-color: #fafafa !important;
+}
+
+.navbar{
+	height: 50px;
+}
+.navbar-header{
+	text-align: center;
+}
+.navbar-brand img{
+	width: 30px;
+    padding-top: 6px;
+}
+
