@@ -55,7 +55,6 @@ $('document').ready(function(){
 					<div class="col-lg-12">
 						<form role="form" id="addNewEventForm" method="post" enctype="multipart/form-data">
  							{% csrf_token %}
- 							<input type="hidden" id="INSERTRESULT" >
 							<input type="hidden" id="selno" name="selno" value="">
 							<div class="form-group"><label class="col-sm-2 control-label" style="text-align: right;">
 								<b class="required">*</b>Title:</label>
@@ -138,7 +137,6 @@ function on_create()
         },
         
         submitHandler: function() {
-        	console.log("value")
         	show_loading(true);
         	$("#addNewEventForm").submit();
         }

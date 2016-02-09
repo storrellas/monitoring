@@ -142,9 +142,8 @@ class EventAddView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateView ):
     def get_context_data(self, **kwargs):
         context = super(EventAddView, self).get_context_data(**kwargs)
       
-        context['user_list'] = User.objects.filter(event__isnull=True,
-                                                   is_superuser=False)
-        #context['user_list'] = User.objects.filter(is_superuser=False)        
+        context['user_list'] = User.objects.filter(event__isnull=True, role=User.EVENTUSER,
+                                                   is_superuser=False).order_by('id')     
         return context
     
     def post(self,request,*args,**kwargs):
@@ -155,15 +154,18 @@ class EventAddView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateView ):
             return HttpResponseBadRequest(form.errors)
                 
         # Save the form        
-        event = form.save()      
+        event = form.save()  
         
-        """
+        # Add users to event        
+        company_owner = event.user.filter(role=User.COMPANY)
+        event.user.clear()
+        event.user.add(company_owner)                
         if request.POST['selno'] != '':            
             selno_list = str(request.POST['selno']).split(',')
             for id in selno_list:
                 user = User.objects.get(id=int(id))
                 event.user.add(user)
-        """        
+                
         return redirect(reverse('event'))
     
 class EventEditView( LoginRequiredMixin, SuperuserRequiredMixin, DetailView ):
@@ -175,15 +177,14 @@ class EventEditView( LoginRequiredMixin, SuperuserRequiredMixin, DetailView ):
         context = super(EventEditView, self).get_context_data(**kwargs)
         
         event = kwargs['object']
-        eventuser_list = event.user.all()
+        eventuser_list = event.user.filter(role=User.EVENTUSER).order_by('id')
         context['eventuser_list'] = eventuser_list
-        context['user_list'] = User.objects.filter(event__isnull=True,
-                                                   is_superuser=False)                
+        context['user_list'] = User.objects.filter(event__isnull=True, role=User.EVENTUSER,
+                                                   is_superuser=False).order_by('id')                
         context['selno'] = str(eventuser_list.values_list('id', flat=True))[1:-1]      
         return context
     
     def post(self,request,*args,**kwargs):
-        log.info('Accessing form')
 
         event = Event.objects.get(id=kwargs['pk'])
         
@@ -196,20 +197,17 @@ class EventEditView( LoginRequiredMixin, SuperuserRequiredMixin, DetailView ):
         # Save form
         event = form.save()
 
-        # Remove previous event users
-        for eventuser in event.eventuser_set.all():            
-            eventuser.event = None
-            eventuser.save()
 
-        # Add new EventUsers
+        # Add users to event
+        company_owner = event.user.filter(role=User.COMPANY)
+        event.user.clear()
+        event.user.add(company_owner)
         if request.POST['selno'] != '':            
             selno_list = str(request.POST['selno']).split(',')
             for id in selno_list:
+                log.info('Adding user to event' + str(id))
                 user = User.objects.get(id=int(id))
-                eventuser = EventUser.objects.get(user=user)
-                eventuser.event = event        
-                eventuser.save()
-
+                event.user.add(user)
         
         return redirect(reverse('event'))
 

@@ -17,8 +17,9 @@ $('document').ready(function(){
 			}
 		});		
 		$temp = $temp.slice(0,-1)
-		$("#selno").val($temp);
+		$("#selno").val($temp);		
 	}
+	
 	
 	// multi check
 	$('#selecttag').on('click', function(){
@@ -35,7 +36,6 @@ $('document').ready(function(){
 	$('.selecttag').on('click', function()
 	{
 		calculate_selno();
-		console.log( $("#selno").val() )
 	});
 
 	// Initialise value
@@ -115,7 +115,8 @@ $('document').ready(function(){
 											<tr>
 											{% for eventuser in eventuser_list %}
 	                                        <tr>
-	                                        	<td><input type="checkbox" checked class="selecttag" id="seltag{{ eventuser.user.id }}" value="{{ eventuser.user.id }}">
+	                                        	<td>
+	                                        	<input type="checkbox" checked class="selecttag" id="seltag{{ eventuser.id }}" value="{{ eventuser.id }}">
 	                                        	</td>
 	                                            <td>{{ eventuser.id }}</td>
 	                                            <td>{{ eventuser.username }}</td>
@@ -123,7 +124,8 @@ $('document').ready(function(){
 											{% endfor %}											
 											{% for user in user_list %}
 	                                        <tr>
-	                                        	<td><input type="checkbox" class="selecttag" id="seltag{{ user.id }}" value="{{ user.id }}">
+	                                        	<td>
+	                                        	<input type="checkbox" class="selecttag" id="seltag{{ user.id }}" value="{{ user.id }}">
 	                                        	</td>
 	                                            <td>{{ user.id }}</td>
 	                                            <td>{{ user.username }}</td>
