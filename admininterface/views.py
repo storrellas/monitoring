@@ -232,7 +232,7 @@ class EventResultView( LoginRequiredMixin, ListView ):
         # An event was selected
         if 'event_id' in self.request.GET.keys():
             event_id = self.request.GET['eventid']
-            self.event = Event.objects.get( id = event_id )            
+            self.event = Event.objects.get( id = event_id )
         else:
             if self.request.user.is_superuser == True:
                 self.event = Event.objects.first()
@@ -242,10 +242,10 @@ class EventResultView( LoginRequiredMixin, ListView ):
     
     def get_context_data(self, **kwargs):
         context = super(EventResultView, self).get_context_data(**kwargs)
-        if request.user.is_superuser:
-            context['event_list'] = Event.objects.all()
-        else:
-            context['event_list'] = Event.objects.filter(user=self.request.user)
+        #if request.user.is_superuser:
+        context['event_list'] = Event.objects.all()
+        #else:
+        #    context['event_list'] = Event.objects.filter(user=self.request.user)
         
 
         analytics = EventCheck.objects.filter(event=self.event) \

@@ -1,94 +1,93 @@
 {% extends 'base.html' %}
-
 {% load staticfiles %}
 {% load tags %}
 
-{% block contents %}
-<script type="text/javascript">
-$('document').ready(function(){
-	 $('#loginForm').validate({
-       errorPlacement: function (error, element) {
-           element.before(error);
-       },
-       rules: {
-    	   username: {
-        	   required: true,
+{% block fullscreencontents %}
+    <script type="text/javascript">
+    $('document').ready(function(){
+    	 $('#loginForm').validate({
+           errorPlacement: function (error, element) {
+               element.before(error);
            },
-           password: {
-        	   required: true,
-           }
-    	}
-	});
-});
-</script>
-<div class="middle-box text-center loginscreen  animated fadeInDown">
-<div>
-<div>
-<h1 class="logo-name">&nbsp;</h1>
-<img
-	src="{% static 'inspinia_admin/img/logo/adminlogo.png' %}"></div>
-<h3 style="color: #bfbfbf">Welcome to Sampling Admin</h3>
+           rules: {
+        	   username: {
+            	   required: true,
+               },
+               password: {
+            	   required: true,
+               }
+        	}
+    	});
+    });
+    </script>
+    <div class="middle-box text-center loginscreen  animated fadeInDown">
+    <div>
+    <div>
+    <h1 class="logo-name">&nbsp;</h1>
+    <img
+    	src="{% static 'inspinia_admin/img/logo/adminlogo.png' %}"></div>
+    <h3 style="color: #bfbfbf">Welcome to Sampling Admin</h3>
 
-<form class="m-t" role="form" id="loginForm" method="post">
-{% csrf_token %}
-<div class="form-group"><input type="text" id="username" name="username"
-	class="form-control" placeholder="Username" style="width: 100%"
-	required></div>
-<div class="form-group"><input type="password" id="password"
-	name="password" class="form-control" placeholder="Password"
-	style="width: 100%" required></div>
-<button type="submit" class="btn btn-primary block full-width m-b"
-	onclick="login(); return false;">Login</button>
-</form>
-<p class="m-t"><small style="font-weight: 900">Sampling &copy; 2015</small>
-</p>
-</div>
-</div>
+    <form class="m-t" role="form" id="loginForm" method="post">
+    {% csrf_token %}
+    <div class="form-group"><input type="text" id="username" name="username"
+    	class="form-control" placeholder="Username" style="width: 100%"
+    	required></div>
+    <div class="form-group"><input type="password" id="password"
+    	name="password" class="form-control" placeholder="Password"
+    	style="width: 100%" required></div>
+    <button type="submit" class="btn btn-primary block full-width m-b"
+    	onclick="login(); return false;">Login</button>
+    </form>
+    <p class="m-t"><small style="font-weight: 900">Sampling &copy; 2015</small>
+    </p>
+    </div>
+    </div>
 
-<script type="text/javascript">
-    function login() {
-    	var username = $("#username").val();
-    	var password = $("#password").val();
-    	if(!username)
-    	{
-    		$("#username").addClass("error");
-    		return;
-    	}
-    	if(!password)
-    	{
-    		$("#password").addClass("error");
-    		return;
-    	}
-    	
-        $.ajax({
-            async: true,
-			url: "{{ request.path }}",			
-            dataType: "json",
-            type: "POST",
-            data: {
-            	csrfmiddlewaretoken : $('#loginForm :first-child').val(),
-                username: $('#username').val(),
-                password: $('#password').val()
-            },
-            success: function(json) {            	
-            	location.href = "{% url 'home' %}";
-            	/*
-            	if (json['result'] > 0)
-                {
-                   location.href = "<?php echo site_url('home/') ?>";                               		
+    <script type="text/javascript">
+        function login() {
+        	var username = $("#username").val();
+        	var password = $("#password").val();
+        	if(!username)
+        	{
+        		$("#username").addClass("error");
+        		return;
+        	}
+        	if(!password)
+        	{
+        		$("#password").addClass("error");
+        		return;
+        	}
+        	
+            $.ajax({
+                async: true,
+    			url: "{{ request.path }}",			
+                dataType: "json",
+                type: "POST",
+                data: {
+                	csrfmiddlewaretoken : $('#loginForm :first-child').val(),
+                    username: $('#username').val(),
+                    password: $('#password').val()
+                },
+                success: function(json) {            	
+                	location.href = "{% url 'home' %}";
+                	/*
+                	if (json['result'] > 0)
+                    {
+                       location.href = "<?php echo site_url('home/') ?>";                               		
+                    }
+                    else
+                    {
+                        location.href = location.href;
+                    }
+                	/**/
+                },
+                error: function(xhr, errStr) {
+                    //    alert(errStr);
+                	location.href = location.href;
+                	console.log("Fail")
                 }
-                else
-                {
-                    location.href = location.href;
-                }
-            	/**/
-            },
-            error: function(xhr, errStr) {
-                //    alert(errStr);
-            	location.href = location.href;
-            	console.log("Fail")
-            }
-        });
-    }
-</script>
+            });
+        }
+    </script>
 {% endblock %}
