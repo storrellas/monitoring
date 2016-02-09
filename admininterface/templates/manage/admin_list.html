@@ -170,65 +170,58 @@
 						</div>
 					</div>
 
-					<!-- admin user table -->
-					<div class="tooltip-demo" style="width: 50%; min-height: 450px;">
-						<table class="table table-bordered" style="margin-bottom: 0px;"
-							id="photo_table">
-							<tbody id="users_body">
-
-								<tr>
-									<th>No</th>
-									<th>Username</th>
-									<th>Event</th>
-									<th>Actions</th>
-								</tr>
-
+					<div class="row">
+						<div class="col-lg-12">
+							<table class="tabledata" style=""id="users_table">
+								<tbody id="users_body">
+									<tr>
+										<th>No</th>
+										<th class="textleft">Username</th>
+										<th class="textleft">Description</th>
+										<th class="textright">Actions</th>
+									</tr>
 								{% for user in admin_list %}
-								<tr>
-									<td style="display: none">
-										{{ user.username }}
-									</td>
-									<td>
-										{{ user.id }}
-									</td>
+									<tr>
+										<td style="display: none">
+											{{ user.username }}
+										</td>
+										<td  class="textleft">
+											{{ user.id }}
+										</td>
 
-									<td>
-										{{ user.username }}
-									</td>
-									<td>
-										{% if not user.data %}
-											All
-										{% else %}
-											{{ user.data.event.title }}	
-										{% endif %}																																							
-									</td>
-									
-									<td
-										style="padding-top: 7px; padding-bottom: 7px; text-align: center; vertical-align: middle;">
-										{% if not user.data.count %}
-											<a class="btn btn-sm btn-white btn-action"
-											onclick="on_edit('{{ user.id }}', '{{ user.username }}', 0);"
-											data-toggle="tooltip" data-placement="bottom" title="Edit">																				
-										{% else %}
-											<a class="btn btn-sm btn-white btn-action"
-											onclick="on_edit('{{ user.username }}', {{ user.data.first.event.id }});"
-											data-toggle="tooltip" data-placement="bottom" title="Edit">
+										<td  class="textleft">
+											{{ user.username }}
+										</td>
+										<td  class="textleft">
+											{% if not user.data %}
+												All
+											{% else %}
+												{{ user.data.event.title }}	
+											{% endif %}																																							
+										</td>
+										
+										<td class="actions">
+											{% if not user.data.count %}
+												<a class="btn btn-sm btn-white btn-action"
+												onclick="on_edit('{{ user.id }}', '{{ user.username }}', 0);"
+												data-toggle="tooltip" data-placement="bottom" title="Edit">															
+											{% else %}
+												<a class="btn btn-sm btn-white btn-action"
+												onclick="on_edit('{{ user.username }}', {{ user.data.first.event.id }});"
+												data-toggle="tooltip" data-placement="bottom" title="Edit">
+											{% endif %}
+											<img src="{% static 'inspinia_admin/img/icon/change-account.png' %}">
+										</a> 
+										{% if request.user != user %}
+										<a class="btn btn-sm btn-white btn-action"
+											onclick="on_delete('{{ user.id }}');"
+											data-toggle="tooltip" data-placement="bottom" title="Delete">
+												<img
+												src="{% static 'inspinia_admin/img/icon/delete.png' %}">
+										</a>
 										{% endif %}
-										
-
-										
-										<img src="{% static 'inspinia_admin/img/icon/change-account.png' %}">
-									</a> 
-									{% if request.user != user %}
-									<a class="btn btn-sm btn-white btn-action"
-										onclick="on_delete('{{ user.id }}');"
-										data-toggle="tooltip" data-placement="bottom" title="Delete">
-											<img
-											src="{% static 'inspinia_admin/img/icon/delete.png' %}">
-									</a>
-									{% endif %}
-									</td>
-								</tr>
+										</td>
+									</tr>
 								{% endfor %}
 
 							</tbody>

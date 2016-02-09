@@ -3788,7 +3788,7 @@ body.skin-3 {
 }
 
 .logo-big{
-	width: 150px;
+	width: 120px;
 	margin-top: 20px;
 }
 /* Only demo */
@@ -3853,10 +3853,9 @@ body.skin-3 {
 		border-bottom: #56FF00 3px solid;
 	}
 }
-.navmobile{
-	margin-bottom: 0px;
-}
 
 .main-content{
 	background-color: #f3f3f4;
+	margin-top: -20px;
+	padding:2em 1em 2em 1em;
 }
