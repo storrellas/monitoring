@@ -6,16 +6,61 @@
 {% block contents %}
 
 <script type="text/javascript">
-$('document').ready(function(){
-	var $result = $("#INSERTRESULT").val();
-	if($result == "SUCCESS")
-	{
-		alert("SUCCESS!");
- 	 	location.href = location.href;
-	}
-});
-</script>
 
+	function generate_event_select($modal, companyid){		
+		var $event = $modal.find('#eventid')
+		var $event_container = $event.parent()
+		
+		var url = "{% url 'ajax-company-event' 0 %}";
+		url = url.replace('0', companyid);
+    	$.ajax({
+            async: true,
+			url: url,
+            dataType: "json",
+            type: "GET",
+            success: function(json) {
+                console.log("Got it!")
+                
+                $event_container.find(".form-control:first").hide()
+                $event.show()
+                
+                $.each(json, function(index,value){
+                	console.log(value)
+                    $event.append($('<option>', { value : value.id }).text(value.title));                 	
+                });
+                
+            },
+            error: function(xhr, errStr) {
+             	console.log(errStr);
+            }
+        });
+	}
+
+	$('document').ready(function(){
+		
+		// Procedure to perform the selection of the event
+		var $modal = $( "#modal-form-new" )
+		var $company = $modal.find("#companyid")
+		$company.change(function() {
+			var $event = $modal.find('#eventid')
+			var $event_container = $event.parent()
+			$event.find('option').remove()			
+			$event.append($('<option>', { value : "0" }).text("None"));
+			
+			$event.hide()
+			$event_container.hide()
+			
+			// If None was selected		
+			if( $(this).val() == 0 ) return;
+			$event_container.find(".form-control:first").show()
+			$event_container.show()
+					
+			// Get event list
+			generate_event_select( $modal, $(this).val() );
+			
+		});
+	});
+</script>
 
 <div class="wrapper wrapper-content">
 	<div class="row">
@@ -25,7 +70,7 @@ $('document').ready(function(){
 					<div class="row">
 						<div class="col-lg-12">
 							<h5 style="margin-top: 6px">
-								Total Products:
+								Total Products:	
 								{{ product_list|length }}
 							</h5>
 							<a data-toggle="modal" class="btn btn-primary"
@@ -62,17 +107,24 @@ $('document').ready(function(){
 												<div class="form-group">
 													<label>Format:</label>
 													<input type="text" placeholder=""
-														class="form-control" name="format"
-														id="cformat">
+														class="form-control" name="format" id="cformat">
 												</div>
 												<div class="form-group">
-													<label>Company:</label> <select class="form-control"
-														name="companyid" id="eventid">
+													<label>Company:</label> 
+													<select class="form-control" name="company" id="companyid">
 														<option value="0" selected>None</option>
 														{% for company in company_list %}
-															<option value='{{ company }}'>{{ company.username }}</option>
+															<option value='{{ company.id }}'>{{ company.username }}</option>
 														{% endfor %}
 													</select>
+												</div>
+												<div class="form-group" style="display:none">
+													<label>Event:</label> 
+													<div class="form-control"> Loading ...</div>
+													<select class="form-control" name="event" id="eventid">
+														<option value="0" selected>None</option>
+													</select>
+																										
 												</div>
 												<div>
 													<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
@@ -254,7 +306,7 @@ $('document').ready(function(){
 										<img src="{% static 'inspinia_admin/img/icon/change-account.png' %}">
 									</a> 
 									<a class="btn btn-sm btn-white btn-action"
-										onclick="on_delete('{{ user.id }}');"
+										onclick="on_delete('{{ product.id }}');"
 										data-toggle="tooltip" data-placement="bottom" title="Delete"
 										{% if not request.user.is_superuser %}
 										disabled
@@ -424,20 +476,16 @@ $('document').ready(function(){
 	{
 	    $('#modal-form-edit').modal('hide');
 	}
-    function on_delete($userid)
+    function on_delete( id )
     {
     	if(confirm("Do you want to delete?"))
         {
-    		var url_delete = "{% url 'ajax-event-user' %}" + $userid 
+    		var url_delete = "{% url 'ajax-product-list' %}" + id 
         	$.ajax({
                 async: true,
 				url: url_delete,
                 dataType: "json",
                 type: "DELETE",
-                data: {
-                    mode: "DELETE_USER",
-                    userid: $userid,
-                },
                 success: function(json) {
                     location.reload()
                     return

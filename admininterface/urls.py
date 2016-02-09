@@ -48,7 +48,7 @@ urlpatterns = [
     url(r'^ajax/eventuser/$',                  EventUserListViewset.as_view(),                name='ajax-event-user'),
     url(r'^ajax/eventuser/(?P<pk>[0-9]+)/$',   EventUserDetailViewset.as_view(),              name='ajax-event-user-edit-pk'),
 
-    url(r'^ajax/company/(?P<pk>[0-9]+)/event/$', CompanyUserEventViewset.as_view({'get': 'event_list'}), name='ajax-eventcheck-graph'),
+    url(r'^ajax/company/(?P<pk>[0-9]+)/event/$', CompanyUserEventViewset.as_view({'get': 'event_list'}), name='ajax-company-event'),
             
     url(r'^ajax/admin/checkname/$',            CheckAdminNameViewset.as_view({'post': 'checkname'}), name='ajax-admin-check-name'),
     
@@ -63,5 +63,6 @@ urlpatterns = [
 # Add routers for REST endpoints
 router = SimpleRouter()
 router.register(r'ajax/event',   EventViewset,'ajax-event')
+router.register(r'ajax/product', ProductViewset,'ajax-product')
 urlpatterns += router.urls
 

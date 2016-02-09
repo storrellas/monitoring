@@ -147,4 +147,12 @@ class EventCheckGraphViewset( ViewSet ):
                                   })
         return JsonResponse( json_response, safe=False )
 
+class ProductViewset( ModelViewSet ):
+    model = Product
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer    
+    permission_classes = [IsAuthenticated]
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
+    def create(self, request, *args, **kwargs):
+        return JsonResponse({})

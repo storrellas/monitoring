@@ -236,7 +236,7 @@ class EventResultView( LoginRequiredMixin, ListView ):
     
     def get_context_data(self, **kwargs):
         context = super(EventResultView, self).get_context_data(**kwargs)
-        if request.user.is_superuser:
+        if self.request.user.is_superuser:
             context['event_list'] = Event.objects.all()
         else:
             context['event_list'] = Event.objects.filter(user=self.request.user)

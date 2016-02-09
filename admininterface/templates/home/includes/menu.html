@@ -36,10 +36,6 @@
 			</ul>
         </li>
         {% if request.user.is_superuser %}
-	        <li class="{% if   request.path == event_url %}active{% endif %}"><a href="{% url 'event' %}">
-	        		<i class="fa fa-clipboard"></i> Events {{ request.user }}
-	        	</a>
-	        </li>
 	        <li class="dropdown visible-sm {% if request.path == admins_url or request.path == users_url  %}active{% endif %}">
 	        <li class="{% if request.path == product_url %}active{% endif %}"><a href="{% url 'product' %}">
 	        		<i class="fa fa-folder"></i> Products
