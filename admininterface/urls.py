@@ -30,7 +30,7 @@ urlpatterns = [
     #url(r'^product/$',             TemplateView.as_view(template_name='manage/product_list.html'),  name='product'),
     url(r'^product/$',             ProductView.as_view(),  name='product'),
     
-    url(r'^manage/admins/$',       AdminView.as_view(),                name='admin_list'),
+    url(r'^manage/company/$',       AdminView.as_view(),               name='company_list'),
     url(r'^manage/users/$',        EventUserView.as_view(),            name='user_list'),
     
     

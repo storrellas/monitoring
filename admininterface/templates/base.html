@@ -57,7 +57,7 @@
 {% url 'edit_event' as edit_event_url %}
 
 {# Users section #}
-{% url 'admin_list' as admins_url %}
+{% url 'company_list' as company_url %}
 {% url 'user_list' as users_url %}
 {% url 'changepwd' as changepwd_url %}
 
@@ -114,14 +114,14 @@
 		</li>
 	
 		<li
-		{% if admins_url in request.path or users_url in request.path %}
+		{% if company_url in request.path or users_url in request.path %}
 		class="active"		
 		{% endif%} 	
 		>
 			<a href="#"><i class="fa fa-users"></i> <span class="nav-label">Users</span><span class="fa arrow"></span> </a>
 			<ul class="nav nav-second-level">
-				<li {% ifequal admins_url request.path %} class="active" {% endifequal %}><a
-					href="{% url 'admin_list' %}">Admin Users</a></li>
+				<li {% ifequal company_url request.path %} class="active" {% endifequal %}><a
+					href="{% url 'company_list' %}">Admin Users</a></li>
 				<li {% ifequal users_url request.path %} class="active" {% endifequal %}><a
 					href="{% url 'user_list' %}">Event Users</a></li>
 			</ul>
