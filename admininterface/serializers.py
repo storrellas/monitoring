@@ -27,6 +27,39 @@ class AdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'password')
+
+class CompanyUserSerializer(serializers.ModelSerializer):
+    
+    def create(self, validated_data):                        
+        obj = super(CompanyUserSerializer, self).create(validated_data)       
+        obj.set_password(self.data['password'])
+        obj.role = User.COMPANY       
+        obj.save()
+                        
+        try:
+            event = Event.objects.get(id=self.initial_data['event'])
+            event.user.add(obj)
+        except:
+            log.info("Not able to find the event")
+            pass
+        
+        
+        return obj        
+    
+    def update(self, instance, validated_data):
+        super(EventUserSerializer, self).update(instance, validated_data)
+        
+        try:
+            instance.set_password(validated_data['password'])
+            instance.save()
+        except:
+            print "No password provided"
+            pass        
+        return instance
+                       
+    password = serializers.CharField(required=False)
+    class Meta:
+        model = User 
         
 class EventUserSerializer(serializers.ModelSerializer):
     

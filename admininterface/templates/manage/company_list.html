@@ -22,34 +22,25 @@
 						</div>
 					</div>
 				</div>
-
+ 
 				<div class="ibox-content" style="min-height: 530px;">
 
 					<!-- modal form 'new' -->
 					<div id="modal-form-new" class="modal fade" aria-hidden="true">
 						<div class="modal-dialog">
 							<div class="modal-content">
-								<div class="modal-body">
+								<div class="modal-body" style="max-height: 600px;overflow-y: auto;">
 									<div class="row">
 										<div class="col-sm-12">
-											<h3 class="m-t-none m-b">New Admin User</h3>
+											<h3 class="m-t-none m-b">New Company</h3>
 
-											<p>Create new admin user.</p>
+											<p>Create new company user.</p>
 
 											<form role="form" id="modalform">
 												<div class="form-group">
 													<label>Username*</label> <input type="text"
 														placeholder="Username" class="form-control required"
 														name="username" id="username">
-												</div>
-												<div class="form-group">
-													<label>Event:</label> <select class="form-control"
-														name="eventid" id="eventid">
-														<option value="0" selected>All</option>
-														{% for event in event_list %}
-															<option value='{{ event.id }}'>{{ event.title }}</option>
-														{% endfor %}
-													</select>
 												</div>
 												<div class="form-group">
 													<label>Password*</label> <input type="password"
@@ -62,6 +53,58 @@
 														class="form-control required" name="confirm"
 														id="confirm">
 												</div>
+												<div class="form-group">
+													<label>Name</label> 
+													<input type="text"
+														placeholder="Company Name"
+														class="form-control" name="name"
+														id="name">
+												</div>
+												<div class="form-group">
+													<label>Address</label> 
+													<input type="text"
+														placeholder="Company address"
+														class="form-control" name="address"
+														id="address">
+												</div>
+												<div class="form-group">
+													<label>CIF</label> 
+													<input type="text"
+														placeholder="Company CIF"
+														class="form-control" name="cif"
+														id="cif">
+												</div>												
+												<div class="form-group">
+													<label>Contact name</label> 
+													<input type="text"
+														placeholder="Contact name"
+														class="form-control" name="contactname"
+														id="contactname">
+												</div>	
+												<div class="form-group">
+													<label>Phone</label> 
+													<input type="text"
+														placeholder="Phone"
+														class="form-control" name="phone"
+														id="phone">
+												</div>	
+												<div class="form-group">
+													<label>Email</label> 
+													<input type="text"
+														placeholder="Email"
+														class="form-control" name="email"
+														id="email">
+												</div>												
+												<div class="form-group">
+													<label>Event:</label> 
+													<select class="form-control" name="event" id="event">
+														<option value="0" selected>All</option>
+														{% for event in event_list %}
+															<option value='{{ event.id }}'>{{ event.title }}</option>
+														{% endfor %}
+													</select>
+												</div>
+
 												<div>
 													<button
 														class="btn btn-sm btn-primary pull-right m-t-n-xs"
@@ -181,8 +224,8 @@
 										<th class="textleft">Address</th>
 										<th class="textleft">CIF</th>
 										<th class="textleft">Contact Person</th>
-										<th class="textleft">Email</th>
 										<th class="textleft">Phone</th>
+										<th class="textleft">Email</th>
 										<th class="textleft">Event</th>
 										<th class="textright">Actions</th>
 									</tr>
@@ -205,7 +248,7 @@
 											{{ user.cif }}
 										</td>
 										<td class="textleft">
-											{{ user.first_name }} {{ user.last_name }}
+											{{ user.contactname }}
 										</td>
 										<td class="textleft">
 											{{ user.phone }}
@@ -216,7 +259,7 @@
 										
 										<td  class="textleft">
 											{% with user.event.all|length as event_count %}
-											{% ifequal event_count 0 %}Admin{% endifequal%} 										 
+											{% ifequal event_count 0 %}None{% endifequal%} 										 
 											{% endwith%}
 											
 											{% for event in user.event.all %}
@@ -286,9 +329,28 @@
     }
     
     
+    $.fn.serializeObject = function()
+    {
+        var o = {};
+        var a = this.serializeArray();
+        $.each(a, function() {
+            if (o[this.name] !== undefined) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    };
+    
     function on_create()
     {
-        $('#modalform').validate({
+    	var $modal = $("#modal-form-new");
+    	var $form = $modal.find("form:first")    	
+        $form.validate({
             errorPlacement: function (error, element) {
                 element.before(error);
             },
@@ -317,16 +379,21 @@
                 }
             },
             submitHandler: function() {
+				// Generate data
+				var postData = {
+					username: $form.find("input[name='username']").val(),					                        
+					password: $form.find("input[name='password']").val(),
+					name:     $form.find("input[name='name']").val(),
+					address:  $form.find("input[name='address']").val(),
+					event:    $form.find("#event").val(),
+				}
+            	
                 $.ajax({
                     async: true,
 					url: "{% url 'ajax-admin' %}",
                     dataType: "json",
                     type: "POST",
-                    data: {
-                        username: $('#username').val(),
-                        eventid: $('#eventid').val(),                        
-                        password: $('#password').val(),
-                    },
+                    data: $form.serializeObject(),
                     success: function(json) {
                     	location.reload()
                     },
@@ -337,7 +404,7 @@
                     }
                 });
             }
-        });
+        });	
     }
     function on_delete(username)
     {
@@ -424,21 +491,6 @@
                     },
                     success: function(json) {
                     	location.reload()
-                    	return;
-                    	/*
-                    	// This is useless
-                        if (json['result'] >= 0)
-                        {
-                            $('#modal-form-edit').modal('hide');
-                            $('#modal-form-edit').on('hidden.bs.modal', function(e) {
-                                //location.href = "<?php echo site_url('admin/admins/0') ?>";
-                                location.href = '#'
-                            });
-                        }
-                        else
-                        {
-                        }
-                    	/**/
                     },
                     error: function(xhr, errStr) {
                         alert(errStr);

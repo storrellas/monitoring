@@ -267,6 +267,7 @@ $('document').ready(function(){
 										</td>
 										<td  class="textleft">
 											{{ user.picture }}
+											 <a style="width:100%"  href="http://www.google.com" target="_blank" class="btn btn-info" role="button">picture</a>
 										</td>
 
 										<td class="actions">
@@ -326,6 +327,8 @@ $('document').ready(function(){
 <script type="text/javascript">
 	function on_create()
 	{
+		
+		
 		$('#createNewUser').validate({
 	        errorPlacement: function (error, element) {
 	            element.before(error);
@@ -433,7 +436,7 @@ $('document').ready(function(){
 	}
 	
 	function on_edit_done()
-	{
+	{		
 	    $('#editUser').validate({
 	        errorPlacement: function (error, element) {
 	            element.before(error);

@@ -40,22 +40,22 @@ import logging
 log = logging.getLogger(__name__)
 
 
-class AdminListViewset( generics.ListCreateAPIView ):
+class CompanyListViewset( generics.ListCreateAPIView ):
 
     #A simple ViewSet for viewing and editing accounts.
     model = User
-    queryset = User.objects.filter(is_superuser=True)
-    serializer_class = AdminSerializer      
+    queryset = User.objects.filter(role=User.COMPANY)
+    serializer_class = CompanyUserSerializer      
     permission_classes = [IsAuthenticated]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
-
     
-class AdminDetailViewset( generics.RetrieveUpdateDestroyAPIView ):
+    
+class CompanyDetailViewset( generics.RetrieveUpdateDestroyAPIView ):
 
     #A simple ViewSet for viewing and editing accounts.
     model = User
-    queryset = User.objects.filter(is_superuser=True)
-    serializer_class = AdminSerializer        
+    queryset = User.objects.filter(role=User.COMPANY)
+    serializer_class = CompanyUserSerializer        
     permission_classes = [IsAuthenticated]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 

@@ -96,7 +96,7 @@ class CompanyView( LoginRequiredMixin, SuperuserRequiredMixin, ListView ):
 
 class EventUserView( CompanyView ):    
     template_name='manage/eventuser_list.html'  
-    queryset = User.objects.filter(is_superuser=False, role=User.EVENTUSER)
+    queryset = User.objects.filter(role=User.EVENTUSER)
     context_object_name = 'event_user_list'
     
     def get_queryset(self):

@@ -42,8 +42,8 @@ urlpatterns = [
 
     url(r'^ajax/docs/',                        include('rest_framework_swagger.urls'),        name='ajax-docs'),
     url(r'^ajax/login/',                       'rest_framework_jwt.views.obtain_jwt_token',   name='ajax-login'),
-    url(r'^ajax/admin/$',                      AdminListViewset.as_view(),                    name='ajax-admin'),
-    url(r'^ajax/admin/(?P<pk>[0-9]+)/$',       AdminDetailViewset.as_view(),                  name='ajax-admin-detail'),
+    url(r'^ajax/company/$',                      CompanyListViewset.as_view(),                    name='ajax-admin'),
+    url(r'^ajax/company/(?P<pk>[0-9]+)/$',       CompanyDetailViewset.as_view(),                  name='ajax-admin-detail'),
     
     url(r'^ajax/eventuser/$',                  EventUserListViewset.as_view(),                name='ajax-event-user'),
     url(r'^ajax/eventuser/(?P<pk>[0-9]+)/$',   EventUserDetailViewset.as_view(),              name='ajax-event-user-edit-pk'),

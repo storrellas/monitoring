@@ -59,9 +59,10 @@ class User(AbstractBaseUser,PermissionsMixin):
     role    = models.CharField(max_length=30, choices=ROLE, default=NONE, blank=True )
     
     # Company
-    name       = models.CharField( max_length=30,  blank=True )
-    cif        = models.CharField( max_length=30,  blank=True )
-    address    = models.CharField( max_length=200, blank=True )
+    name         = models.CharField( max_length=30,  blank=True )
+    cif          = models.CharField( max_length=30,  blank=True )
+    address      = models.CharField( max_length=200, blank=True )
+    contactname  = models.CharField( max_length=200, blank=True )
 
     # EventUser
     UNKNOWN    = 'UNKNOWN'
@@ -69,7 +70,7 @@ class User(AbstractBaseUser,PermissionsMixin):
     FEMALE     = 'FEMALE'
     GENDER = (
         (UNKNOWN,    'unknown'),
-        (MALE,       'male'),
+        (MALE,       'male')    ,
         (FEMALE,     'female'),
     )
     gender     = models.CharField( max_length=30, choices=GENDER, default=UNKNOWN, blank=True)
