@@ -59,10 +59,20 @@ class User(AbstractBaseUser,PermissionsMixin):
     role    = models.CharField(max_length=30, choices=ROLE, default=NONE, blank=True )
     
     # Company
-    cif    = models.CharField( max_length=30, blank=True )
+    name       = models.CharField( max_length=30,  blank=True )
+    cif        = models.CharField( max_length=30,  blank=True )
+    address    = models.CharField( max_length=200, blank=True )
 
     # EventUser
-    gender     = models.CharField( max_length=30, blank=True)
+    UNKNOWN    = 'UNKNOWN'
+    MALE       = 'MALE'
+    FEMALE     = 'FEMALE'
+    GENDER = (
+        (UNKNOWN,    'unknown'),
+        (MALE,       'male'),
+        (FEMALE,     'female'),
+    )
+    gender     = models.CharField( max_length=30, choices=GENDER, default=UNKNOWN, blank=True)
     score      = models.CharField( max_length=30, blank=True)
     picture    = models.ImageField(upload_to='event/user/',blank=True,null=True)
 

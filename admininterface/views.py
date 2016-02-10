@@ -80,22 +80,22 @@ class BaseView( LoginRequiredMixin, TemplateView ):
 
 
 
-class AdminView( LoginRequiredMixin, SuperuserRequiredMixin, ListView ):
-    template_name='manage/admin_list.html'  
+class CompanyView( LoginRequiredMixin, SuperuserRequiredMixin, ListView ):
+    template_name='manage/company_list.html'  
     model = User
     paginate_by = 10
-    queryset = User.objects.filter(Q(is_superuser=True)|Q(role=User.COMPANY)).order_by('id')
-    context_object_name = 'admin_list'
+    queryset = User.objects.filter(role=User.COMPANY).order_by('id')
+    context_object_name = 'company_list'
     
     
     def get_context_data(self, **kwargs):
-        context = super(AdminView, self).get_context_data(**kwargs)        
+        context = super(CompanyView, self).get_context_data(**kwargs)        
         context['event_list'] = Event.objects.all()        
         return context
    
 
-class EventUserView( AdminView ):    
-    template_name='manage/user_list.html'  
+class EventUserView( CompanyView ):    
+    template_name='manage/eventuser_list.html'  
     queryset = User.objects.filter(is_superuser=False, role=User.EVENTUSER)
     context_object_name = 'event_user_list'
     
