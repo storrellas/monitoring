@@ -126,6 +126,28 @@ class EventUserView( CompanyView ):
             context['search_data'] = ''                                         
         return context    
             
+class EventUserAddView( LoginRequiredMixin, SuperuserRequiredMixin, FormView ):
+    form_class = EventUserModelForm
+    
+    def get_success_url(self):
+        return reverse('user_list')
+    
+    def form_valid(self, form):
+        # Save the form
+        obj = form.save()
+        
+        # Set the role for eventuser
+        obj.role = User.EVENTUSER
+        obj.save()
+        
+        return super(EventUserAddView, self).form_valid(form)
+
+
+class EventUserEditView( LoginRequiredMixin, SuperuserRequiredMixin, FormView ):
+    
+    def post(self,request):
+        print "This is my response"
+        return HttpResponse()  
     
 class EventView( LoginRequiredMixin, SuperuserRequiredMixin, ListView ):
     template_name='manage/event_list.html'
@@ -146,7 +168,7 @@ class EventAddView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateView ):
                                                    is_superuser=False).order_by('id')     
         return context
     
-    def post(self,request,*args,**kwargs):
+    def post(self,request,*args,**kwargs):        
         form = EventModelForm(request.POST, request.FILES)        
         if not form.is_valid():
             #raise Http404()          

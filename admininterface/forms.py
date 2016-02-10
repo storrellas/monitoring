@@ -18,6 +18,10 @@ class EventModelForm(forms.ModelForm):
         fields = ['title','description','pdfdocument','videourl']
 
 
-        
+class EventUserModelForm(forms.ModelForm):    
+
+    class Meta:
+        model = User
+        fields = ['username','password','first_name','last_name', 'phone', 'email', 'gender', 'picture']        
 
         

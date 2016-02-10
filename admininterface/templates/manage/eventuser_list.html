@@ -39,58 +39,17 @@ $('document').ready(function(){
 					</div>
 				</div>
 				<div class="ibox-content">
-					<!-- modal form 'edit Password' -->
-					<div id="modal-form-editpass" class="modal fade" aria-hidden="true">
-						<div class="modal-smalldialog">
-							<div class="modal-content">
-								<div class="modal-body">
-									<div class="row">
-										<div class="col-sm-12">
-											<h3 class="m-t-none m-b">Change Password</h3>
-											<form role="form" id="updatePasswordForm">
-												<input type="hidden" id="upuserid" value="">
-												<input type="hidden" id="upusername" value="">
-												<input type="hidden" id="updescription" value="">
-												<div class="form-group">
-													<label>Password*</label> <input type="password"
-														placeholder="Password" class="form-control required"
-														name="uppassword" id="uppassword">
-												</div>
-												<div class="form-group">
-													<label>Confirm*</label> <input type="password"
-														placeholder="Confirm password"
-														class="form-control required" name="upconfirmpass"
-														id="upconfirmpass">
-												</div>
-												<div>
-													<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
-														type="submit" onclick="on_editpass_done()">
-														<strong>Change</strong>
-													</button>
-													<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
-														style="margin-right: 20px;" type="button"
-														onclick="on_cancel_editpass()">
-														<strong>Cancel</strong>
-													</button>
-												</div>
-											</form>
-										</div>
-
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
 
 					<!-- modal form 'new' -->
 					<div id="modal-form-new" class="modal fade" aria-hidden="true">
 						<div class="modal-dialog">
 							<div class="modal-content">
-								<div class="modal-body">
+								<div class="modal-body" style="max-height: 600px;overflow-y: auto;">
 									<div class="row">
 										<div class="col-sm-12">
 											<h3 class="m-t-none m-b">Create User</h3>
-											<form role="form" id="createNewUser">
+											<form role="form" id="createNewUser" method="post" action="{% url 'user_add' %}" enctype="multipart/form-data">
+												{% csrf_token %}
 												<div class="form-group">
 													<label><b class="required">*</b>Username:</label> <input
 														type="text" placeholder="" class="form-control required"
@@ -99,19 +58,49 @@ $('document').ready(function(){
 												<div class="form-group">
 													<label><b class="required">*</b>Password:</label> <input
 														type="password" placeholder=""
-														class="form-control required" name="cpassword_edit"
-														id="cpassword_edit">
+														class="form-control required" name="password"
+														id="password">
 												</div>
 												<div class="form-group">
 													<label><b class="required">*</b>Confirm Password:</label> <input
 														type="password" placeholder=""
-														class="form-control required" name="ccpassword_edit"
-														id="ccpassword_edit">
+														class="form-control required" name="password_confirm"
+														id="password_confirm">
 												</div>
 												<div class="form-group">
-													<label>Description:</label>
-													<textarea class="form-control" name="description"
-														id="description" style="width: 100%; height: 100px;"></textarea>
+													<label>First Name:</label>
+													<input type="text" placeholder="First Name"
+														class="form-control" name="first_name"
+														id="first_name">
+												</div>
+												<div class="form-group">
+													<label>Last Name:</label>
+													<input type="text" placeholder="Last Name"
+														class="form-control" name="last_name"
+														id="last_name">
+												</div>
+												<div class="form-group">
+													<label>Phone:</label>
+													<input type="text" placeholder="Last Name"
+														class="form-control" name="phone"
+														id="phone">
+												</div>
+												<div class="form-group">
+													<label>Email:</label>
+													<input type="text" placeholder="Email"
+														class="form-control" name="email"
+														id="email">
+												</div>
+												<div class="form-group">
+													<label>Gender:</label>
+													<select class="form-control" name="event" id="event">
+														<option value="male" selected>Male</option>
+														<option value="female">Female</option>
+													</select>
+												</div>
+												<div class="form-group">
+													<label>Picture:</label>
+													<input type="file" class="form-control" name="picture" id="picture">
 												</div>
 												<div>
 													<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
@@ -230,8 +219,8 @@ $('document').ready(function(){
 									<tr>
 										<th>No</th>
 										<th class="textleft">Username</th>
-										<th class="textleft">Name</th>
-										<th class="textleft">Surname</th>
+										<th class="textleft">First Name</th>
+										<th class="textleft">Last Name</th>
 										<th class="textleft">Phone</th>
 										<th class="textleft">Email</th>
 										<th class="textleft">Gender</th>
@@ -271,15 +260,6 @@ $('document').ready(function(){
 										</td>
 
 										<td class="actions">
-											<a class="btn btn-sm btn-white btn-action"
-											onclick="on_editpass('{{ user.id }}','{{user.username}}','{{ user.first_name }}');"
-											data-toggle="tooltip" data-placement="bottom"
-											title="Change Password"
-											{% if not request.user.is_superuser %}
-											disabled
-											{% endif %}> 
-											<img src="{% static 'inspinia_admin/img/icon/change_password.png' %}">
-										</a> 
 										<a class="btn btn-sm btn-white btn-action"
 											onclick="on_edit('{{ user.id }}');"
 											data-toggle="tooltip" data-placement="bottom" title="Edit"
@@ -326,10 +306,10 @@ $('document').ready(function(){
 
 <script type="text/javascript">
 	function on_create()
-	{
-		
-		
-		$('#createNewUser').validate({
+	{		
+		var $modal = $('#modal-form-new');
+		var $form = $modal.find("form:first")
+		$form.validate({
 	        errorPlacement: function (error, element) {
 	            element.before(error);
 	        },
@@ -346,6 +326,8 @@ $('document').ready(function(){
 	            }
 	        },
 	        submitHandler: function(){
+	        	$form.submit()
+	        	/*
 	        	var postData = {
 	        		    username: $('#createNewUser #username').val(),
 	        		    password: $('#createNewUser #cpassword_edit').val(),
@@ -365,7 +347,8 @@ $('document').ready(function(){
         		  error: function(xhr, errStr) {
         		    alert(errStr);
         		  }
-        		});	        	
+        		});
+	        	/**/
 	        }
 	    });
 	}
@@ -373,58 +356,7 @@ $('document').ready(function(){
     {
         $('#modal-form-new').modal('hide');
     }
-	function on_editpass(userid, username, description)
-	{				
-		$("#upuserid").val(userid);
-		$("#upusername").val(username);
-		$("#updescription").val(description);
-		$("#upconfirmpass").val('');
-		$("#uppassword").val('');
-		$('#modal-form-editpass').modal('show');
-	}
-	function on_editpass_done()
-	{
-	    $('#updatePasswordForm').validate({
-	        errorPlacement: function (error, element) {
-	            element.before(error);
-	        },
-	        rules: {
-	        	uppassword: {
-	            	required: true
-	            },
-	            upconfirmpass: {
-	            	equalTo: "#uppassword"
-	            },
-	        },
-	
-	        submitHandler: function() {
-                $.ajax({
-                    async: true,
-                    url: "{% url 'ajax-event-user'%}" + $("#upuserid").val() + "/",
-                    dataType: "json",
-                    type: "PUT",
-                    data: {
-                        username:   $("#upusername").val(),
-                        password:   $("#uppassword").val(),
-                        description: $("#updescription").val(),
-                    },
-                    success: function(json) {
-                    	location.reload()
-                    	return;
-                    },
-                    error: function(xhr, errStr) {
-                        alert(errStr);
-                    }
-                });
-	        	
-	        }
-	    });
-	}
-	
-	function on_cancel_editpass()
-	{
-	    $('#modal-form-editpass').modal('hide');
-	}
+
 	function on_edit(userid)
 	{
 		var $username	= $('#username'+userid).val();
