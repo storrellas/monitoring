@@ -101,11 +101,17 @@ class User(AbstractBaseUser,PermissionsMixin):
         return self.username
 
 class Event(models.Model):
-    title         = models.CharField(max_length=30)
-    description   = models.CharField(max_length=400)
+    title         = models.CharField(max_length=30, default='')
+    description   = models.CharField(max_length=400, default= '')
+    brief         = models.CharField(max_length=400, default='')
     register_date = models.DateTimeField(default=timezone.now())
+    start_date    = models.DateTimeField(blank=True, null=True)
+    end_date      = models.DateTimeField(blank=True, null=True)
+    eventuser_objective_day = models.IntegerField(default=0)    
+
     videourl      = models.URLField(default='')
     pdfdocument   = models.FileField(upload_to='event/',blank=True,null=True)
+    
     user          = models.ManyToManyField(User, related_name='event')
     
     def __unicode__(self):

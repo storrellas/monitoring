@@ -47,14 +47,27 @@ class CompanyUserSerializer(serializers.ModelSerializer):
         return obj        
     
     def update(self, instance, validated_data):
-        super(EventUserSerializer, self).update(instance, validated_data)
+        super(CompanyUserSerializer, self).update(instance, validated_data)
         
         try:
             instance.set_password(validated_data['password'])
             instance.save()
         except:
             print "No password provided"
-            pass        
+            pass
+        
+        # Remove assigned user
+        instance.event.clear()
+        # Assign new user        
+        try:
+            event = Event.objects.get(id=self.initial_data['event'])
+            # Check if there is space for user in event
+            if event.user.filter(role=User.COMPANY).count() == 0:    
+                instance.event.add(event)
+        except:
+            log.info("Not able to find the event")
+            pass
+              
         return instance
                        
     password = serializers.CharField(required=False)
