@@ -337,7 +337,7 @@ class ProductView( LoginRequiredMixin, ListView ):
     model = Product
     paginate_by = 10
     context_object_name = 'product_list'
-    queryset = Product.objects.all()
+    queryset = Product.objects.all().order_by('id')
     
     def get_context_data(self, **kwargs):
         context = super(ProductView, self).get_context_data(**kwargs)

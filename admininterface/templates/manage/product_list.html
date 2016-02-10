@@ -35,29 +35,37 @@
         });
 	}
 
-	$('document').ready(function(){
+	function loading_event_list_manage($modal, companyid){
+		var $event = $modal.find('#eventid')
+		var $event_container = $event.parent()
+		$event.find('option').remove()			
+		$event.append($('<option>', { value : "0" }).text("None"));
+		
+		$event.hide()
+		$event_container.hide()
+		
+		// If None was selected		
+		if( companyid == 0 ) return;
+		$event_container.find(".form-control:first").show()
+		$event_container.show()
+				
+		// Get event list
+		generate_event_select( $modal, companyid );
+	}
+	
+	$('document').ready(function(){		
+		// Procedure to perform the selection of the event
+		var $modal = $( "#modal-form-new" )		
+		$modal.find("#companyid").change(function() {
+			loading_event_list_manage($modal, $(this).val() )			
+		});
 		
 		// Procedure to perform the selection of the event
-		var $modal = $( "#modal-form-new" )
-		var $company = $modal.find("#companyid")
-		$company.change(function() {
-			var $event = $modal.find('#eventid')
-			var $event_container = $event.parent()
-			$event.find('option').remove()			
-			$event.append($('<option>', { value : "0" }).text("None"));
-			
-			$event.hide()
-			$event_container.hide()
-			
-			// If None was selected		
-			if( $(this).val() == 0 ) return;
-			$event_container.find(".form-control:first").show()
-			$event_container.show()
-					
-			// Get event list
-			generate_event_select( $modal, $(this).val() );
-			
+		var $modal = $( "#modal-form-edit" )		
+		$modal.find("#companyid").change(function() {
+			loading_event_list_manage($modal, $(this).val() )			
 		});
+		
 	});
 </script>
 
@@ -151,18 +159,42 @@
 								<div class="modal-body">
 									<div class="row">
 										<div class="col-sm-12">
-											<h3 class="m-t-none m-b">Edit User</h3>
+											<h3 class="m-t-none m-b">Edit Product</h3>
 											<form role="form" id="editUser" method="post"
 												enctype="multipart/form-data">
+												<input type="hidden" id="eproductid" value="">
 												<div class="form-group">
-													<label><b class="required">*</b>Username:</label> <input
-														type="text" placeholder="" class="form-control required"
-														name="eusername" id="eusername">
+													<label><b class="required">*</b>Name:</label> 
+													<input type="text" placeholder="" class="form-control required"
+														name="name" id="cname">
 												</div>
 												<div class="form-group">
-													<label>Description:</label>
-													<textarea class="form-control" name="edescription"
-														id="edescription" style="width: 100%; height: 100px;"></textarea>
+													<label>Brand:</label> 
+													<input type="text" placeholder=""
+														class="form-control" name="brand"
+														id="cbrand">
+												</div>
+												<div class="form-group">
+													<label>Format:</label>
+													<input type="text" placeholder=""
+														class="form-control" name="format" id="cformat">
+												</div>
+												<div class="form-group">
+													<label>Company:</label> 
+													<select class="form-control" name="company" id="companyid">
+														<option value="0" selected>None</option>
+														{% for company in company_list %}
+															<option value='{{ company.id }}'>{{ company.username }}</option>
+														{% endfor %}
+													</select>
+												</div>
+												<div class="form-group" style="display:none">
+													<label>Event:</label> 
+													<div class="form-control"> Loading ...</div>
+													<select class="form-control" name="event" id="eventid">
+														<option value="0" selected>None</option>
+													</select>
+																										
 												</div>
 												<div>
 													<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
@@ -296,7 +328,7 @@
 									</td>
 									<td style="padding-top: 1px; padding-bottom: 0px; text-align: center;">										 
 									<a class="btn btn-sm btn-white btn-action"
-										onclick="on_edit('{{ user.id }}');"
+										onclick="on_edit(this);"
 										data-toggle="tooltip" data-placement="bottom" title="Edit"
 										{% if not request.user.is_superuser %}
 										disabled
@@ -348,9 +380,11 @@
 					name: $modal.find("input[name='name']").val(),
 					brand: $modal.find("input[name='brand']").val(),
 					format: $modal.find("input[name='format']").val(),
+					event : ""
 				}
+				
 	        	if( $modal.find("select[name='event']").val() != 0 ){
-	        		$.extend(postData,{ event : parseInt($modal.find("select[name='event']").val()) })
+					postData['event'] = parseInt($modal.find("select[name='event']").val())
 	        	}
 	        	
 	        	
@@ -368,8 +402,7 @@
         		  error: function(xhr, errStr) {
         		    alert(errStr);
         		  }
-        		});	 
-	        	/**/
+        		});
 	        }
 	    });
 		$form.submit()
@@ -378,98 +411,63 @@
     {
         $('#modal-form-new').modal('hide');
     }
-	function on_editpass(userid, username, description)
-	{				
-		$("#upuserid").val(userid);
-		$("#upusername").val(username);
-		$("#updescription").val(description);
-		$("#upconfirmpass").val('');
-		$("#uppassword").val('');
-		$('#modal-form-editpass').modal('show');
-	}
-	function on_editpass_done()
-	{
-	    $('#updatePasswordForm').validate({
-	        errorPlacement: function (error, element) {
-	            element.before(error);
-	        },
-	        rules: {
-	        	uppassword: {
-	            	required: true
-	            },
-	            upconfirmpass: {
-	            	equalTo: "#uppassword"
-	            },
-	        },
 	
-	        submitHandler: function() {
-                $.ajax({
-                    async: true,
-                    url: "{% url 'ajax-event-user'%}" + $("#upuserid").val() + "/",
-                    dataType: "json",
-                    type: "PUT",
-                    data: {
-                        username:   $("#upusername").val(),
-                        password:   $("#uppassword").val(),
-                        description: $("#updescription").val(),
-                    },
-                    success: function(json) {
-                    	location.reload()
-                    	return;
-                    },
-                    error: function(xhr, errStr) {
-                        alert(errStr);
-                    }
-                });
-	        	
-	        }
-	    });
-	}
-	
-	function on_cancel_editpass()
+	function on_edit(source)
 	{
-	    $('#modal-form-editpass').modal('hide');
-	}
-	function on_edit(userid)
-	{
-		var $username	= $('#username'+userid).val();
-		var $description 	= $('#description'+userid).val();
-		$("#euserid").val(userid);
-		$("#eusername").val($username);
-		$("#edescription").val($description);
-        $('#modal-form-edit').modal('show');
+		var $row = $(source).parent().parent()
+		console.log(  $row )
+		var $id = $row.find("td:first")
+		var product_name = $.trim($id.next().text());
+		
+		// Add hint for edit
+		var $modal = $( "#modal-form-edit" )	
+		$modal.find("input[name='name']").val(product_name)
+		$modal.find('#eproductid').val( $.trim($id.text()) )
+		$modal.modal('show');
 	}
 	
 	function on_edit_done()
 	{
-	    $('#editUser').validate({
+		var $modal = $('#modal-form-edit')
+		var $form = $modal.find('form:first')
+		$form.validate({
 	        errorPlacement: function (error, element) {
 	            element.before(error);
 	        },
 	        rules: {
-	            eusername: {
+	            name: {
 	            	required: true
 	            },
 	        },
 	
 	        submitHandler: function() {		        	
-                $.ajax({
-                    async: true,
-                    url: "{% url 'ajax-event-user' %}" + $("#euserid").val() + "/",
-                    dataType: "json",
-                    type: "PUT",
-                    data: {
-                        username:   $("#eusername").val(),
-                        description: $("#edescription").val(),
-                    },
-                    success: function(json) {
-                    	location.reload()
-                    	return;
-                    },
-                    error: function(xhr, errStr) {
-                        alert(errStr);
-                    }
-                });
+				// Generate data
+				var postData = {
+					name: $modal.find("input[name='name']").val(),
+					brand: $modal.find("input[name='brand']").val(),
+					format: $modal.find("input[name='format']").val(),
+					event : ""
+				}
+				
+	        	if( $modal.find("select[name='event']").val() != 0 ){
+					postData['event'] = parseInt($modal.find("select[name='event']").val())
+	        	}
+	        	
+        		$.ajax({        			
+        		  async: true,
+        		  url: "{% url 'ajax-product-list' %}" + $("#eproductid").val() + '/',
+        		  dataType: "json",
+        		  type: "PUT",
+        		  data : postData,
+        		  datatype : "application/json",
+        		  success: function(json) {
+        		    location.reload()
+        		    return;
+        		  },
+        		  error: function(xhr, errStr) {
+        		    alert(errStr);
+        		  }
+        		});
 	        }
 	    });
 	}
