@@ -46,17 +46,13 @@ class LoginAppViewset( ViewSet ):
           required: true
           type: string
         """
+       
 
-        
-        print request.data
-        #serializer = LoginUserAppSerializer(data=request.data)
         serializer = UserInputAppSerializer(data=request.data)
         if not serializer.is_valid():
             print serializer.errors
             raise ValidationError("Credentials were not correct")
-        
-        print serializer.validated_data
-        
+                
         # Authenticate user
         username = serializer.validated_data['username']
         password = serializer.validated_data['password']        
@@ -64,7 +60,7 @@ class LoginAppViewset( ViewSet ):
         if user is None:
             raise ValidationError("Credentials were not valid" )
         
-        if user.groups.filter(name='EventUser').exists() == False:
+        if user.role != User.EVENTUSER:
             raise ValidationError( "User is not EventUser" )
             
         # Return userdata            

@@ -1,26 +1,26 @@
 [
 {
   "model": "authtoken.token",
-  "pk": "639ff4a7de60183a525b4b6a877839fc27d942de",
-  "fields": {
-    "user": 2,
-    "created": "2016-02-08T10:10:00.094Z"
-  }
-},
-{
-  "model": "authtoken.token",
-  "pk": "8126547c3cf87a0e9244b5a8e9018f56a8261259",
-  "fields": {
-    "user": 1,
-    "created": "2016-02-08T10:10:00.112Z"
-  }
-},
-{
-  "model": "authtoken.token",
-  "pk": "fa80d4a81584faff44f511564b1cd7d250821b4d",
+  "pk": "1fb2c70996de9ea93278ee509283eb62b8706ca6",
   "fields": {
     "user": 3,
-    "created": "2016-02-08T10:10:00.109Z"
+    "created": "2016-02-11T10:46:21.240Z"
+  }
+},
+{
+  "model": "authtoken.token",
+  "pk": "4dd2c3734b657827e2a09a39c73fdf86adfa51d4",
+  "fields": {
+    "user": 2,
+    "created": "2016-02-11T10:46:20.904Z"
+  }
+},
+{
+  "model": "authtoken.token",
+  "pk": "ca83e02c888bbca26dd602ef655608ddaad46b9d",
+  "fields": {
+    "user": 6,
+    "created": "2016-02-11T10:46:21.237Z"
   }
 }
 ]
