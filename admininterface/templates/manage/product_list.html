@@ -415,7 +415,6 @@
 	function on_edit(source)
 	{
 		var $row = $(source).parent().parent()
-		console.log(  $row )
 		var $id = $row.find("td:first")
 		var product_name = $.trim($id.next().text());
 		

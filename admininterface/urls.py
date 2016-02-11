@@ -33,7 +33,7 @@ urlpatterns = [
     url(r'^manage/company/$',      CompanyView.as_view(),              name='company_list'),
     url(r'^manage/users/$',        EventUserView.as_view(),            name='user_list'),
     url(r'^manage/users/add/$',    EventUserAddView.as_view(),         name='user_add'),
-    url(r'^manage/users/edit/$',   EventUserEditView.as_view(),        name='user_edit'),
+    url(r'^manage/users/edit/(?P<pk>[0-9]+)/$',   EventUserEditView.as_view(),        name='user_edit'),
     
     
     url(r'^settings/changepwd/$',  ChangePwdView.as_view(),            name='changepwd'),    

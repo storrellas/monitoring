@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
-from django.views.generic import TemplateView, RedirectView, ListView, DetailView, FormView
+from django.views.generic import TemplateView, RedirectView, ListView, DetailView
+from django.views.generic import FormView, UpdateView, CreateView
 from django.views.generic.base import TemplateResponseMixin
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
@@ -126,7 +127,7 @@ class EventUserView( CompanyView ):
             context['search_data'] = ''                                         
         return context    
             
-class EventUserAddView( LoginRequiredMixin, SuperuserRequiredMixin, FormView ):
+class EventUserAddView( LoginRequiredMixin, SuperuserRequiredMixin, CreateView ):
     form_class = EventUserModelForm
     
     def get_success_url(self):
@@ -138,16 +139,30 @@ class EventUserAddView( LoginRequiredMixin, SuperuserRequiredMixin, FormView ):
         
         # Set the role for eventuser
         obj.role = User.EVENTUSER
+        obj.set_password(form.data['password'])
         obj.save()
         
         return super(EventUserAddView, self).form_valid(form)
 
 
-class EventUserEditView( LoginRequiredMixin, SuperuserRequiredMixin, FormView ):
+class EventUserEditView( LoginRequiredMixin, SuperuserRequiredMixin, UpdateView ):
+    model = User
+    form_class = EventUserModelForm
     
-    def post(self,request):
-        print "This is my response"
-        return HttpResponse()  
+    def get_success_url(self):
+        return reverse('user_list')
+    
+    def form_valid(self, form):
+        
+        # Save the form
+        obj = form.save()
+        
+        # Set the role for eventuser
+        obj.role = User.EVENTUSER
+        obj.set_password(form.data['password'])
+        obj.save()
+        
+        return super(EventUserEditView, self).form_valid(form) 
     
 class EventView( LoginRequiredMixin, SuperuserRequiredMixin, ListView ):
     template_name='manage/event_list.html'
