@@ -117,6 +117,26 @@ class Event(models.Model):
     def __unicode__(self):
        return self.title
 
+class Product(models.Model):
+    event    = models.ForeignKey(Event,null=True, blank=True, related_name='products')
+    name     = models.CharField(default='', max_length=400) 
+    brand    = models.CharField(default='', max_length=400)
+    format   = models.CharField(default='', max_length=400)
+    
+    def __unicode__(self):
+       return self.name
+   
+class Location(models.Model):
+    event    = models.ForeignKey(Event,null=True, blank=True, related_name='locations')
+    name     = models.CharField(default='', max_length=400) 
+    city     = models.CharField(default='', max_length=400)
+    address  = models.CharField(default='', max_length=400)
+
+    latitude     = models.FloatField(default=0.0)
+    longitude    = models.FloatField(default=0.0)
+    
+    def __unicode__(self):
+       return self.name
     
 class EventCheck(models.Model):
     
@@ -146,10 +166,9 @@ class EventCheck(models.Model):
     checkouttime = models.DateTimeField(null=True, blank=True)
     completeflag = models.BooleanField(default=False)
 
-    latitude     = models.FloatField(default=0.0)
-    longitude    = models.FloatField(default=0.0)
-    location     = models.CharField(default='', max_length=400)    
-
+    product      = models.ForeignKey(Product,null=True, blank=True, related_name='eventcheck')
+    location     = models.ForeignKey(Location,null=True, blank=True, related_name='eventcheck')
+   
     def __unicode__(self):
         if self.trackdate is not None and self.tracktime is not None:
             return self.user.username + "," + self.event.title + "," + self.trackdate.strftime("%d/%m/%y") + "," + self.tracktime.strftime("%d/%m/%y")
@@ -160,11 +179,7 @@ class EventCheckImage(models.Model):
     photo         = models.ImageField(upload_to='event/photo/',blank=True,null=True)
     eventcheck    = models.ForeignKey(EventCheck)
 
-class Product(models.Model):
-    event    = models.ForeignKey(Event,null=True, blank=True, related_name='products')
-    name     = models.CharField(default='', max_length=400) 
-    brand    = models.CharField(default='', max_length=400)
-    format   = models.CharField(default='', max_length=400)
+
     
     
     

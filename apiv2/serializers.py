@@ -28,10 +28,7 @@ class UserAppSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'event','auth_token')
 
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product    
-        fields = ('id', 'name','brand','format')
+
     
 class EventCheckDetailAppSerializer(serializers.ModelSerializer):
     lastsubmit = serializers.SerializerMethodField('lastsubmit_field', required=False)        
@@ -47,6 +44,16 @@ class EventCheckDetailAppSerializer(serializers.ModelSerializer):
         model = EventCheck
         fields = ('id', 'quantity', 'target', 'lastsubmit', 'completeflag', 'brief_opened', 
                   'checkintime', 'checkouttime')
+
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location    
+        fields = '__all__'
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product    
+        fields = ('id', 'name','brand','format')
 
 class EventAppSerializer(serializers.ModelSerializer):
 
@@ -77,11 +84,12 @@ class EventAppSerializer(serializers.ModelSerializer):
             return 0
        
     # Include related field
-    product = ProductSerializer(source='products',many=True)
+    product  = ProductSerializer(source='products',many=True)
+    location = LocationSerializer(source='locations',many=True)
     class Meta:
         model = Event
         fields = ('id','title','description', 'videourl', 
-                  'pdfurl', 'eventcheck', 'total','product')
+                  'pdfurl', 'eventcheck', 'total','product', 'location')
 
 
 class EventCheckAppSerializer(serializers.ModelSerializer):
@@ -98,7 +106,7 @@ class EventCheckAppSerializer(serializers.ModelSerializer):
     class Meta:
         model = EventCheck
         fields = ('id', 'user', 'event', 'quantity', 'target', 'type', 'note', 'lastsubmit', 'completeflag','brief_opened',\
-                  'checkintime', 'checkouttime','latitude', 'longitude', 'location')
+                  'checkintime', 'checkouttime')
 
 class UploadFileSerializer(serializers.Serializer):
     file = FileField()

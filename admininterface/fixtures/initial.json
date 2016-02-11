@@ -199,90 +199,6 @@
   }
 },
 {
-  "model": "admininterface.eventcheck",
-  "pk": 3,
-  "fields": {
-    "user": 2,
-    "event": 1,
-    "quantity": 10,
-    "target": 5,
-    "type": 1,
-    "note": "notes",
-    "brief_opened": false,
-    "trackdate": "2016-01-22",
-    "tracktime": "12:39:45.388",
-    "checkintime": "2016-01-22T14:04:43.517Z",
-    "checkouttime": "2016-01-22T14:04:43.517Z",
-    "completeflag": true,
-    "latitude": 0.0,
-    "longitude": 0.0,
-    "location": ""
-  }
-},
-{
-  "model": "admininterface.eventcheck",
-  "pk": 4,
-  "fields": {
-    "user": 2,
-    "event": 1,
-    "quantity": 41,
-    "target": 37,
-    "type": 2,
-    "note": "",
-    "brief_opened": false,
-    "trackdate": "2016-01-29",
-    "tracktime": "13:22:45.388",
-    "checkintime": "2016-01-22T14:04:43.517Z",
-    "checkouttime": "2016-01-22T14:04:43.517Z",
-    "completeflag": true,
-    "latitude": 0.0,
-    "longitude": 0.0,
-    "location": ""
-  }
-},
-{
-  "model": "admininterface.eventcheck",
-  "pk": 5,
-  "fields": {
-    "user": 2,
-    "event": 1,
-    "quantity": 12,
-    "target": 8,
-    "type": 2,
-    "note": "",
-    "brief_opened": false,
-    "trackdate": "2016-02-02",
-    "tracktime": "12:18:59.883",
-    "checkintime": "2016-01-22T14:04:43.517Z",
-    "checkouttime": "2016-01-22T14:04:43.517Z",
-    "completeflag": true,
-    "latitude": 0.0,
-    "longitude": 0.0,
-    "location": ""
-  }
-},
-{
-  "model": "admininterface.eventcheck",
-  "pk": 16,
-  "fields": {
-    "user": 3,
-    "event": 1,
-    "quantity": 25,
-    "target": 14,
-    "type": 2,
-    "note": "dbx",
-    "brief_opened": false,
-    "trackdate": "2016-02-02",
-    "tracktime": "13:43:50.617",
-    "checkintime": "2016-02-02T13:24:28.234Z",
-    "checkouttime": null,
-    "completeflag": false,
-    "latitude": 41.414762,
-    "longitude": 2.131821,
-    "location": "Carrer d'Adri\u00e0 Margarit, 24, 08035 Barcelona, Barcelona, Spain"
-  }
-},
-{
   "model": "admininterface.product",
   "pk": 1,
   "fields": {
@@ -310,6 +226,87 @@
     "name": "MyOther",
     "brand": "MyOther",
     "format": ""
+  }
+},
+
+{
+  "model": "admininterface.eventcheck",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "event": 1,
+    "quantity": 10,
+    "target": 5,
+    "type": 1,
+    "note": "notes",
+    "brief_opened": false,
+    "trackdate": "2016-01-22",
+    "tracktime": "12:39:45.388",
+    "checkintime": "2016-01-22T14:04:43.517Z",
+    "checkouttime": "2016-01-22T14:04:43.517Z",
+    "completeflag": true,
+    "product": 3,
+	"location": 1
+  }
+},
+{
+  "model": "admininterface.eventcheck",
+  "pk": 2,
+  "fields": {
+    "user": 2,
+    "event": 1,
+    "quantity": 41,
+    "target": 37,
+    "type": 2,
+    "note": "",
+    "brief_opened": false,
+    "trackdate": "2016-01-29",
+    "tracktime": "13:22:45.388",
+    "checkintime": "2016-01-22T14:04:43.517Z",
+    "checkouttime": "2016-01-22T14:04:43.517Z",
+    "completeflag": true,
+    "product": 2,
+	"location": 1
+  }
+},
+{
+  "model": "admininterface.eventcheck",
+  "pk": 3,
+  "fields": {
+    "user": 2,
+    "event": 1,
+    "quantity": 12,
+    "target": 8,
+    "type": 2,
+    "note": "",
+    "brief_opened": false,
+    "trackdate": "2016-02-02",
+    "tracktime": "12:18:59.883",
+    "checkintime": "2016-01-22T14:04:43.517Z",
+    "checkouttime": "2016-01-22T14:04:43.517Z",
+    "completeflag": true,
+    "product": 1,
+	"location": 1
+  }
+},
+{
+  "model": "admininterface.eventcheck",
+  "pk": 4,
+  "fields": {
+    "user": 3,
+    "event": 1,
+    "quantity": 25,
+    "target": 14,
+    "type": 2,
+    "note": "dbx",
+    "brief_opened": false,
+    "trackdate": "2016-02-02",
+    "tracktime": "13:43:50.617",
+    "checkintime": "2016-02-02T13:24:28.234Z",
+    "checkouttime": null,
+    "completeflag": false,
+    "product": 1,
+	"location": 1
   }
 }
 ]
