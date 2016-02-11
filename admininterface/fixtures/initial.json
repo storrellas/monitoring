@@ -228,7 +228,18 @@
     "format": ""
   }
 },
-
+{
+  "model": "admininterface.location",
+  "pk": 1,
+  "fields": {
+    "event": 1,
+    "name": "MyLocation",
+    "city": "Barcelona",
+    "address": "Marina 299",
+    "latitude": 42.0,
+    "longitude": 2.0
+  }
+},
 {
   "model": "admininterface.eventcheck",
   "pk": 1,
@@ -246,7 +257,7 @@
     "checkouttime": "2016-01-22T14:04:43.517Z",
     "completeflag": true,
     "product": 3,
-	"location": 1
+    "location": 1
   }
 },
 {
@@ -266,7 +277,7 @@
     "checkouttime": "2016-01-22T14:04:43.517Z",
     "completeflag": true,
     "product": 2,
-	"location": 1
+    "location": 1
   }
 },
 {
@@ -286,27 +297,7 @@
     "checkouttime": "2016-01-22T14:04:43.517Z",
     "completeflag": true,
     "product": 1,
-	"location": 1
-  }
-},
-{
-  "model": "admininterface.eventcheck",
-  "pk": 4,
-  "fields": {
-    "user": 3,
-    "event": 1,
-    "quantity": 25,
-    "target": 14,
-    "type": 2,
-    "note": "dbx",
-    "brief_opened": false,
-    "trackdate": "2016-02-02",
-    "tracktime": "13:43:50.617",
-    "checkintime": "2016-02-02T13:24:28.234Z",
-    "checkouttime": null,
-    "completeflag": false,
-    "product": 1,
-	"location": 1
+    "location": 1
   }
 }
 ]
