@@ -20,7 +20,7 @@ class UserAppSerializer(serializers.ModelSerializer):
     event = serializers.SerializerMethodField('event_field', required=False)        
     def event_field(self, obj):
         try:
-            return obj.eventuser.event.id
+            return obj.event.first().id
         except:
             return None
 
