@@ -296,9 +296,13 @@ $('document').ready(function(){
 										<td  class="textleft">
 											{{ user.score }}
 										</td>
-										<td  class="textleft">
-											{{ user.picture }}
-											 <a style="width:100%"  href="http://www.google.com" target="_blank" class="btn btn-info" role="button">picture</a>
+										<td  class="textleft">										
+											 <a style="width:100%"
+											 {% ifequal user.picture.name "" %}disabled href="#"
+											 {% else %}
+											  href="{{ user.picture.url }}"
+											 {% endifequal %} 
+											 target="_blank" class="btn btn-info" role="button">picture</a>
 										</td>
 
 										<td class="actions">
@@ -413,25 +417,6 @@ $('document').ready(function(){
 	
 	        submitHandler: function() {
 	        	$form.submit()
-	        	/*
-                $.ajax({
-                    async: true,
-                    url: "{% url 'ajax-event-user' %}" + $("#euserid").val() + "/",
-                    dataType: "json",
-                    type: "PUT",
-                    data: {
-                        username:   $("#eusername").val(),
-                        description: $("#edescription").val(),
-                    },
-                    success: function(json) {
-                    	location.reload()
-                    	return;
-                    },
-                    error: function(xhr, errStr) {
-                        alert(errStr);
-                    }
-                });
-	        	/**/
 	        }
 	    });
 	}
