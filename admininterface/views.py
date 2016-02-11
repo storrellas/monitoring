@@ -15,6 +15,8 @@ from django.core.files.base import ContentFile
 # Thrid-party libs
 from braces.views import LoginRequiredMixin, SuperuserRequiredMixin
 
+from rest_framework.authtoken.models import Token
+
 # Project imports
 from forms import *
 from models import *
@@ -141,6 +143,9 @@ class EventUserAddView( LoginRequiredMixin, SuperuserRequiredMixin, CreateView )
         obj.role = User.EVENTUSER
         obj.set_password(form.data['password'])
         obj.save()
+        
+        # Create token for API 
+        Token.objects.create(user=obj)
         
         return super(EventUserAddView, self).form_valid(form)
 
