@@ -86,6 +86,9 @@ class QuestionsDay(models.Model):
                 out = "{}\r\n,{},{}".format(out, self.full_sentence(day), answer)
         return out
 
+    def __str__(self):
+        return self.text
+
 
 class AnswersDay(models.Model):
     """ Answers for a specific day on a campaign
@@ -109,7 +112,6 @@ class QuestionsUser(models.Model):
     enabled = models.BooleanField(default=True)
 
     objects = QuestionsManager()
-
 
     def full_sentence(self, user):
         """ Returns question + subject. On the form we display the question and
@@ -142,6 +144,9 @@ class QuestionsUser(models.Model):
                 answer = answer if answer is not None else "No answer"
                 out = "{}\r\n,{},{}".format(out, question.full_sentence(user), answer)
         return out
+
+    def __str__(self):
+        return self.text
 
 
 class AnswersUser(models.Model):
@@ -195,6 +200,9 @@ class QuestionsEvent(models.Model):
             answer = self.get_answer(event)
             out = "{}\r\n,{},{}".format(out, self.text, answer)
         return out
+
+    def __str__(self):
+        return self.text
 
 
 class AnswersEvent(models.Model):

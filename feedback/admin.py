@@ -5,11 +5,12 @@ from django.contrib.admin.sites import AlreadyRegistered
 
 from import_export import resources
 
-from feedback.models import FeedbackList
+from feedback import models
 
-app_models = apps.get_app_config('feedback').get_models()
-for model in app_models:
-    try:
-        admin.site.register(model)
-    except AlreadyRegistered:
-        pass
+
+class Admin(admin.ModelAdmin):
+    list_display = ('text', 'enabled')
+
+admin.site.register(models.QuestionsEvent, Admin)
+admin.site.register(models.QuestionsUser, Admin)
+admin.site.register(models.QuestionsDay, Admin)
