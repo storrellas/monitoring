@@ -76,24 +76,29 @@ $('document').ready(function(){
 <!--                                        <div class="col-lg-1 search_btn">-->
 <!--                                        	<button class="btn btn-primary pull-left" type="submit"><strong>Go!</strong></button>-->
 <!--                                       	</div>-->
-                                     	<div class="col-lg-1 search_btn" style="float:right;">
+                                     	<div class="search_btn" style="float:right;">
                                      		<a data-toggle="modal" class="btn btn-primary" href="{% url 'add_event'%}"
 											{% if notrequest.user.is_superuser %}disabled{% endif %}>Add Event</a>
                                      	</div>	
+                                      <div class="search_btn" style="float:right;">
+                                        <a data-toggle="modal" class="btn btn-primary" style="margin-right: 20px" href="{% url 'event_feedback_csv'%}">
+                                          Export Feedback
+                                        </a>
+                                      </div>  
                                   </div>
                               </form>
                           </div>
 
                           <div style="clear:both;"></div>
                           <div class="tooltip-demo photo_table_wrapper">
-						<table class="table table-bordered" style="margin-bottom: 0px;" id="photo_table">
-							<col width="50px"/>
+						<table class="tabledata" style="" id="photo_table">
+							<!--col width="50px"/>
 							<col width="50px"/>
 							<col width="150px"/>
 							<col width="100px"/>
 							<col width="100px"/>
 							<col width="100px"/>
-							<col width="100px"/>
+							<col width="100px"/-->
 							<tbody id="users_body">
 								<tr>
 									<th><input type="checkbox" id="selecttag"></th>
