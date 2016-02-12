@@ -1,13 +1,10 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from django.db import models
 from django.utils import timezone
 
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
-
-
 
 class UserManager(BaseUserManager):
 
@@ -99,6 +96,7 @@ class User(AbstractBaseUser,PermissionsMixin):
 
     def __unicode__(self):
         return self.username
+
 
 class Event(models.Model):
     title         = models.CharField(max_length=30, default='')

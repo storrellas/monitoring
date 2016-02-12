@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^event/$',               EventView.as_view(),                name='event'),
     url(r'^event/add/$',           EventAddView.as_view(),             name='add_event'),
     url(r'^event/edit/(?P<pk>[0-9]+)/$',    EventEditView.as_view(),   name='edit_event'),
+    url(r'^export_feedback/$',     FeedbackCSVView.as_view(),   name='event_feedback_csv'),
 
     #url(r'^product/$',             TemplateView.as_view(template_name='manage/product_list.html'),  name='product'),
     url(r'^product/$',             ProductView.as_view(),  name='product'),

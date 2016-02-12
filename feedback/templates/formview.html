@@ -1,0 +1,24 @@
+
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load formfeedback %}
+
+
+{% block contents %}
+	{% if no_dates %}
+		<div class="nodatesDIV">
+			<div><i class="fa fa-exclamation-triangle"></i></div>
+			<span>There is a problem with the dates of this event.<br/>
+			The form could not be rendered.
+			</span>
+		</div>
+	{% elif no_questions %}
+		<div class="nodatesDIV">
+			<div><i class="fa fa-exclamation-triangle"></i></div>
+			<span>No feedback questions defined.
+			</span>
+		</div>
+	{% else %}
+		{% showFeedbackForm form event %}
+	{% endif %}
+{% endblock %}

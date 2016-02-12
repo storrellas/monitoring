@@ -41,8 +41,8 @@ INSTALLED_APPS = (
     'import_export',
     'admininterface',
     #'apiv1',
-    'apiv2'
-    
+    'apiv2',
+    'feedback'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -249,9 +249,25 @@ LOGGING = {
     }
 }
 
-try:
-    from localsettings import *
-except ImportError:
-    print 'localsettings could not be imported'
-    # pass
-    #raise Exception('localsettings could not be imported')
+##################
+# LOCAL SETTINGS #
+##################
+
+# Allow any settings to be defined in local_settings.py which should be
+# ignored in your version control system allowing for settings to be
+# defined per machine.
+
+# Instead of doing "from .local_settings import *", we use exec so that
+# local_settings has full access to everything defined in this module.
+# The behaviour though shall be the same.
+# For instance we can define in localsettings.py the following line:
+# 
+# INSTALLED_APPS += (
+#    'debug_toolbar.apps.DebugToolbarConfig',  # Enabling django-debug-toolbar
+# )
+# Otherwise, using `from .local_settings import *` forces us to rewrite the
+# entire variable in localsettings, making it harder to maintain.
+
+f = os.path.join(PROJECT_PATH, "localsettings.py")
+if os.path.exists(f):
+    exec(open(f, "rb").read())
