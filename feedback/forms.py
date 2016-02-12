@@ -10,7 +10,7 @@ from feedback import models
 
 logger = logging.getLogger("")
 
-  
+
 class FeedbackForm(forms.Form):
 
     def _create_fields_dates(self, event):
@@ -20,9 +20,8 @@ class FeedbackForm(forms.Form):
         questions = models.QuestionsDay.objects.filter(enabled=True)
 
         #num_days = (event.end_date.date() - event.start_date.date()).days+1
-        print event.end_date, event.start_date
+
         for day in event.getDays():
-            print day
             #day = (event.start_date + timedelta(days=da)).date()
 
             # For each day, we specify a field for all questions
