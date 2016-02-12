@@ -10,7 +10,7 @@ from feedback import models
 
 logger = logging.getLogger("")
 
- 
+  
 class FeedbackForm(forms.Form):
 
     def _create_fields_dates(self, event):
