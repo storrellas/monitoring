@@ -86,8 +86,9 @@ class EventCheckInAppViewset(generics.CreateAPIView):
         user=User.objects.get(id=request.data['user'])
         eventcheck = EventCheck.objects.filter(event=event,user=user) \
                     .order_by('-checkintime').first()
-        if eventcheck.completeflag == False:
-            raise APIException("You already made checkin")
+        if eventcheck is not None:
+            if eventcheck.completeflag == False:
+                raise APIException("You already made checkin")
         
         # Continue with flow
         return super(EventCheckInAppViewset,self).create(request, *args, **kwargs)
@@ -106,10 +107,11 @@ class EventCheckOutAppViewset(generics.UpdateAPIView):
         user=User.objects.get(id=request.data['user'])
         eventcheck = EventCheck.objects.filter(event=event,user=user) \
                     .order_by('-checkintime').first()
-        if eventcheck.completeflag == True:
-            raise APIException("You did not check in or you already checkout")
-        if eventcheck.type == EventCheck.UNDEFINED:
-            raise APIException("You did not report")
+        if eventcheck is not None:                    
+            if eventcheck.completeflag == True:
+                raise APIException("You did not check in or you already checkout")
+            if eventcheck.type == EventCheck.UNDEFINED:
+                raise APIException("You did not report")
 
               
         # Mark as completed
@@ -134,8 +136,9 @@ class EventCheckReportAppViewset(generics.UpdateAPIView):
         user=User.objects.get(id=request.data['user'])
         eventcheck = EventCheck.objects.filter(event=event,user=user) \
                     .order_by('-checkintime').first()
-        if eventcheck.completeflag == True:
-            raise APIException("You did not check in")
+        if eventcheck is not None:
+            if eventcheck.completeflag == True:
+                raise APIException("You did not check in")
         
         return super(EventCheckReportAppViewset,self).update(request, *args, **kwargs)
     
