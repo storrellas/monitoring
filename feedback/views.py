@@ -39,4 +39,7 @@ class FeedBack(View):
             logger.debug("Form is not valid")
 
         context_data['form'] = form
+        context_data['confirm_save'] = True
+        context_data['event_id'] = id
+        
         return TemplateResponse(request, self.template_name, context_data)

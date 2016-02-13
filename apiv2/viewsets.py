@@ -26,6 +26,13 @@ from rest_framework.parsers import FileUploadParser
 from serializers import *
 from admininterface.models import *
 
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+
+    def enforce_csrf(self, request):
+        return  # To not perform the csrf check previously happening
+
 
 class LoginAppViewset( ViewSet ):
     """
@@ -78,7 +85,7 @@ class EventCheckInAppViewset(generics.CreateAPIView):
     model = EventCheck
     queryset = EventCheck.objects.all()
     serializer_class = EventCheckAppSerializer
-            
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     def create(self,request, *args, **kwargs):
         
         # Check if already checkin
@@ -98,7 +105,7 @@ class EventCheckOutAppViewset(generics.UpdateAPIView):
     model = EventCheck
     queryset = EventCheck.objects.all()
     serializer_class = EventCheckAppSerializer
-    
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     def update(self,request, *args, **kwargs):
 
         # Check if not checkin
@@ -126,7 +133,8 @@ class EventCheckReportAppViewset(generics.UpdateAPIView):
     model = EventCheck
     queryset = EventCheck.objects.all()    
     serializer_class = EventCheckAppSerializer
-    
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+
     def update(self,request, *args, **kwargs):        
         
         # Check if not checkin

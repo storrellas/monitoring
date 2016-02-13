@@ -17,7 +17,7 @@ from models import *
 app_models = apps.get_app_config('admininterface').get_models()
 for model in app_models:
     try:
-        pass#admin.site.register(model)
+        admin.site.register(model)
     except AlreadyRegistered:
         pass
 

@@ -61,33 +61,36 @@ class QuestionsDay(models.Model):
         Example, question='how are you' subject='2015/01/02'
         returns how are you (2015/01/02)
         """
-        return "{} ({})".format(self.text, day)
+        return u"{} ({})".format(self.text, day)
 
     def get_answer(self, event, day):
         """ Returns the answer for this question on the event passed by parameter.
         Returns None if there is no answer
         """
         try:
-            return AnswersDay.objects.get(question=self, feedbackday__event=event,
+            return AnswersDay.objects.get(question=self,
+                                          feedbackday__event=event,
                                           feedbackday__day=day).text
         except:
-            return None
+            return "No answer"
 
     def getCSVLine(self, event):
-        """ Returns a CSV Line for this question for the event passed by parameter.
-        The line returnes is of the format `,Question,Answer`
-        If no answer, the line returned is of the format `,Question,No answer`
+        """ Returns a CSV Line for this question for the event passed by
+        parameter. The line returnes is of the format `Eventday, supervisor,
+        Question, Answer\r\n`. If no answer, the line returned is of the format
+        `,Question,No answer`
         """
         out = ""
-        for question in QuestionsDay.objects.filter(enabled=True):
-            for day in event.getDays():
-                answer = self.get_answer(event, day)
-                answer = answer if answer is not None else "No answer"
-                out = "{}\r\n,{},{}".format(out, self.full_sentence(day), answer)
+        for day in event.getDays():
+            answer = self.get_answer(event, day)
+            answer = answer if answer is not None else "No answer"
+            out = u"{}{},{},{},{}\r\n".format(out, event.title, '-',
+                                              self.full_sentence(day),
+                                              answer)
         return out
 
-    def __str__(self):
-        return self.text
+    def __unicode__(self):
+        return unicode(self.text)
 
 
 class AnswersDay(models.Model):
@@ -120,7 +123,7 @@ class QuestionsUser(models.Model):
         returns how are you (2015/01/02)
         """
         username = user.username if user.get_full_name() == "" else user.get_full_name()
-        return "{} ({})".format(self.text, username)
+        return u"{} ({})".format(self.text, username)
 
     def get_answer(self, event, user):
         """ Returns the answer for this question on the event passed by parameter.
@@ -130,11 +133,12 @@ class QuestionsUser(models.Model):
             return AnswersUser.objects.get(question=self, event=event,
                                            user=user).text
         except AnswersUser.DoesNotExist:
-            return None
+            return "No answer"
 
     def getCSVLine(self, event):
         """ Returns a CSV Line for this question for the event passed by parameter.
-        The line returnes is of the format `,Question,Answer`
+        The line returnes is of the format `eventname,supervosr,Question,
+        Answer\r\n`
         If no answer, the line returned is of the format `,Question,No answer`
         """
         out = ""
@@ -142,10 +146,12 @@ class QuestionsUser(models.Model):
             for user in event.user.all():
                 answer = self.get_answer(event, user)
                 answer = answer if answer is not None else "No answer"
-                out = "{}\r\n,{},{}".format(out, question.full_sentence(user), answer)
+                out = u"{}{},{},{},{}\r\n".format(out, event.title, '-',
+                                                  question.full_sentence(user),
+                                                  answer)
         return out
 
-    def __str__(self):
+    def __unicode__(self):
         return self.text
 
 
@@ -179,7 +185,7 @@ class QuestionsEvent(models.Model):
         Example, question='how are you' subject='2015/01/02'
         returns how are you (2015/01/02)
         """
-        return self.text
+        return unicode(self.text)
 
     def get_answer(self, event):
         """ Returns the answer for this question on the event passed by parameter.
@@ -188,20 +194,18 @@ class QuestionsEvent(models.Model):
         try:
             return AnswersEvent.objects.get(question=self, event=event).text
         except AnswersEvent.DoesNotExist:
-            return None
+            return "No answer"
 
     def getCSVLine(self, event):
         """ Returns a CSV Line for this question for the event passed by parameter.
-        The line returnes is of the format `,Question,Answer`
+        The line returnes is of the format `Event name, supervisor,
+        Question, Answer\r\n`
         If no answer, the line returned is of the format `,Question,No answer`
         """
-        out = ""
-        for question in QuestionsEvent.objects.filter(enabled=True):
-            answer = self.get_answer(event)
-            out = "{}\r\n,{},{}".format(out, self.text, answer)
-        return out
+        return u"{},{},{},{}\r\n".format(event.title, '-', self.text,
+                                     self.get_answer(event))
 
-    def __str__(self):
+    def __unicode__(self):
         return self.text
 
 
@@ -228,17 +232,15 @@ class FeedbackManager(models.Manager):
         Attributes:
 
         """
-        out = "Event,Question, Answer\r\n"
+        out = "Event,Supervisor,Question,Answer\r\n"
         # Generating content for AnswersUsers
         for event in events:
-            out = "{}{}".format(out, event.title)
-
             questions = event.getQuestions()
             if len(questions) == 0:
-                out = "{},No questions defined".format(out)
-            for question in questions:
-                out = "{}{}".format(out, question.getCSVLine(event))
-            out = "{}{}".format(out, "\r\n")
+                out = u"{},No questions defined".format(out)
+            else:
+                for question in questions:
+                    out = u"{}{}".format(out, question.getCSVLine(event))
         return out
 
 

@@ -18,6 +18,14 @@
 			<span>No feedback questions defined.
 			</span>
 		</div>
+	{% elif confirm_save %}
+		<div class="nodatesDIV">
+			<div><i class="fa fa-check" style="color: #347920"></i></div>
+			<span>
+				Information saved successfully<br/>
+				<a href="{% url 'home' %}?eventid={{ event_id }}">Go home</a>.
+			</span>
+		</div>
 	{% else %}
 		{% showFeedbackForm form event %}
 	{% endif %}
