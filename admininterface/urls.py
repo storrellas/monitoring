@@ -22,12 +22,12 @@ urlpatterns = [
     url(r'^home/$',                EventAnalysisView.as_view(),        name='home'),
     url(r'^home/result/$',         EventResultView.as_view(),          name='home_results'),
     url(r'^home/result/csv/$',     EventResultCSVView.as_view(),       name='event_analysis_csv'),
+    url(r'^home/pictures/$',       EventPicturesView.as_view(),        name='home_pictures'),
         
     url(r'^event/$',               EventView.as_view(),                name='event'),
     url(r'^event/add/$',           EventAddView.as_view(),             name='add_event'),
     url(r'^event/edit/(?P<pk>[0-9]+)/$',    EventEditView.as_view(),   name='edit_event'),
 
-    #url(r'^product/$',             TemplateView.as_view(template_name='manage/product_list.html'),  name='product'),
     url(r'^product/$',             ProductView.as_view(),  name='product'),
     
     url(r'^manage/company/$',      CompanyView.as_view(),              name='company_list'),
