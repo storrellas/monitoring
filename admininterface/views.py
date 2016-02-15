@@ -260,13 +260,12 @@ class EventEditView( LoginRequiredMixin, SuperuserRequiredMixin, DetailView ):
 
 class EventResultView( LoginRequiredMixin, ListView ):
     template_name='home/event_result.html'
-    model = EventCheck
+    model = Event
     paginate_by = 10
     context_object_name = 'eventcheck_list'
     event = None
     
-    def get_queryset(self):
-                    
+    def get_queryset(self):                
         # An event was selected
         if 'eventid' in self.request.GET.keys():
             event_id = self.request.GET['eventid']
@@ -377,6 +376,7 @@ class ExportToCSV(LoginRequiredMixin, View):
         response['Content-Disposition'] = 'attachment; filename="%s.csv"' % filename
         return response
 
+
 class EventResultCSVView(ExportToCSV):
 
     def get(self,request,*args,**kwargs):
@@ -387,6 +387,56 @@ class FeedbackCSVView(ExportToCSV):
     def get(self, request, *args, **kwargs):
         events = Event.objects.all()
         return self.getResponseCSV((FeedbackList.objects.toCSV, (events)), 'feedback')
+
+class EventPicturesView( LoginRequiredMixin, ListView ):
+    template_name='home/event_pictures.html'
+    model = EventCheckImage
+    context_object_name = 'eventcheckimage_list'
+    
+    def get_queryset(self):            
+        # An event was selected
+        if 'eventid' in self.request.GET.keys():
+            event_id = self.request.GET['eventid']
+            self.event = Event.objects.get( id = event_id )
+        else:
+            if self.request.user.is_superuser == True:
+                self.event = Event.objects.first()
+            else:
+                self.event = Event.objects.filter(user=self.request.user).first()          
+        return self.model.objects.filter(eventcheck__event=self.event).order_by('id')
+
+    
+    def get_context_data(self, **kwargs):
+        context = super(EventPicturesView, self).get_context_data(**kwargs)
+        if self.request.user.is_superuser:
+            context['event_list'] = Event.objects.all()
+        else:
+            context['event_list'] = Event.objects.filter(user=self.request.user)
+        
+        # An event was selected
+        if 'eventid' in self.request.GET.keys():           
+            event_id = self.request.GET['eventid']
+            event = Event.objects.get( id = event_id )            
+        else:            
+            if self.request.user.is_superuser == True:
+                event = Event.objects.first()
+            else:
+                event = Event.objects.filter(user=self.request.user).first()
+
+        analytics = EventCheck.objects.filter(event=event) \
+                        .aggregate(Sum('quantity'), Sum('target'))
+        try:
+            context['sampling']    = analytics['quantity__sum']
+            context['target']      = analytics['target__sum']
+            context['percentage']  = str(context['target']*100 / context['sampling']) + '%' 
+        except:
+            context['sampling']    = '0'
+            context['target']      = '0'
+            context['percentage']  = '0%'
+        context['eventid_selected'] = event.id
+
+        return context
+    
 
 class ChangePwdView(LoginRequiredMixin, TemplateView):
     template_name='settings/changepwd.html'
