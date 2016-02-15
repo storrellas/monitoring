@@ -116,6 +116,11 @@ class EventCheckSerializer(serializers.Serializer):
     quantity = serializers.IntegerField()
     target = serializers.IntegerField()
 
+class FileUploadSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = EventCheckImage
+        fields = ('photo', )
+
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product

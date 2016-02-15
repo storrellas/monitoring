@@ -26,6 +26,12 @@
 				<a href="{% url 'home' %}?eventid={{ event_id }}">Go home</a>.
 			</span>
 		</div>
+	{% elif no_view %}
+		<div class="nodatesDIV">
+			<div><i class="fa fa-exclamation-triangle"></i></div>
+			<span> You cannot see this form because you do not have promoteurs assigned in it.
+			</span>
+		</div>
 	{% else %}
 		{% showFeedbackForm form event %}
 	{% endif %}

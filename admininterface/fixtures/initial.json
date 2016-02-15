@@ -4,12 +4,12 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$24000$phminvGvyboZ$E+bZEc10tGELn0WLs4ymlUrUGUbptqxnLrGxGGT+v8w=",
-    "last_login": "2016-02-11T11:06:27.788Z",
+    "last_login": "2016-02-15T07:54:12.371Z",
     "is_superuser": true,
     "username": "admin",
     "first_name": "",
     "last_name": "",
-    "is_staff": false,
+    "is_staff": true,
     "is_active": true,
     "date_joined": "2016-02-08T08:06:06.557Z",
     "phone": "",
@@ -22,6 +22,7 @@
     "gender": "",
     "score": "",
     "picture": "",
+    "eventuser": null,
     "groups": [],
     "user_permissions": []
   }
@@ -49,6 +50,7 @@
     "gender": "",
     "score": "100",
     "picture": "event/user/Koala.jpg",
+    "eventuser": null,
     "groups": [],
     "user_permissions": []
   }
@@ -76,6 +78,7 @@
     "gender": "female",
     "score": "21",
     "picture": "",
+    "eventuser": null,
     "groups": [],
     "user_permissions": []
   }
@@ -103,6 +106,7 @@
     "gender": "",
     "score": "",
     "picture": "",
+    "eventuser": null,
     "groups": [],
     "user_permissions": []
   }
@@ -130,6 +134,7 @@
     "gender": "",
     "score": "",
     "picture": "",
+    "eventuser": null,
     "groups": [],
     "user_permissions": []
   }
@@ -157,6 +162,35 @@
     "gender": "",
     "score": "44",
     "picture": "event/user/Penguins.jpg",
+    "eventuser": null,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "admininterface.user",
+  "pk": 7,
+  "fields": {
+    "password": "pbkdf2_sha256$24000$SDglTbVdxJ7A$pZT4rhX2k1yFtVPi6CUTmzer/9TMRWIgcsgRxY4YbcQ=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "dimitry",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2016-02-15T07:54:29.681Z",
+    "phone": "",
+    "email": "",
+    "role": "EVENTUSER",
+    "name": "",
+    "cif": "",
+    "address": "",
+    "contactname": "",
+    "gender": "",
+    "score": "",
+    "picture": "",
+    "eventuser": null,
     "groups": [],
     "user_permissions": []
   }
@@ -194,7 +228,8 @@
     "videourl": "http://migranne.com",
     "pdfdocument": "event/Tulips.jpg",
     "user": [
-      4
+      4,
+      7
     ]
   }
 },

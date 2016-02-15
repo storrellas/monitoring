@@ -21,7 +21,7 @@ class FeedbackDay(models.Model):
 class QuestionsManager(models.Manager):
     """ Model Manager to retrieve answer values
     """
-    def getInitial(self, event, question, day=None, user=None):
+    def getInitial(self, event, question, author, day=None, user=None):
         """ Gets the text value for an answer for the attributes
         """
         o = []
@@ -30,14 +30,17 @@ class QuestionsManager(models.Manager):
             if len(d):
                 d = d[0]
                 # Using the feedbackday to save the answer.
-                o = AnswersDay.objects.filter(feedbackday=d, question=question)
+                o = AnswersDay.objects.filter(feedbackday=d,
+                                              question=question,
+                                              author=author)
 
         if self.__str__() == "feedback.QuestionsUser.objects":
             o = AnswersUser.objects.filter(user=user, question=question,
-                                           event=event)
+                                           event=event, author=author)
 
         if self.__str__() == "feedback.QuestionsEvent.objects":
-            o = AnswersEvent.objects.filter(question=question, event=event)
+            o = AnswersEvent.objects.filter(question=question, event=event,
+                                            author=author)
 
         return "" if len(o) == 0 else o[0].text
 
@@ -63,18 +66,19 @@ class QuestionsDay(models.Model):
         """
         return u"{} ({})".format(self.text, day)
 
-    def get_answer(self, event, day):
+    def get_answer(self, event, day, author):
         """ Returns the answer for this question on the event passed by parameter.
         Returns None if there is no answer
         """
         try:
             return AnswersDay.objects.get(question=self,
                                           feedbackday__event=event,
-                                          feedbackday__day=day).text
+                                          feedbackday__day=day,
+                                          author=author).text
         except:
             return "No answer"
 
-    def getCSVLine(self, event):
+    def getCSVLine(self, event, author):
         """ Returns a CSV Line for this question for the event passed by
         parameter. The line returnes is of the format `Eventday, supervisor,
         Question, Answer\r\n`. If no answer, the line returned is of the format
@@ -82,9 +86,10 @@ class QuestionsDay(models.Model):
         """
         out = ""
         for day in event.getDays():
-            answer = self.get_answer(event, day)
+            answer = self.get_answer(event, day, author)
             answer = answer if answer is not None else "No answer"
-            out = u"{}{},{},{},{}\r\n".format(out, event.title, '-',
+            out = u"{}{},{},{},{}\r\n".format(out, event.title,
+                                              author.get_full_name(),
                                               self.full_sentence(day),
                                               answer)
         return out
@@ -98,10 +103,11 @@ class AnswersDay(models.Model):
     """
     question = models.ForeignKey(QuestionsDay)
     feedbackday = models.ForeignKey(FeedbackDay)
+    author = models.ForeignKey(User)  # author of the review (Supervisor)
     text = models.TextField(max_length=LENGTH_ANSWERS, blank=True)
 
     class Meta:
-        unique_together = ("question", "feedbackday")
+        unique_together = ("question", "feedbackday", "author")
 
     def getCSVLine(self):
         return ",{},{}".format(self.question.full_sentence(self.feedbackday.day),
@@ -125,17 +131,17 @@ class QuestionsUser(models.Model):
         username = user.username if user.get_full_name() == "" else user.get_full_name()
         return u"{} ({})".format(self.text, username)
 
-    def get_answer(self, event, user):
+    def get_answer(self, event, user, author):
         """ Returns the answer for this question on the event passed by parameter.
         Returns None if there is no answer
         """
         try:
             return AnswersUser.objects.get(question=self, event=event,
-                                           user=user).text
+                                           user=user, author=author).text
         except AnswersUser.DoesNotExist:
             return "No answer"
 
-    def getCSVLine(self, event):
+    def getCSVLine(self, event, author):
         """ Returns a CSV Line for this question for the event passed by parameter.
         The line returnes is of the format `eventname,supervosr,Question,
         Answer\r\n`
@@ -144,11 +150,13 @@ class QuestionsUser(models.Model):
         out = ""
         for question in QuestionsUser.objects.filter(enabled=True):
             for user in event.user.all():
-                answer = self.get_answer(event, user)
-                answer = answer if answer is not None else "No answer"
-                out = u"{}{},{},{},{}\r\n".format(out, event.title, '-',
-                                                  question.full_sentence(user),
-                                                  answer)
+                if user.eventuser == author:
+                    answer = self.get_answer(event, user, author)
+                    answer = answer if answer is not None else "No answer"
+                    out = u"{}{},{},{},{}\r\n".format(out, event.title,
+                                                      author.get_full_name(),
+                                                      question.full_sentence(user),
+                                                      answer)
         return out
 
     def __unicode__(self):
@@ -158,13 +166,14 @@ class QuestionsUser(models.Model):
 class AnswersUser(models.Model):
     """ Answers for a user
     """
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User)  # User evaluated
     question = models.ForeignKey(QuestionsUser)
     event = models.ForeignKey(Event)
+    author = models.ForeignKey(User, related_name="custom_author_fk")  # author of the review (Supervisor)
     text = models.TextField(max_length=LENGTH_ANSWERS, blank=True)
 
     class Meta:
-        unique_together = ("user", "question", "event")
+        unique_together = ("user", "question", "event", "author")
 
     def getCSVLine(self):
         return ",{},{}".format(self.question.full_sentence(self.user),
@@ -187,23 +196,23 @@ class QuestionsEvent(models.Model):
         """
         return unicode(self.text)
 
-    def get_answer(self, event):
+    def get_answer(self, event, author):
         """ Returns the answer for this question on the event passed by parameter.
         Returns None if there is no answer
         """
         try:
-            return AnswersEvent.objects.get(question=self, event=event).text
+            return AnswersEvent.objects.get(question=self, event=event, author=author).text
         except AnswersEvent.DoesNotExist:
             return "No answer"
 
-    def getCSVLine(self, event):
+    def getCSVLine(self, event, author):
         """ Returns a CSV Line for this question for the event passed by parameter.
         The line returnes is of the format `Event name, supervisor,
         Question, Answer\r\n`
         If no answer, the line returned is of the format `,Question,No answer`
         """
-        return u"{},{},{},{}\r\n".format(event.title, '-', self.text,
-                                     self.get_answer(event))
+        return u"{},{},{},{}\r\n".format(event.title, author.get_full_name(),
+                                         self.text, self.get_answer(event, author))
 
     def __unicode__(self):
         return self.text
@@ -215,9 +224,10 @@ class AnswersEvent(models.Model):
     question = models.ForeignKey(QuestionsEvent)
     event = models.ForeignKey(Event)
     text = models.TextField(max_length=LENGTH_ANSWERS, blank=True)
+    author = models.ForeignKey(User)  # author of the review (Supervisor)
 
     class Meta:
-        unique_together = ("event", "question")
+        unique_together = ("event", "question", "author")
 
     def getCSVLine(self):
         return ",{},{}".format(self.question.full_sentence(),
@@ -235,12 +245,17 @@ class FeedbackManager(models.Manager):
         out = "Event,Supervisor,Question,Answer\r\n"
         # Generating content for AnswersUsers
         for event in events:
+            # Getting supervisors assigned to the event. It means, retrieving
+            # supervisors of users assigned to the event.
+            #authors = [User.objects.get(id=el.eventuser.id) for el in event.user.all()]
+            authors = event.getSupervisors()
             questions = event.getQuestions()
             if len(questions) == 0:
                 out = u"{},No questions defined".format(out)
             else:
                 for question in questions:
-                    out = u"{}{}".format(out, question.getCSVLine(event))
+                    for user in authors:
+                        out = u"{}{}".format(out, question.getCSVLine(event, user))
         return out
 
 
@@ -275,6 +290,23 @@ def getDaysCampaign(self):
         for da in range(0, num_days):
             yield (self.start_date + timedelta(days=da)).date()
 
+
+def userHasAssigned(self, event):
+    """ Returns True when the user has personel assigned in the event passed
+    by parameter
+    """
+    return self.id in [user.id for user in event.getSupervisors()]
+
+
+def getEventSupervisors(self):
+    supervisors = []
+    for user in self.user.all():
+        if user.eventuser is not None:
+            supervisors.append(user.eventuser)
+    return supervisors
+
 Event.getAnswers = eventGetAnswers
 Event.getQuestions = eventGetQuestions
 Event.getDays = getDaysCampaign
+Event.getSupervisors = getEventSupervisors
+User.has_assigned = userHasAssigned

@@ -16,8 +16,10 @@ class FeedBack(View):
         context_data = dict()
         event = Event.objects.get(id=id)
         context_data['event'] = event
+        if not request.user.has_assigned(event):
+            return TemplateResponse(request, self.template_name, { 'no_view': True})
         try:
-            context_data['form'] = forms.FeedbackForm(event)
+            context_data['form'] = forms.FeedbackForm(event, request.user)
         except NoStartDateEndDateEvent:
             return TemplateResponse(request, self.template_name, { 'no_dates': True})
         except NoQuestionsDefined:
@@ -31,7 +33,7 @@ class FeedBack(View):
         context_data = dict()
         context_data['event_name'] = event.title
 
-        form = forms.FeedbackForm(event, request.POST)
+        form = forms.FeedbackForm(event, request.user, request.POST)
         if form.is_valid():
             logger.debug("Form is valid")
             form.save()
