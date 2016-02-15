@@ -11,6 +11,7 @@ from admininterface.models import *
 import logging
 log = logging.getLogger(__name__)
 
+
 class UserInputAppSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
     password = serializers.CharField(required=True)
@@ -28,8 +29,6 @@ class UserAppSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'event','auth_token')
 
-
-    
 class EventCheckDetailAppSerializer(serializers.ModelSerializer):
     lastsubmit = serializers.SerializerMethodField('lastsubmit_field', required=False)        
     def lastsubmit_field(self, obj):
@@ -90,7 +89,6 @@ class EventAppSerializer(serializers.ModelSerializer):
         model = Event
         fields = ('id','title','description', 'videourl', 
                   'pdfurl', 'eventcheck', 'total','product', 'location')
-
 
 class EventCheckAppSerializer(serializers.ModelSerializer):
     lastsubmit = serializers.SerializerMethodField('lastsubmit_field', required=False)        
