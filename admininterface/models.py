@@ -77,6 +77,9 @@ class User(AbstractBaseUser,PermissionsMixin):
     score      = models.CharField( max_length=30, blank=True)
     picture    = models.ImageField(upload_to='event/user/',blank=True,null=True)
 
+    # Supervisor
+    eventuser = models.ForeignKey("self",blank=True,null=True)
+
     objects = UserManager()
 
     USERNAME_FIELD = 'username'
