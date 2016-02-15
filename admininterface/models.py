@@ -113,8 +113,8 @@ class Event(models.Model):
     description   = models.CharField(max_length=400, default= '')
     brief         = models.CharField(max_length=400, default='')
     register_date = models.DateTimeField(default=timezone.now())
-    start_date    = models.DateTimeField(blank=True, null=True)
-    end_date      = models.DateTimeField(blank=True, null=True)
+    start_date    = models.DateField(blank=False, null=True)
+    end_date      = models.DateField(blank=False, null=True)
     eventuser_objective_day = models.IntegerField(default=0)    
 
     videourl      = models.URLField(default='')

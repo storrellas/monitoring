@@ -212,7 +212,7 @@ class EventAddView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateView ):
                 event.user.add(user)
                 
         return redirect(reverse('event'))
-    
+
 class EventEditView( LoginRequiredMixin, SuperuserRequiredMixin, DetailView ):
     template_name='manage/editevent.html'
     model = Event
@@ -232,8 +232,7 @@ class EventEditView( LoginRequiredMixin, SuperuserRequiredMixin, DetailView ):
     def post(self,request,*args,**kwargs):
 
         event = Event.objects.get(id=kwargs['pk'])
-        
-        form = EventModelForm(request.POST, request.FILES, instance=event)        
+        form = EventModelForm(request.POST, request.FILES, instance=event)
         if not form.is_valid():
             #raise Http404()          
             print form.errors
@@ -256,7 +255,6 @@ class EventEditView( LoginRequiredMixin, SuperuserRequiredMixin, DetailView ):
                 event.user.add(user)
         
         return redirect(reverse('event'))
-
 
 class EventResultView( LoginRequiredMixin, ListView ):
     template_name='home/event_result.html'
