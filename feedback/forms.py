@@ -19,10 +19,7 @@ class FeedbackForm(forms.Form):
         # Num days between end_Date and start_date
         questions = models.QuestionsDay.objects.filter(enabled=True)
 
-        #num_days = (event.end_date.date() - event.start_date.date()).days+1
-
         for day in event.getDays():
-            #day = (event.start_date + timedelta(days=da)).date()
 
             # For each day, we specify a field for all questions
             for question in questions:
