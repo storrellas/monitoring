@@ -1,13 +1,11 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from django.db import models
 from django.utils import timezone
 
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
-
-
+from django.core.exceptions import ValidationError
 
 class UserManager(BaseUserManager):
 
@@ -77,6 +75,9 @@ class User(AbstractBaseUser,PermissionsMixin):
     score      = models.CharField( max_length=30, blank=True)
     picture    = models.ImageField(upload_to='event/user/',blank=True,null=True)
 
+    # Supervisor
+    eventuser = models.ForeignKey("self",blank=True,null=True)
+
     objects = UserManager()
 
     USERNAME_FIELD = 'username'
@@ -96,9 +97,16 @@ class User(AbstractBaseUser,PermissionsMixin):
         "Returns the short name for the user."
         return self.first_name
 
+    def save(self, *args, **kwargs):
+        """ Overwritting save method
+        """
+        if self.role == "EVENTUSER" and self.eventuser is None:
+            raise ValidationError("User needs a defined supervisor")
+        super(User, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.username
+
 
 class Event(models.Model):
     title         = models.CharField(max_length=30, default='')

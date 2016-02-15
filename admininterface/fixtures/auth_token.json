@@ -1,26 +1,58 @@
 [
 {
   "model": "authtoken.token",
-  "pk": "1fb2c70996de9ea93278ee509283eb62b8706ca6",
+  "pk": "3dcc6f9069073344153f0f092ac6f7b97fb576b0",
   "fields": {
     "user": 3,
-    "created": "2016-02-11T10:46:21.240Z"
+    "created": "2016-02-15T08:11:41.993Z"
   }
 },
 {
   "model": "authtoken.token",
-  "pk": "4dd2c3734b657827e2a09a39c73fdf86adfa51d4",
+  "pk": "4e90610e674bd8a10d02a079e9dcbc502f3f263d",
+  "fields": {
+    "user": 1,
+    "created": "2016-02-15T08:11:41.948Z"
+  }
+},
+{
+  "model": "authtoken.token",
+  "pk": "4f3a102ccfd33d49c361212395b6b785ebb9f934",
+  "fields": {
+    "user": 4,
+    "created": "2016-02-15T08:11:41.996Z"
+  }
+},
+{
+  "model": "authtoken.token",
+  "pk": "71315f21d1e4f1d998b264df9d863e7c284bc1c5",
+  "fields": {
+    "user": 5,
+    "created": "2016-02-15T08:11:41.998Z"
+  }
+},
+{
+  "model": "authtoken.token",
+  "pk": "987a885e2e90bcb2775e3c87561ca6e9c194ba3a",
   "fields": {
     "user": 2,
-    "created": "2016-02-11T10:46:20.904Z"
+    "created": "2016-02-15T08:11:41.953Z"
   }
 },
 {
   "model": "authtoken.token",
-  "pk": "ca83e02c888bbca26dd602ef655608ddaad46b9d",
+  "pk": "9d6a7643556e9ac49c1fe651d87a8f8efc3f3985",
+  "fields": {
+    "user": 7,
+    "created": "2016-02-15T08:11:42.003Z"
+  }
+},
+{
+  "model": "authtoken.token",
+  "pk": "eb0f04314186aef914bdb017d4e2ca2fc8d7852a",
   "fields": {
     "user": 6,
-    "created": "2016-02-11T10:46:21.237Z"
+    "created": "2016-02-15T08:11:42.000Z"
   }
 }
 ]

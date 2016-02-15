@@ -10,6 +10,7 @@ urlpatterns = [
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^', include('admininterface.urls')),
+    url(r'^feedback/', include('feedback.urls')),
     #url(r'^api/v1/', include('apiv1.urls')),
     url(r'^api/v2/', include('apiv2.urls')),
         

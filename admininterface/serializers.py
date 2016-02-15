@@ -79,6 +79,7 @@ class EventUserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):                
         obj = self.Meta.model.objects.create_user(username = self.data['username'],                                             
                                             password=self.data['password'])
+        obj.role = User.EVENTUSER 
         obj.save()
         return obj        
     
@@ -115,6 +116,11 @@ class EventCheckSerializer(serializers.Serializer):
     trackdate = serializers.DateField(format='%Y-%m-%d')
     quantity = serializers.IntegerField()
     target = serializers.IntegerField()
+
+class FileUploadSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = EventCheckImage
+        fields = ('photo', )
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:

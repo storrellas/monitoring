@@ -59,3 +59,4 @@ amphiaWrapper
 *.DS_Store*
 
 .idea
+localsettings.py

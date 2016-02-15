@@ -21,10 +21,18 @@ from rest_framework import mixins
 from rest_framework.renderers import JSONRenderer
 from rest_framework.exceptions import ValidationError, APIException
 from rest_framework.parsers import FileUploadParser
+from rest_framework.permissions import IsAuthenticated
 
 # Project imports
 from serializers import *
 from admininterface.models import *
+
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+
+    def enforce_csrf(self, request):
+        return  # To not perform the csrf check previously happening
 
 
 class LoginAppViewset( ViewSet ):
@@ -67,18 +75,30 @@ class LoginAppViewset( ViewSet ):
         serializer = UserAppSerializer(user)            
         return JsonResponse(serializer.data)
 
-class EventAppViewset( generics.RetrieveAPIView ):
+class EventListAppViewset( generics.ListAPIView ):
     model = Event
     serializer_class = EventAppSerializer
     queryset = Event.objects.all()
+    permission_classes = [IsAuthenticated]
 
+class EventDetailAppViewset( generics.RetrieveAPIView ):
+    model = Event
+    serializer_class = EventAppSerializer
+    queryset = Event.objects.all()
+    permission_classes = [IsAuthenticated]
 
+class EventCheckAppViewset(generics.ListAPIView):
+    model = EventCheck
+    queryset = EventCheck.objects.all()
+    serializer_class = EventCheckAppSerializer
+    permission_classes = [IsAuthenticated]
 
 class EventCheckInAppViewset(generics.CreateAPIView):
     model = EventCheck
     queryset = EventCheck.objects.all()
     serializer_class = EventCheckAppSerializer
-            
+    permission_classes = [IsAuthenticated]
+
     def create(self,request, *args, **kwargs):
         
         # Check if already checkin
@@ -99,6 +119,7 @@ class EventCheckOutAppViewset(generics.UpdateAPIView):
     model = EventCheck
     queryset = EventCheck.objects.all()
     serializer_class = EventCheckAppSerializer
+    permission_classes = [IsAuthenticated]
     
     def update(self,request, *args, **kwargs):
 
@@ -128,6 +149,7 @@ class EventCheckReportAppViewset(generics.UpdateAPIView):
     model = EventCheck
     queryset = EventCheck.objects.all()    
     serializer_class = EventCheckAppSerializer
+    permission_classes = [IsAuthenticated]
     
     def update(self,request, *args, **kwargs):        
         
@@ -142,15 +164,9 @@ class EventCheckReportAppViewset(generics.UpdateAPIView):
         
         return super(EventCheckReportAppViewset,self).update(request, *args, **kwargs)
     
-
-class FileUploadSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = EventCheckImage
-        fields = ('photo', )
-
  
 class EventCheckPhotoAppViewset(ViewSet):
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args,**kwargs):
         # Capture eventcheck
