@@ -267,7 +267,7 @@
   "model": "admininterface.location",
   "pk": 1,
   "fields": {
-    "event": 1,
+    "event": 2,
     "name": "MyLocation",
     "city": "Barcelona",
     "address": "Marina 299",
