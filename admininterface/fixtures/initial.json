@@ -334,5 +334,41 @@
     "product": 1,
     "location": 1
   }
+},
+{
+  "model": "admininterface.eventcheck",
+  "pk": 4,
+  "fields": {
+    "user": 7,
+    "event": 2,
+    "quantity": 0,
+    "target": 0,
+    "type": 0,
+    "note": "",
+    "brief_opened": false,
+    "trackdate": "2016-02-15",
+    "tracktime": "12:52:12.076",
+    "checkintime": "2016-02-15T12:46:58.581Z",
+    "checkouttime": null,
+    "completeflag": false,
+    "product": null,
+    "location": 1
+  }
+},
+{
+  "model": "admininterface.eventcheckimage",
+  "pk": 1,
+  "fields": {
+    "photo": "event/photo/Chrysanthemum.jpg",
+    "eventcheck": 1
+  }
+},
+{
+  "model": "admininterface.eventcheckimage",
+  "pk": 2,
+  "fields": {
+    "photo": "event/photo/Desert.jpg",
+    "eventcheck": 1
+  }
 }
 ]

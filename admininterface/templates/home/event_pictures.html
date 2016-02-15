@@ -124,6 +124,13 @@
 					        	<div style="display: none;">
 					                <img data-u="image" src="{{ eventcheckimage.photo.url }}" />
 							        <div style="position: absolute; top: 20px; left: 20px; background:white; font-size:20px">
+							            {{ eventcheckimage.eventcheck.user.username }}, {{ eventcheckimage.eventcheck.trackdate| date:"d/m/Y" }}, {{ eventcheckimage.eventcheck.location.address }} 
+							        </div>
+					            </div>
+					            {% empty %}
+								<div style="display: none;">
+					                <img data-u="image" src="{% static 'jssor/img/no_image.png' %}" />
+							        <div style="position: absolute; top: 20px; left: 20px; background:white; font-size:20px">
 							            Your text here
 							        </div>
 					            </div>

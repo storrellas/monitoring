@@ -368,7 +368,17 @@ class EventPicturesView( LoginRequiredMixin, ListView ):
     context_object_name = 'eventcheckimage_list'
     
     def get_queryset(self):            
-        return self.model.objects.all()
+        # An event was selected
+        if 'eventid' in self.request.GET.keys():
+            event_id = self.request.GET['eventid']
+            self.event = Event.objects.get( id = event_id )
+        else:
+            if self.request.user.is_superuser == True:
+                self.event = Event.objects.first()
+            else:
+                self.event = Event.objects.filter(user=self.request.user).first()          
+        return self.model.objects.filter(eventcheck__event=self.event).order_by('id')
+
     
     def get_context_data(self, **kwargs):
         context = super(EventPicturesView, self).get_context_data(**kwargs)
