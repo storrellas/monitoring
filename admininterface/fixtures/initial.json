@@ -22,6 +22,7 @@
     "gender": "",
     "score": "",
     "picture": "",
+    "eventuser": null,
     "groups": [],
     "user_permissions": []
   }
@@ -49,6 +50,7 @@
     "gender": "",
     "score": "100",
     "picture": "event/user/Koala.jpg",
+    "eventuser": null,
     "groups": [],
     "user_permissions": []
   }
@@ -76,6 +78,7 @@
     "gender": "female",
     "score": "21",
     "picture": "",
+    "eventuser": null,
     "groups": [],
     "user_permissions": []
   }
@@ -103,6 +106,7 @@
     "gender": "",
     "score": "",
     "picture": "",
+    "eventuser": null,
     "groups": [],
     "user_permissions": []
   }
@@ -130,6 +134,7 @@
     "gender": "",
     "score": "",
     "picture": "",
+    "eventuser": null,
     "groups": [],
     "user_permissions": []
   }
@@ -157,6 +162,7 @@
     "gender": "",
     "score": "44",
     "picture": "event/user/Penguins.jpg",
+    "eventuser": null,
     "groups": [],
     "user_permissions": []
   }
@@ -184,6 +190,7 @@
     "gender": "",
     "score": "",
     "picture": "",
+    "eventuser": null,
     "groups": [],
     "user_permissions": []
   }
@@ -264,18 +271,6 @@
     "name": "MyLocation",
     "city": "Barcelona",
     "address": "Marina 299",
-    "latitude": 42.0,
-    "longitude": 2.0
-  }
-},
-{
-  "model": "admininterface.location",
-  "pk": 2,
-  "fields": {
-    "event": 2,
-    "name": "MySecondLocation",
-    "city": "KualaLump",
-    "address": "Roc Boronat",
     "latitude": 42.0,
     "longitude": 2.0
   }
