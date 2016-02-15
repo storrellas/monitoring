@@ -1,0 +1,38 @@
+
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load formfeedback %}
+
+
+{% block contents %}
+	{% if no_dates %}
+		<div class="nodatesDIV">
+			<div><i class="fa fa-exclamation-triangle"></i></div>
+			<span>There is a problem with the dates of this event.<br/>
+			The form could not be rendered.
+			</span>
+		</div>
+	{% elif no_questions %}
+		<div class="nodatesDIV">
+			<div><i class="fa fa-exclamation-triangle"></i></div>
+			<span>No feedback questions defined.
+			</span>
+		</div>
+	{% elif confirm_save %}
+		<div class="nodatesDIV">
+			<div><i class="fa fa-check" style="color: #347920"></i></div>
+			<span>
+				Information saved successfully<br/>
+				<a href="{% url 'home' %}?eventid={{ event_id }}">Go home</a>.
+			</span>
+		</div>
+	{% elif no_view %}
+		<div class="nodatesDIV">
+			<div><i class="fa fa-exclamation-triangle"></i></div>
+			<span> You cannot see this form because you do not have promoteurs assigned in it.
+			</span>
+		</div>
+	{% else %}
+		{% showFeedbackForm form event %}
+	{% endif %}
+{% endblock %}

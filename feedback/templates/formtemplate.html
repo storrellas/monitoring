@@ -1,0 +1,45 @@
+
+<form action="" method="post" class="formFeedbackView">
+    {% csrf_token %}
+
+	<h1>Feedback for {{ event }}</h1>    
+    <h2>Promoter</h2>
+    <div class="row">
+    {% for field in form %}
+    	{% if  field.name|slice:":11" == "questionuse" %}
+    		<div class="col-md-6">
+	    		{{ field.errors }}
+	    		<label>{{ field.label }}</label>
+	    		{{ field }}
+    		</div>
+    	{% endif %}
+    {% endfor %}
+    </div>
+
+    <h2>Daily feedback</h2>
+    <div class="row">
+    {% for field in form %}
+        {% if field.name|slice:":11" == "questionday" %}
+        	<div class="col-md-6">
+	    		{{ field.errors }}
+	    		<label>{{ field.label_tag }}</label>
+	    		{{ field }}
+    		</div>
+    	{% endif %}
+    {% endfor %}
+    </div>
+
+    <h2>Event feedback</h2>
+    <div class="row">
+    {% for field in form %}
+        {% if field.name|slice:":11" == "questioneve" %}
+        	<div class="col-md-6">
+	     		{{ field.errors }}
+	    		<label>{{ field.label_tag }}</label>
+	    		{{ field }}
+	    	</div>
+    	{% endif %}
+    {% endfor %}
+    </div>
+    <input type="submit" value="Submit" id="btnsb" />
+</form>

@@ -256,3 +256,34 @@ form#viewResult{
     padding-top: 6px;
 }
 
+.formFeedbackView label, .formFeedbackView textarea{
+	display: block;
+}
+.formFeedbackView textarea{
+	width: 100%;
+}
+.formFeedbackView{
+	padding: 0em 2em;
+}
+.formFeedbackView #btnsb{
+	margin-top: 20px;
+	float: right;
+}
+
+@media screen and (max-width: 992px){
+	.formFeedbackView{
+		padding: 0em 2em 0em 2em;
+	}
+}
+
+.nodatesDIV{
+	margin-top: 100px;
+	text-align: center;
+}
+.nodatesDIV i{
+	font-size: 56px;
+	margin-bottom: 30px;
+}
+.nodatesDIV span{
+	font-size: 16px;
+}

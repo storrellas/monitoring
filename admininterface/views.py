@@ -21,6 +21,8 @@ from rest_framework.authtoken.models import Token
 from forms import *
 from models import *
 from admin import EventCheckResource
+from import_export import resources
+from feedback.models import FeedbackList
 
 # Configure logger
 import logging
@@ -210,7 +212,7 @@ class EventAddView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateView ):
                 event.user.add(user)
                 
         return redirect(reverse('event'))
-    
+
 class EventEditView( LoginRequiredMixin, SuperuserRequiredMixin, DetailView ):
     template_name='manage/editevent.html'
     model = Event
@@ -230,8 +232,7 @@ class EventEditView( LoginRequiredMixin, SuperuserRequiredMixin, DetailView ):
     def post(self,request,*args,**kwargs):
 
         event = Event.objects.get(id=kwargs['pk'])
-        
-        form = EventModelForm(request.POST, request.FILES, instance=event)        
+        form = EventModelForm(request.POST, request.FILES, instance=event)
         if not form.is_valid():
             #raise Http404()          
             print form.errors
@@ -254,7 +255,6 @@ class EventEditView( LoginRequiredMixin, SuperuserRequiredMixin, DetailView ):
                 event.user.add(user)
         
         return redirect(reverse('event'))
-
 
 class EventResultView( LoginRequiredMixin, ListView ):
     template_name='home/event_result.html'
@@ -279,6 +279,7 @@ class EventResultView( LoginRequiredMixin, ListView ):
         context = super(EventResultView, self).get_context_data(**kwargs)
         if self.request.user.is_superuser:
             context['event_list'] = Event.objects.all()
+
         else:
             context['event_list'] = Event.objects.filter(user=self.request.user)
         
@@ -307,7 +308,6 @@ class EventAnalysisView( LoginRequiredMixin, TemplateView ):
         else:
             context['event_list'] = Event.objects.filter(user=self.request.user)
 
-        
         # An event was selected
         if 'eventid' in self.request.GET.keys():
             event_id = self.request.GET['eventid']
@@ -322,7 +322,8 @@ class EventAnalysisView( LoginRequiredMixin, TemplateView ):
         if event is None:
             context['eventid_selected'] = 0
             return context
-        
+
+
         # Capture data for event_header.html
         eventcheck_list = EventCheck.objects.filter(event=event) 
         analytics = eventcheck_list.aggregate(Sum('quantity'), Sum('target'))
@@ -336,6 +337,7 @@ class EventAnalysisView( LoginRequiredMixin, TemplateView ):
             context['percentage']  = '0%'
         context['eventid_selected'] = event.id
 
+
         
         # Add data for feedback graph
         feedback = {}
@@ -347,20 +349,42 @@ class EventAnalysisView( LoginRequiredMixin, TemplateView ):
         # Generate graph data
         graph_data = eventcheck_list.values('trackdate') \
                      .annotate(quantity = Sum('quantity'), target = Sum('target') )
-        #print graph_data
-        context['graph_data'] = graph_data
 
+        context['graph_data'] = graph_data
 
         return context
 
-class EventResultCSVView( LoginRequiredMixin, View ):
-    
-    def get(self,request,*args,**kwargs):
-        file_to_send = ContentFile(EventCheckResource().export().csv)
+class ExportToCSV(LoginRequiredMixin, View):
+
+    def getResponseCSV(self, resource, filename):
+        """ Exports a resource to CSV. Generated CSV will be named as filename.
+        Attributes:
+          resource (resources.ModelResource or (callable, attribute) )
+          filename: Name to be used on the exported csv file
+        """
+        if isinstance(resource, resources.ModelResource):
+            content = resource.export().csv
+        else:
+            # Custom callable to export csv data, using the attribute
+            content = resource[0](resource[1])
+        file_to_send = ContentFile(content)
+
         response     = HttpResponse(file_to_send,'text/csv')
         response['Content-Length']      = file_to_send.size    
-        response['Content-Disposition'] = 'attachment; filename="event.csv"'        
+        response['Content-Disposition'] = 'attachment; filename="%s.csv"' % filename
         return response
+
+
+class EventResultCSVView(ExportToCSV):
+
+    def get(self,request,*args,**kwargs):
+        return self.getResponseCSV(EventCheckResource(), 'event')
+
+class FeedbackCSVView(ExportToCSV):
+    
+    def get(self, request, *args, **kwargs):
+        events = Event.objects.all()
+        return self.getResponseCSV((FeedbackList.objects.toCSV, (events)), 'feedback')
 
 class EventPicturesView( LoginRequiredMixin, ListView ):
     template_name='home/event_pictures.html'

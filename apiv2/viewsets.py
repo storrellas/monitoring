@@ -27,6 +27,13 @@ from rest_framework.permissions import IsAuthenticated
 from serializers import *
 from admininterface.models import *
 
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+
+    def enforce_csrf(self, request):
+        return  # To not perform the csrf check previously happening
+
 
 class LoginAppViewset( ViewSet ):
     """
@@ -91,7 +98,7 @@ class EventCheckInAppViewset(generics.CreateAPIView):
     queryset = EventCheck.objects.all()
     serializer_class = EventCheckAppSerializer
     permission_classes = [IsAuthenticated]
-            
+
     def create(self,request, *args, **kwargs):
         
         # Check if already checkin
