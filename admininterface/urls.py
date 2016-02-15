@@ -22,7 +22,7 @@ urlpatterns = [
     url(r'^home/$',                EventAnalysisView.as_view(),        name='home'),
     url(r'^home/result/$',         EventResultView.as_view(),          name='home_results'),
     url(r'^home/result/csv/$',     EventResultCSVView.as_view(),       name='event_analysis_csv'),
-    url(r'^home/pictures/$',       TemplateView.as_view(template_name='home/event_pictures.html'),          name='home_pictures'),
+    url(r'^home/pictures/$',       EventPicturesView.as_view(),        name='home_pictures'),
         
     url(r'^event/$',               EventView.as_view(),                name='event'),
     url(r'^event/add/$',           EventAddView.as_view(),             name='add_event'),

@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load staticfiles %}
+{% load tags %}
+
+{% block contents %}
+
+
+    <script type="text/javascript" src="{% static 'jssor/js/jquery-1.9.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jssor/js/jssor.slider.mini.js' %}"></script>
+    <!-- use jssor.slider.debug.js instead for debug -->
+    <script type="text/javascript">
+        jQuery(document).ready(function ($) {
+                        
+            var jssor_1_options = {
+              $Idle: 2000,
+              $ArrowNavigatorOptions: {
+                $Class: $JssorArrowNavigator$
+              },
+              $BulletNavigatorOptions: {
+                $Class: $JssorBulletNavigator$
+              }
+            };
+            
+            var jssor_1_slider = new $JssorSlider$("jssor_1", jssor_1_options);
+            
+            //responsive code begin
+            //you can remove responsive code if you don't want the slider scales while window resizing
+            function ScaleSlider() {
+                var refSize = jssor_1_slider.$Elmt.parentNode.clientWidth;
+                if (refSize) {
+                    refSize = Math.min(refSize, 600);
+                    jssor_1_slider.$ScaleWidth(refSize);
+                }
+                else {
+                    window.setTimeout(ScaleSlider, 30);
+                }
+            }
+            ScaleSlider();
+            $(window).bind("load", ScaleSlider);
+            $(window).bind("resize", ScaleSlider);
+            $(window).bind("orientationchange", ScaleSlider);
+            //responsive code end
+        });
+    </script>
+
+    <style type="text/css">
+        
+        /* jssor slider bullet navigator skin 01 css */
+        /*
+        .jssorb01 div           (normal)
+        .jssorb01 div:hover     (normal mouseover)
+        .jssorb01 .av           (active)
+        .jssorb01 .av:hover     (active mouseover)
+        .jssorb01 .dn           (mousedown)
+        */
+        .jssorb01 {
+            position: absolute;
+        }
+        .jssorb01 div, .jssorb01 div:hover, .jssorb01 .av {
+            position: absolute;
+            /* size of bullet elment */
+            width: 12px;
+            height: 12px;
+            filter: alpha(opacity=70);
+            opacity: .7;
+            overflow: hidden;
+            cursor: pointer;
+            border: #000 1px solid;
+        }
+        .jssorb01 div { background-color: gray; }
+        .jssorb01 div:hover, .jssorb01 .av:hover { background-color: #d3d3d3; }
+        .jssorb01 .av { background-color: #fff; }
+        .jssorb01 .dn, .jssorb01 .dn:hover { background-color: #555555; }
+
+        /* jssor slider arrow navigator skin 02 css */
+        /*
+        .jssora02l                  (normal)
+        .jssora02r                  (normal)
+        .jssora02l:hover            (normal mouseover)
+        .jssora02r:hover            (normal mouseover)
+        .jssora02l.jssora02ldn      (mousedown)
+        .jssora02r.jssora02rdn      (mousedown)
+        */
+        .jssora02l, .jssora02r {
+            display: block;
+            position: absolute;
+            /* size of arrow element */
+            width: 55px;
+            height: 55px;
+            cursor: pointer;
+            background: url('{% static "img/a02.png" %}') no-repeat;
+            overflow: hidden;
+        }
+        .jssora02l { background-position: -3px -33px; }
+        .jssora02r { background-position: -63px -33px; }
+        .jssora02l:hover { background-position: -123px -33px; }
+        .jssora02r:hover { background-position: -183px -33px; }
+        .jssora02l.jssora02ldn { background-position: -3px -33px; }
+        .jssora02r.jssora02rdn { background-position: -63px -33px; }
+    </style>
+
+
+
+<div class="row" style="margin-top: 10px">
+	<div class="col-lg-12">
+		<div class="ibox float-e-margins">
+
+				{# Header #}
+				{% include 'home/event_header.html' with export_to_csv=False %}
+	
+				<div class="row" >
+					<div class="ibox-content datetableresults">
+					   <div id="jssor_1" style="position: relative; margin: 0 auto; top: 0px; left: 0px; width: 800px; height: 600px; overflow: hidden; visibility: hidden;">
+					        <!-- Loading Screen -->
+					        <div data-u="loading" style="position: absolute; top: 0px; left: 0px;">
+					            <div style="filter: alpha(opacity=70); opacity: 0.7; position: absolute; display: block; top: 0px; left: 0px; width: 100%; height: 100%;"></div>
+					            <div style="position:absolute;display:block;background:url('{% static "jssor/img/loading_sc.gif" %}') no-repeat center center;top:0px;left:0px;width:100%;height:100%;"></div>
+					        </div>
+					        <div data-u="slides" style="cursor: default; position: relative; top: 0px; left: 0px; width: 800px; height: 600px; overflow: hidden;">
+					        
+					        	{% for eventcheckimage in eventcheckimage_list %}
+					        	<div style="display: none;">
+					                <img data-u="image" src="{{ eventcheckimage.photo.url }}" />
+							        <div style="position: absolute; top: 20px; left: 20px; background:white; font-size:20px">
+							            Your text here
+							        </div>
+					            </div>
+					        	{% endfor %}           
+					        </div>
+					        <!-- Bullet Navigator -->
+					        <div data-u="navigator" class="jssorb01" style="bottom:16px;right:16px;">
+					            <div data-u="prototype" style="width:12px;height:12px;"></div>
+					        </div>
+					        <!-- Arrow Navigator -->
+					        <span data-u="arrowleft" class="jssora02l" style="top:0px;left:8px;width:55px;height:55px;" data-autocenter="2"></span>
+					        <span data-u="arrowright" class="jssora02r" style="top:0px;right:8px;width:55px;height:55px;" data-autocenter="2"></span>
+					    </div>
+
+					</div>
+				</div>	
+				
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	function on_change()
+	{
+		$("#viewResult").submit();
+	}
+</script>
+
+{% endblock %}
