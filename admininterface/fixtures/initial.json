@@ -269,6 +269,18 @@
   }
 },
 {
+  "model": "admininterface.location",
+  "pk": 2,
+  "fields": {
+    "event": 2,
+    "name": "MySecondLocation",
+    "city": "KualaLump",
+    "address": "Roc Boronat",
+    "latitude": 42.0,
+    "longitude": 2.0
+  }
+},
+{
   "model": "admininterface.eventcheck",
   "pk": 1,
   "fields": {
