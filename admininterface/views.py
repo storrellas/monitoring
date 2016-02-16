@@ -1,8 +1,8 @@
 from django.shortcuts import render,redirect
 from django.views.generic import TemplateView, RedirectView, ListView, DetailView
-from django.views.generic import FormView, UpdateView, CreateView
+from django.views.generic import FormView, UpdateView, CreateView, DeleteView
 from django.views.generic.base import TemplateResponseMixin
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse,reverse_lazy
 from django.shortcuts import redirect
 from django.views.generic import View
 from django.http import Http404, HttpResponseBadRequest, HttpResponseNotFound,HttpResponse,JsonResponse
@@ -659,5 +659,9 @@ class LocationView( LoginRequiredMixin, ListView ):
         context = super(LocationView, self).get_context_data(**kwargs)
         context['event_list'] = Event.objects.all()
         return context
+
+class LocationDeleteView(LoginRequiredMixin, DeleteView):
+    model = Location
+    success_url = reverse_lazy('location')
 
 

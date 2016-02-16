@@ -479,7 +479,9 @@
     {
     	if(confirm("Do you want to delete?"))
         {
-    		var url_delete = "{% url 'ajax-product-list' %}" + id 
+    		
+    		//var url_delete = "{% url 'ajax-product-list' %}" + id
+    		var url_delete = "{% url 'location_delete' %}"
         	$.ajax({
                 async: true,
 				url: url_delete,
@@ -493,6 +495,7 @@
                  	console.log(errStr);
                 }
             });
+    		/**/
         }
     }
 </script>

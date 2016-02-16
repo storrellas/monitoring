@@ -29,6 +29,8 @@ urlpatterns = [
     url(r'^event/edit/(?P<pk>[0-9]+)/$',    EventEditView.as_view(),   name='edit_event'),
     url(r'^export_feedback/$',     FeedbackCSVView.as_view(),   name='event_feedback_csv'),
     url(r'^event/location/$',      LocationView.as_view(),             name='location'),
+    url(r'^event/location/delete/(?P<pk>[0-9]+)/$',      LocationDeleteView.as_view(),             name='location_delete'),
+
 
     url(r'^product/$',             ProductView.as_view(),  name='product'),
     
