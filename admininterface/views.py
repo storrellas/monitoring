@@ -258,7 +258,7 @@ class EventEditView( LoginRequiredMixin, SuperuserRequiredMixin, DetailView ):
 
 class EventResultView( LoginRequiredMixin, ListView ):
     template_name='home/event_result.html'
-    model = Event
+    model = EventCheck
     paginate_by = 10
     context_object_name = 'eventcheck_list'
     event = None

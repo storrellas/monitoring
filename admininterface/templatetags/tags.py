@@ -21,6 +21,8 @@ def sidebar(context):
 
 @register.filter(name='percentage')
 def percentage(quantity, target):
+    if target == 0:
+        return 0
     return str(quantity*100/target) + '%'
 
 @register.filter(name='eventuser_list')
