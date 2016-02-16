@@ -87,7 +87,7 @@ class EventAppSerializer(serializers.ModelSerializer):
     location = LocationSerializer(source='locations',many=True)
     class Meta:
         model = Event
-        fields = ('id','title','description', 'videourl', 
+        fields = ('id','title','description', 'videourl', 'eventuser_objective_day',
                   'pdfurl', 'eventcheck', 'total','product', 'location')
 
 class EventCheckAppSerializer(serializers.ModelSerializer):

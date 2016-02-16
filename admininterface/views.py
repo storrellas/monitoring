@@ -15,7 +15,7 @@ from django.core.files.base import ContentFile
 
 # Thrid-party libs
 from braces.views import LoginRequiredMixin, SuperuserRequiredMixin
-from admininterface.utils import save_file
+#from admininterface.utils import save_file
 from rest_framework.authtoken.models import Token
 
 # Project imports
@@ -497,12 +497,20 @@ class EventAnalysisView( LoginRequiredMixin, TemplateView ):
         context['eventid_selected'] = event.id
 
 
+        good_quantity    = eventcheck_list.filter(type=EventCheck.GOOD).aggregate(good=Sum('quantity'))['good']
+        neutral_quantity = eventcheck_list.filter(type=EventCheck.NEUTRAL).aggregate(neutral=Sum('quantity'))['neutral']
+        bad_quantity     = eventcheck_list.filter(type=EventCheck.BAD).aggregate(bad=Sum('quantity'))['bad']
+        total_quantity   = eventcheck_list.aggregate(total=Sum('quantity'))['total']        
+        good_quantity = int(good_quantity or 0)
+        neutral_quantity = int(neutral_quantity or 0)
+        bad_quantity = int(bad_quantity or 0)
+
         
         # Add data for feedback graph
         feedback = {}
-        feedback['Good'] = eventcheck_list.filter(type=EventCheck.GOOD).count()
-        feedback['Neutral'] = eventcheck_list.filter(type=EventCheck.NEUTRAL).count()
-        feedback['Bad'] = eventcheck_list.filter(type=EventCheck.BAD).count()
+        feedback['Good']    = (good_quantity*100)/total_quantity
+        feedback['Neutral'] = (neutral_quantity*100)/total_quantity
+        feedback['Bad']     = (bad_quantity*100)/total_quantity        
         context['feedback'] = feedback
 
         # Generate graph data

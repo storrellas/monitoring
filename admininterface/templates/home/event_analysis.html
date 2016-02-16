@@ -102,10 +102,10 @@ $(function() {
 
     //creates area chart with dotted
     Dashboard1.prototype.createAreaChartDotted = function(element, pointSize, lineWidth, data, xkey, ykeys, labels, Pfillcolor, Pstockcolor, lineColors) {
-        Morris.Area({
+        Morris.Line({
             element: element,
             pointSize: 3,
-            lineWidth: 0,
+            lineWidth: 4,
             data: data,
             xkey: xkey,
             xLabels: "day",
@@ -157,7 +157,7 @@ $(function() {
       	// Creating donut chart      
 		var $donutData = [
 			{% for key, value in feedback.items %}
-			{label: "{{key}}",    value: {{ value }} },
+			{label: "{{key}}%",    value: {{ value }} },
 			{% endfor %}
 		];
       	
