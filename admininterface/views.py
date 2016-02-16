@@ -501,9 +501,9 @@ class EventAnalysisView( LoginRequiredMixin, TemplateView ):
         neutral_quantity = eventcheck_list.filter(type=EventCheck.NEUTRAL).aggregate(neutral=Sum('quantity'))['neutral']
         bad_quantity     = eventcheck_list.filter(type=EventCheck.BAD).aggregate(bad=Sum('quantity'))['bad']
         total_quantity   = eventcheck_list.aggregate(total=Sum('quantity'))['total']        
-        good_quantity = int(good_quantity or 0)
+        good_quantity    = int(good_quantity or 0)
         neutral_quantity = int(neutral_quantity or 0)
-        bad_quantity = int(bad_quantity or 0)
+        bad_quantity     = int(bad_quantity or 0)
 
         
         # Add data for feedback graph

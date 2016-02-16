@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 import traceback
+from datetime import datetime
 
 from rest_framework import serializers
 from django.db.models import Sum
@@ -73,12 +74,14 @@ class EventAppSerializer(serializers.ModelSerializer):
 
     total = serializers.SerializerMethodField('total_field')        
     def total_field(self, obj):
+        
         # Return total samplings for the given user and event
         try:
-            user = self.context['request'].user
-            total_dict=EventCheck.objects.filter(event=obj, user=user) \
+            user = self.context['request'].user 
+            list = EventCheck.objects.filter(event=obj, user=user,trackdate=datetime.now())   
+            total_dict=EventCheck.objects.filter(event=obj, user=user,trackdate=datetime.now()) \
                             .aggregate(total=Sum('quantity'))
-            total = int(bad_quantity or 0)
+            total = int(total_dict['total'] or 0)
             return total
         except:
             return 0
