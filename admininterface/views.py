@@ -14,7 +14,7 @@ from django.core.files.base import ContentFile
 
 # Thrid-party libs
 from braces.views import LoginRequiredMixin, SuperuserRequiredMixin
-
+from admininterface.utils import save_file
 from rest_framework.authtoken.models import Token
 
 # Project imports
@@ -128,7 +128,9 @@ class EventUserView( CompanyView ):
         try:
             context['search_data'] = self.request.GET['search_data']
         except: 
-            context['search_data'] = ''                                         
+            context['search_data'] = ''
+        context['list_supervisors'] = User.objects.filter(role=User.SUPERVISOR)
+        
         return context    
 
 
@@ -164,63 +166,52 @@ class EventSupervisorView(CompanyView):
         return context
 
 class EventUserAddView( LoginRequiredMixin, SuperuserRequiredMixin, CreateView ):
-    form_class = EventUserModelForm
-    
-    def get_success_url(self):
-        return reverse('user_list')
-    
-    def form_valid(self, form):
-        # Save the form
-        obj = form.save()
-        
-        # Set the role for eventuser
-        obj.role = User.EVENTUSER
-        obj.set_password(form.data['password'])
-        obj.save()
-        
-        # Create token for API 
-        Token.objects.create(user=obj)
-        
-        return super(EventUserAddView, self).form_valid(form)
+    template_name = "manage/eventuser_list.html"
 
-# class EventSupervisorAddView( LoginRequiredMixin, SuperuserRequiredMixin, CreateView ):
-#     form_class = EventUserModelForm
-    
-#     def get_success_url(self):
-#         return reverse('user_list')
-    
-#     def form_valid(self, form):
-#         # Save the form
-#         obj = form.save()
-        
-#         # Set the role for eventuser
-#         obj.role = User.EVENTUSER
-#         obj.set_password(form.data['password'])
-#         obj.save()
-        
-#         # Create token for API 
-#         Token.objects.create(user=obj)
-        
-#         return super(EventSupervisorAddView, self).form_valid(form)
+    def post(self, request):
+        """Stores the data, redirects to the list of Supervisors. Not using
+        UpdateView as it does not fit with modals
+        """
+        form = EventUserModelForm(request.POST)
+        if form.is_valid():
+            log.debug("Form is valid")
+            u = form.save()
+            user = User.objects.get(username=u)
+            user.role = User.EVENTUSER
+            if request.FILES:
+                user.picture = request.FILES['picture']
+            id_supervisor = request.POST.get('eventuser')
+            user.eventuser = User.objects.get(id=id_supervisor)
+            # QUICK HACK
+            # If we specify the fields password in the form, we modify the user
+            # password. We should do this operation in the User model but it
+            # required too many changes.
+            password1 = request.POST.get("password")
+            password2 = request.POST.get("password_confirm")
+            if password1 != "" and password1 == password2:
+                # This is too weak password check
+                #   - Check length and charts
+                #   - Do not let spaces
+                user.set_password(password1)
+                
+                log.debug("Password for user `{}` changed to {}"
+                          .format(user.username, ''.join(["*" for el in range(0,5)])))
+                r = "0"
+            elif password1 != "" and password1 != password2:
+                r = "2"
+            else:
+                r = "0"
+            user.save()
+        else:
+            log.debug("Form is invalid")
+            log.debug(form.errors)
+            r = "1"
+
+        return redirect("{}?r={}".format(reverse('user_list'), r))
 
 class EventSupervisorAddView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateView ):
     template_name = "manage/supervisor_list.html"
-    # model = User
-    # form_class = EventUserModelForm
 
-    # def get_success_url(self):
-    #     return reverse('user_list')
-
-    # def form_valid(self, form):
-
-    #     # Save the form
-    #     obj = form.save()
-
-    #     # Set the role for eventuser
-    #     obj.role = User.SUPERVISOR
-    #     obj.set_password(form.data['password'])
-    #     obj.save()
-    #     return super(EventSupervisorEditView, self).form_valid(form) 
     def post(self, request):
         """Stores the data, redirects to the list of Supervisors. Not using
         UpdateView as it does not fit with modals
@@ -258,43 +249,51 @@ class EventSupervisorAddView( LoginRequiredMixin, SuperuserRequiredMixin, Templa
 
         return redirect("{}?r={}".format(reverse('super_url'), r))
 
-class EventUserEditView( LoginRequiredMixin, SuperuserRequiredMixin, UpdateView ):
-    model = User
-    form_class = EventUserModelForm
-    
-    def get_success_url(self):
-        return reverse('user_list')
-    
-    def form_valid(self, form):
-        
-        # Save the form
-        obj = form.save()
-        
-        # Set the role for eventuser
-        obj.role = User.EVENTUSER
-        obj.set_password(form.data['password'])
-        obj.save()
-        
-        return super(EventUserEditView, self).form_valid(form)
+class EventUserEditView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateView ):
+    template_name = "manage/eventuser_list.html"
+
+    def post(self, request, pk):
+        """Stores the data, redirects to the list of Supervisors. Not using
+        UpdateView as it does not fit with modals
+        """
+        user = User.objects.get(id=pk)
+        form = EventUserModelForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            log.debug("Form is valid")
+            form.save()
+            if request.FILES:
+                user.picture = request.FILES['picture']
+            # QUICK HACK
+            # If we specify the fields password in the form, we modify the user
+            # password. We should do this operation in the User model but it
+            # required too many changes.
+            password1 = request.POST.get("password")
+            password2 = request.POST.get("password_confirm")
+            if password1 != "" and password1 == password2:
+                # This is too weak password check
+                #   - Check length and charts
+                #   - Do not let spaces
+                user.set_password(password1)
+                user.save()
+                log.debug("Password for user `{}` changed to {}"
+                          .format(user.username, ''.join(["*" for el in range(0,5)])))
+                r = "0"
+            elif password1 != "" and password1 != password2:
+                r = "2"
+            else:
+                r = "0"
+                user.save()
+        else:
+            log.debug("Form is invalid")
+            log.debug(form.errors)
+            r = "1"
+
+        return redirect("{}?r={}".format(reverse('user_list'), r))
+
 
 class EventSupervisorEditView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateView ):
     template_name = "manage/supervisor_list.html"
-    # model = User
-    # form_class = EventUserModelForm
 
-    # def get_success_url(self):
-    #     return reverse('user_list')
-
-    # def form_valid(self, form):
-
-    #     # Save the form
-    #     obj = form.save()
-
-    #     # Set the role for eventuser
-    #     obj.role = User.SUPERVISOR
-    #     obj.set_password(form.data['password'])
-    #     obj.save()
-    #     return super(EventSupervisorEditView, self).form_valid(form) 
     def post(self, request, pk):
         """Stores the data, redirects to the list of Supervisors. Not using
         UpdateView as it does not fit with modals

@@ -48,7 +48,7 @@ $('document').ready(function(){
 									<div class="row">
 										<div class="col-sm-12">
 											<h3 class="m-t-none m-b">Create User</h3>
-											<form role="form" id="createNewUser" method="post" action="{% url 'user_add' %}" enctype="multipart/form-data">
+											<form role="form" id="createNewUser" method="post" action="{% url 'supervisor_add' %}" enctype="multipart/form-data">
 												{% csrf_token %}
 												<div class="form-group">
 													<label><b class="required">*</b>Username:</label> <input
@@ -118,7 +118,7 @@ $('document').ready(function(){
 									<div class="row">
 										<div class="col-sm-12">
 											<h3 class="m-t-none m-b">Edit User</h3>
-											<form role="form" id="editUser" method="post" action="{% url 'user_edit' 0 %}" enctype="multipart/form-data">
+											<form role="form" id="editUser" method="post" action="{% url 'supervisor_edit' 0 %}" enctype="multipart/form-data">
 												{% csrf_token %}
 												<div class="form-group">
 													<label><b class="required">*</b>Username:</label> <input

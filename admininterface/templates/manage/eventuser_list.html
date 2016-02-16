@@ -64,20 +64,28 @@ $('document').ready(function(){
 												<div class="form-group">
 													<label><b class="required">*</b>Confirm Password:</label> <input
 														type="password" placeholder=""
-														class="form-control required" name="password_confirm"
+														class="form-control" name="password_confirm"
 														id="password_confirm">
 												</div>
 												<div class="form-group">
-													<label>First Name:</label>
+													<label><b class="required">*</b>First Name:</label>
 													<input type="text" placeholder="First Name"
-														class="form-control" name="first_name"
+														class="form-control required" name="first_name"
 														id="first_name">
 												</div>
 												<div class="form-group">
-													<label>Last Name:</label>
+													<label><b class="required">*</b>Last Name:</label>
 													<input type="text" placeholder="Last Name"
-														class="form-control" name="last_name"
+														class="form-control required" name="last_name"
 														id="last_name">
+												</div>
+												<div class="form-group">
+													<label>Supervisor:</label>
+													<select class="form-control" name="eventuser" id="evenusert">
+														{% for supervisor in list_supervisors %}
+														<option value="{{ supervisor.id }}">{{ supervisor.get_full_name }}</option>
+														{% endfor %}
+													</select>
 												</div>
 												<div class="form-group">
 													<label>Phone:</label>
@@ -94,8 +102,8 @@ $('document').ready(function(){
 												<div class="form-group">
 													<label>Gender:</label>
 													<select class="form-control" name="event" id="event">
-														<option value="male" selected>Male</option>
-														<option value="female">Female</option>
+														<option value="MALE" selected>Male</option>
+														<option value="FEMALE">Female</option>
 													</select>
 												</div>
 												<div class="form-group">
@@ -137,28 +145,36 @@ $('document').ready(function(){
 														name="username" id="username">
 												</div>
 												<div class="form-group">
-													<label><b class="required">*</b>Password:</label> <input
+													<label>Password:</label> <input
 														type="password" placeholder=""
-														class="form-control required" name="password"
+														class="form-control" name="password"
 														id="password">
 												</div>
 												<div class="form-group">
-													<label><b class="required">*</b>Confirm Password:</label> <input
+													<label>Confirm Password:</label> <input
 														type="password" placeholder=""
-														class="form-control required" name="password_confirm"
+														class="form-control" name="password_confirm"
 														id="password_confirm">
 												</div>
 												<div class="form-group">
-													<label>First Name:</label>
+													<label><b class="required">*</b>First Name:</label>
 													<input type="text" placeholder="First Name"
-														class="form-control" name="first_name"
+														class="form-control required" name="first_name"
 														id="first_name">
 												</div>
 												<div class="form-group">
-													<label>Last Name:</label>
+													<label><b class="required">*</b>Last Name:</label>
 													<input type="text" placeholder="Last Name"
-														class="form-control" name="last_name"
+														class="form-control required" name="last_name"
 														id="last_name">
+												</div>
+												<div class="form-group">
+													<label>Supervisor:</label>
+													<select class="form-control" name="eventuser" id="eventuser">
+														{% for supervisor in list_supervisors %}
+														<option value="{{ supervisor.id }}">{{ supervisor.get_full_name }}</option>
+														{% endfor %}
+													</select>
 												</div>
 												<div class="form-group">
 													<label>Phone:</label>
@@ -174,9 +190,9 @@ $('document').ready(function(){
 												</div>
 												<div class="form-group">
 													<label>Gender:</label>
-													<select class="form-control" name="event" id="event">
-														<option value="male" selected>Male</option>
-														<option value="female">Female</option>
+													<select class="form-control" name="gender" id="gendera">
+														<option value="MALE">Male</option>
+														<option value="FEMALE">Female</option>
 													</select>
 												</div>
 												<div class="form-group">
@@ -258,7 +274,7 @@ $('document').ready(function(){
 						<div class="col-lg-12">
 							<table class="tabledata" style=""id="users_table">
 								<tbody id="users_body">
-									<tr>
+									<tr >
 										<th>No</th>
 										<th class="textleft">Username</th>
 										<th class="textleft">First Name</th>
@@ -271,7 +287,7 @@ $('document').ready(function(){
 										<th class="textright">Actions</th>
 									</tr>
 									{% for user in event_user_list %}
-									<tr>
+									<tr id="user_id_{{ user.id }}" data-username="{{ user.username }}" data-first_name="{{ user.first_name }}" data-last_name="{{ user.last_name }}" data-phone="{{ user.phone }}" data-email="{{ user.email }}" data-gender="{{ user.gender }}" data-picture="user.picture.url">
 										<td>
 											{{ user.id }}
 										</td>
@@ -307,7 +323,7 @@ $('document').ready(function(){
 
 										<td class="actions">
 										<a class="btn btn-sm btn-white btn-action"
-											onclick="on_edit(this);"
+											onclick="on_edit(this, '{{ user.id }}');"
 											data-toggle="tooltip" data-placement="bottom" title="Edit"
 											{% if not request.user.is_superuser %}
 											disabled
@@ -335,6 +351,16 @@ $('document').ready(function(){
 								{% endfor %}
 								</tbody>
 							</table>
+							{% if request.GET.r == "0" %}
+							<div style="margin-left: 15px">Information saved successfully</div>
+							{% elif request.GET.r == "1" %}
+							<div style="margin-left: 15px">
+								There are errors in the form:
+								{{ request.GET.error }}
+							</div>
+							{% elif request.GET.r == "2" %}
+							<div style="margin-left: 15px">Password mismatch. Try again</div>
+							{% endif %}
 						</div>
 					</div>
 					<div class="table-responsive tooltip-demo"
@@ -381,7 +407,7 @@ $('document').ready(function(){
         $('#modal-form-new').modal('hide');
     }
 
-	function on_edit(source)
+	function on_edit(source, user_id)
 	{
 		var $modal = $('#modal-form-edit');
 		var $form = $modal.find("form:first")
@@ -392,6 +418,12 @@ $('document').ready(function(){
 		
 		var eventuser_name = $.trim($id.next().text());
 		$modal.find("input[name='username']").val(eventuser_name)
+		var $row = $("#user_id_"+ user_id)
+		$modal.find("input[name='first_name']").val($row.data('first_name'));
+		$modal.find("input[name='last_name']").val($row.data('last_name'));
+		$modal.find("input[name='phone']").val($row.data('phone'));
+		$modal.find("input[name='email']").val($row.data('email'));
+		$modal.find("#gendera").val($row.data('gender'));
 		
 		var url = "{% url 'user_edit' 0 %}"
 		url = url.replace('0', $.trim($id.text()));
