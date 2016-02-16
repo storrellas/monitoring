@@ -48,7 +48,7 @@ $('document').ready(function(){
 									<div class="row">
 										<div class="col-sm-12">
 											<h3 class="m-t-none m-b">Create User</h3>
-											<form role="form" id="createNewUser" method="post" action="{% url 'user_add' %}" enctype="multipart/form-data">
+											<form role="form" id="createNewUser" method="post" action="{% url 'supervisor_add' %}" enctype="multipart/form-data">
 												{% csrf_token %}
 												<div class="form-group">
 													<label><b class="required">*</b>Username:</label> <input
@@ -64,32 +64,24 @@ $('document').ready(function(){
 												<div class="form-group">
 													<label><b class="required">*</b>Confirm Password:</label> <input
 														type="password" placeholder=""
-														class="form-control" name="password_confirm"
+														class="form-control required" name="password_confirm"
 														id="password_confirm">
 												</div>
 												<div class="form-group">
-													<label><b class="required">*</b>First Name:</label>
+													<label>First Name:</label>
 													<input type="text" placeholder="First Name"
 														class="form-control required" name="first_name"
 														id="first_name">
 												</div>
 												<div class="form-group">
-													<label><b class="required">*</b>Last Name:</label>
+													<label>Last Name:</label>
 													<input type="text" placeholder="Last Name"
 														class="form-control required" name="last_name"
 														id="last_name">
 												</div>
 												<div class="form-group">
-													<label>Supervisor:</label>
-													<select class="form-control" name="eventuser" id="evenusert">
-														{% for supervisor in list_supervisors %}
-														<option value="{{ supervisor.id }}">{{ supervisor.get_full_name }}</option>
-														{% endfor %}
-													</select>
-												</div>
-												<div class="form-group">
 													<label>Phone:</label>
-													<input type="text" placeholder="Last Name"
+													<input type="text" placeholder="Phone"
 														class="form-control" name="phone"
 														id="phone">
 												</div>
@@ -98,17 +90,6 @@ $('document').ready(function(){
 													<input type="text" placeholder="Email"
 														class="form-control" name="email"
 														id="email">
-												</div>
-												<div class="form-group">
-													<label>Gender:</label>
-													<select class="form-control" name="event" id="event">
-														<option value="MALE" selected>Male</option>
-														<option value="FEMALE">Female</option>
-													</select>
-												</div>
-												<div class="form-group">
-													<label>Picture:</label>
-													<input type="file" class="form-control" name="picture" id="picture">
 												</div>
 												<div>
 													<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
@@ -137,7 +118,7 @@ $('document').ready(function(){
 									<div class="row">
 										<div class="col-sm-12">
 											<h3 class="m-t-none m-b">Edit User</h3>
-											<form role="form" id="editUser" method="post" action="{% url 'user_edit' 0 %}" enctype="multipart/form-data">
+											<form role="form" id="editUser" method="post" action="{% url 'supervisor_edit' 0 %}" enctype="multipart/form-data">
 												{% csrf_token %}
 												<div class="form-group">
 													<label><b class="required">*</b>Username:</label> <input
@@ -169,16 +150,8 @@ $('document').ready(function(){
 														id="last_name">
 												</div>
 												<div class="form-group">
-													<label>Supervisor:</label>
-													<select class="form-control" name="eventuser" id="eventuser">
-														{% for supervisor in list_supervisors %}
-														<option value="{{ supervisor.id }}">{{ supervisor.get_full_name }}</option>
-														{% endfor %}
-													</select>
-												</div>
-												<div class="form-group">
 													<label>Phone:</label>
-													<input type="text" placeholder="Last Name"
+													<input type="text" placeholder="Phone"
 														class="form-control" name="phone"
 														id="phone">
 												</div>
@@ -187,17 +160,6 @@ $('document').ready(function(){
 													<input type="text" placeholder="Email"
 														class="form-control" name="email"
 														id="email">
-												</div>
-												<div class="form-group">
-													<label>Gender:</label>
-													<select class="form-control" name="gender" id="gendera">
-														<option value="MALE">Male</option>
-														<option value="FEMALE">Female</option>
-													</select>
-												</div>
-												<div class="form-group">
-													<label>Picture:</label>
-													<input type="file" class="form-control" name="picture" id="picture">
 												</div>
 												<div>
 													<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
@@ -274,20 +236,17 @@ $('document').ready(function(){
 						<div class="col-lg-12">
 							<table class="tabledata" style=""id="users_table">
 								<tbody id="users_body">
-									<tr >
+									<tr>
 										<th>No</th>
 										<th class="textleft">Username</th>
 										<th class="textleft">First Name</th>
 										<th class="textleft">Last Name</th>
 										<th class="textleft">Phone</th>
 										<th class="textleft">Email</th>
-										<th class="textleft">Gender</th>
-										<th class="textleft">Score</th>
-										<th class="textleft">Picture</th>
 										<th class="textright">Actions</th>
 									</tr>
 									{% for user in event_user_list %}
-									<tr id="user_id_{{ user.id }}" data-username="{{ user.username }}" data-first_name="{{ user.first_name }}" data-last_name="{{ user.last_name }}" data-phone="{{ user.phone }}" data-email="{{ user.email }}" data-gender="{{ user.gender }}" data-picture="user.picture.url">
+									<tr id="user_id_{{ user.id }}" data-username="{{ user.username }}" data-first_name="{{ user.first_name }}" data-last_name="{{ user.last_name }}" data-phone="{{ user.phone }}" data-email="{{ user.email }}">
 										<td>
 											{{ user.id }}
 										</td>
@@ -306,21 +265,6 @@ $('document').ready(function(){
 										<td  class="textleft">
 											{{ user.email }}
 										</td>
-										<td  class="textleft">
-											{{ user.gender }}
-										</td>
-										<td  class="textleft">
-											{{ user.score }}
-										</td>
-										<td  class="textleft">										
-											 <a style="width:100%"
-											 {% ifequal user.picture.name "" %}disabled href="#"
-											 {% else %}
-											  href="{{ user.picture.url }}"
-											 {% endifequal %} 
-											 target="_blank" class="btn btn-info" role="button">picture</a>
-										</td>
-
 										<td class="actions">
 										<a class="btn btn-sm btn-white btn-action"
 											onclick="on_edit(this, '{{ user.id }}');"
@@ -344,7 +288,7 @@ $('document').ready(function(){
 									</tr>
 								{% empty %}
 									<tr>
-										<td colspan="5" class="nodatarow">
+										<td colspan="8" class="nodatarow">
 											No data
 										</td>
 									</tr>
@@ -354,10 +298,7 @@ $('document').ready(function(){
 							{% if request.GET.r == "0" %}
 							<div style="margin-left: 15px">Information saved successfully</div>
 							{% elif request.GET.r == "1" %}
-							<div style="margin-left: 15px">
-								There are errors in the form:
-								{{ request.GET.error }}
-							</div>
+							<div style="margin-left: 15px">There are errors in the form</div>
 							{% elif request.GET.r == "2" %}
 							<div style="margin-left: 15px">Password mismatch. Try again</div>
 							{% endif %}
@@ -417,13 +358,12 @@ $('document').ready(function(){
 		console.log( $.trim($id.text()) )
 		
 		var eventuser_name = $.trim($id.next().text());
-		$modal.find("input[name='username']").val(eventuser_name)
 		var $row = $("#user_id_"+ user_id)
+		$modal.find("input[name='username']").val(eventuser_name)
 		$modal.find("input[name='first_name']").val($row.data('first_name'));
 		$modal.find("input[name='last_name']").val($row.data('last_name'));
 		$modal.find("input[name='phone']").val($row.data('phone'));
 		$modal.find("input[name='email']").val($row.data('email'));
-		$modal.find("#gendera").val($row.data('gender'));
 		
 		var url = "{% url 'user_edit' 0 %}"
 		url = url.replace('0', $.trim($id.text()));

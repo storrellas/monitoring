@@ -30,8 +30,8 @@ class EventModelForm(forms.ModelForm):
             raise forms.ValidationError("Start date must be before End date")
 
 class EventUserModelForm(forms.ModelForm):
-
+    password = forms.CharField(widget=forms.PasswordInput, required=False)
     class Meta:
         model = User
         fields = ['username', 'password', 'first_name', 'last_name',
-                  'phone', 'email', 'gender', 'picture']
+                  'phone', 'email', 'gender', 'picture', 'eventuser']
