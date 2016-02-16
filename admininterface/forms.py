@@ -35,3 +35,10 @@ class EventUserModelForm(forms.ModelForm):
         model = User
         fields = ['username', 'password', 'first_name', 'last_name',
                   'phone', 'email', 'gender', 'picture', 'eventuser']
+
+class LocationModelForm(forms.ModelForm):
+
+    class Meta:
+        model = Location
+        fields = '__all__'
+

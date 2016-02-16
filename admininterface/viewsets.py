@@ -154,3 +154,10 @@ class ProductViewset( ModelViewSet ):
     permission_classes = [IsAuthenticated]
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
+class LocationViewset( ModelViewSet ):
+    model = Location
+    queryset = Location.objects.all()
+    serializer_class = LocationSerializer    
+    permission_classes = [IsAuthenticated]
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+

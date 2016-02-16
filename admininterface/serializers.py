@@ -129,4 +129,7 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
 
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
         

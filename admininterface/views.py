@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.views.generic import View
 from django.http import Http404, HttpResponseBadRequest, HttpResponseNotFound,HttpResponse,JsonResponse
+from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 
 from django.utils.decorators import method_decorator
@@ -654,4 +655,9 @@ class LocationView( LoginRequiredMixin, ListView ):
         else:
             return queryset.order_by('name').order_by('id') 
     
-    
+    def get_context_data(self, **kwargs):
+        context = super(LocationView, self).get_context_data(**kwargs)
+        context['event_list'] = Event.objects.all()
+        return context
+
+

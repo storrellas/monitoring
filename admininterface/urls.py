@@ -62,8 +62,6 @@ urlpatterns = [
     url(r'^ajax/event/multidelete/$',          EventMultiDeleteViewset.as_view({'post': 'multidelete'}), name='ajax-event-multidelete'),
     url(r'^ajax/event/graph/(?P<pk>[0-9]+)/$', EventCheckGraphViewset.as_view({'get': 'generate_graph_data'}), name='ajax-eventcheck-graph'),
 
-    
-
 ]
 
 
@@ -71,5 +69,6 @@ urlpatterns = [
 router = SimpleRouter()
 router.register(r'ajax/event',   EventViewset,'ajax-event')
 router.register(r'ajax/product', ProductViewset,'ajax-product')
+router.register(r'ajax/location', LocationViewset,'ajax-location')
 urlpatterns += router.urls
 
