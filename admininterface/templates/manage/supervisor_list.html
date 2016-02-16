@@ -1,0 +1,427 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% load tags %}
+
+{% block contents %}
+
+<script type="text/javascript">
+$('document').ready(function(){
+	var $result = $("#INSERTRESULT").val();
+	if($result == "SUCCESS")
+	{
+		alert("SUCCESS!");
+ 	 	location.href = location.href;
+	}
+});
+</script>
+
+
+<div class="wrapper wrapper-content">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<div class="row">
+						<div class="col-lg-12">
+							<h5 style="margin-top: 6px">
+								Total Users:
+								{{ event_user_list|length }}
+							</h5>
+							<a data-toggle="modal" class="btn btn-primary"
+								style="float: right; margin-right: 10px" href="#modal-form-new"
+								{% if notrequest.user.is_superuser %}
+								disabled
+								{% endif %}
+										>Add
+								User</a>
+						</div>
+					</div>
+				</div>
+				<div class="ibox-content">
+
+					<!-- modal form 'new' -->
+					<div id="modal-form-new" class="modal fade" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-body" style="max-height: 600px;overflow-y: auto;">
+									<div class="row">
+										<div class="col-sm-12">
+											<h3 class="m-t-none m-b">Create User</h3>
+											<form role="form" id="createNewUser" method="post" action="{% url 'user_add' %}" enctype="multipart/form-data">
+												{% csrf_token %}
+												<div class="form-group">
+													<label><b class="required">*</b>Username:</label> <input
+														type="text" placeholder="" class="form-control required"
+														name="username" id="username">
+												</div>
+												<div class="form-group">
+													<label><b class="required">*</b>Password:</label> <input
+														type="password" placeholder=""
+														class="form-control required" name="password"
+														id="password">
+												</div>
+												<div class="form-group">
+													<label><b class="required">*</b>Confirm Password:</label> <input
+														type="password" placeholder=""
+														class="form-control required" name="password_confirm"
+														id="password_confirm">
+												</div>
+												<div class="form-group">
+													<label>First Name:</label>
+													<input type="text" placeholder="First Name"
+														class="form-control" name="first_name"
+														id="first_name">
+												</div>
+												<div class="form-group">
+													<label>Last Name:</label>
+													<input type="text" placeholder="Last Name"
+														class="form-control" name="last_name"
+														id="last_name">
+												</div>
+												<div class="form-group">
+													<label>Phone:</label>
+													<input type="text" placeholder="Phone"
+														class="form-control" name="phone"
+														id="phone">
+												</div>
+												<div class="form-group">
+													<label>Email:</label>
+													<input type="text" placeholder="Email"
+														class="form-control" name="email"
+														id="email">
+												</div>
+												<div>
+													<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
+														type="submit" onclick="on_create()">
+														<strong>Create</strong>
+													</button>
+													<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
+														style="margin-right: 20px;" type="button"
+														onclick="on_cancel_new()">
+														<strong>Cancel</strong>
+													</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- modal form 'Edit' -->
+					<div id="modal-form-edit" class="modal fade" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-body" style="max-height: 600px;overflow-y: auto;">
+									<div class="row">
+										<div class="col-sm-12">
+											<h3 class="m-t-none m-b">Edit User</h3>
+											<form role="form" id="editUser" method="post" action="{% url 'user_edit' 0 %}" enctype="multipart/form-data">
+												{% csrf_token %}
+												<div class="form-group">
+													<label><b class="required">*</b>Username:</label> <input
+														type="text" placeholder="" class="form-control required"
+														name="username" id="username">
+												</div>
+												<div class="form-group">
+													<label>Password:</label> <input
+														type="password" placeholder=""
+														class="form-control" name="password"
+														id="password">
+												</div>
+												<div class="form-group">
+													<label>Confirm Password:</label> <input
+														type="password" placeholder=""
+														class="form-control" name="password_confirm"
+														id="password_confirm">
+												</div>
+												<div class="form-group">
+													<label><b class="required">*</b>First Name:</label>
+													<input type="text" placeholder="First Name"
+														class="form-control required" name="first_name"
+														id="first_name">
+												</div>
+												<div class="form-group">
+													<label><b class="required">*</b>Last Name:</label>
+													<input type="text" placeholder="Last Name"
+														class="form-control required" name="last_name"
+														id="last_name">
+												</div>
+												<div class="form-group">
+													<label>Phone:</label>
+													<input type="text" placeholder="Phone"
+														class="form-control" name="phone"
+														id="phone">
+												</div>
+												<div class="form-group">
+													<label>Email:</label>
+													<input type="text" placeholder="Email"
+														class="form-control" name="email"
+														id="email">
+												</div>
+												<div>
+													<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
+														type="submit" onclick="on_edit_done()">
+														<strong>Save</strong>
+													</button>
+													<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
+														style="margin-right: 20px;" type="button"
+														onclick="on_cancel_edit()">
+														<strong>Cancel</strong>
+													</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<form class="form-horizontal searchformUserList" action="" method="get">
+						<div>
+							<div class="col-md-6">
+								<label class="control-label">Search:</label>
+								<input type="search" class="form-control" name="search_data"
+													id="search_data" placeholder="Search Username"
+													value="{{ search_data }}">
+							</div>
+							<div class="col-md-3">
+								<label class="control-label">Sort:</label>
+								<select class="form-control m-b" name="order_field"
+									id="order_field">											
+									<option value="ASC" {% ifequal sortMode 'ASC'%}selected{% endifequal %} >ASC</option>
+									<option value="DESC"{% ifequal sortMode 'DESC'%}selected{% endifequal %}>DESC</option>
+								</select>
+							</div>
+							<div class="col-md-3">
+								<button class="btn btn-primary" type="submit">Go!</button>
+							</div>
+						</div>
+					</form>
+					<div class="row">
+					</div>
+
+					<!-- confirm modal form -->
+					<div id="modal-confirm" class="modal fade" aria-hidden="true"
+						aria-labelledby="confirm-modal-label">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<input type="hidden" id="modal-opener" value=""> <input
+									type="hidden" id="modal-return" value=""> <input
+									type="hidden" id="modal-callback" value=""> <input
+									type="hidden" id="modal-param" value="">
+
+								<div class="modal-header">
+									<h4 class="modal-title" id="confirm-modal-label">Confirm
+										dialog</h4>
+								</div>
+
+								<div class="modal-body">
+									<p id="modal-message"></p>
+								</div>
+
+								<div class="modal-footer" style="padding: 10px 20px 5px">
+									<button class="btn btn-sm btn-primary pull-right"
+										data-dismiss="modal">Cancel</button>
+									<button class="btn btn-sm btn-primary pull-right"
+										style="margin-right: 10px;" onclick="on_ok_confirm()">Ok</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-12">
+							<table class="tabledata" style=""id="users_table">
+								<tbody id="users_body">
+									<tr>
+										<th>No</th>
+										<th class="textleft">Username</th>
+										<th class="textleft">First Name</th>
+										<th class="textleft">Last Name</th>
+										<th class="textleft">Phone</th>
+										<th class="textleft">Email</th>
+										<th class="textright">Actions</th>
+									</tr>
+									{% for user in event_user_list %}
+									<tr id="user_id_{{ user.id }}" data-username="{{ user.username }}" data-first_name="{{ user.first_name }}" data-last_name="{{ user.last_name }}" data-phone="{{ user.phone }}" data-email="{{ user.email }}">
+										<td>
+											{{ user.id }}
+										</td>
+										<td  class="textleft">
+											{{ user.username }}
+										</td>
+										<td  class="textleft">
+											{{ user.first_name }}
+										</td>
+										<td  class="textleft">
+											{{ user.last_name }}
+										</td>
+										<td  class="textleft">
+											{{ user.phone }}
+										</td>
+										<td  class="textleft">
+											{{ user.email }}
+										</td>
+										<td class="actions">
+										<a class="btn btn-sm btn-white btn-action"
+											onclick="on_edit(this, '{{ user.id }}');"
+											data-toggle="tooltip" data-placement="bottom" title="Edit"
+											{% if not request.user.is_superuser %}
+											disabled
+											{% endif %}
+											> 
+											<img src="{% static 'inspinia_admin/img/icon/change-account.png' %}">
+										</a> 
+										<a class="btn btn-sm btn-white btn-action"
+											onclick="on_delete('{{ user.id }}');"
+											data-toggle="tooltip" data-placement="bottom" title="Delete"
+											{% if not request.user.is_superuser %}
+											disabled
+											{% endif %}
+											> 
+											<img src="{% static 'inspinia_admin/img/icon/delete.png' %}">
+										</a>
+										</td>
+									</tr>
+								{% empty %}
+									<tr>
+										<td colspan="8" class="nodatarow">
+											No data
+										</td>
+									</tr>
+								{% endfor %}
+								</tbody>
+							</table>
+							{% if request.GET.r == "0" %}
+							<div style="margin-left: 15px">Information saved successfully</div>
+							{% elif request.GET.r == "1" %}
+							<div style="margin-left: 15px">There are errors in the form</div>
+							{% elif request.GET.r == "2" %}
+							<div style="margin-left: 15px">Password mismatch. Try again</div>
+							{% endif %}
+						</div>
+					</div>
+					<div class="table-responsive tooltip-demo"
+						style="display: block; overflow-x: auto;">
+						
+					</div>
+
+					{% include 'manage/pagination.html' %}
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	function on_create()
+	{		
+		var $modal = $('#modal-form-new');
+		var $form = $modal.find("form:first")
+		$form.validate({
+	        errorPlacement: function (error, element) {
+	            element.before(error);
+	        },
+	        rules: {
+	            username: {
+	            	required: true
+	            },
+	            cpassword_edit: {
+	            	required: true
+	            },
+	            
+	            ccpassword_edit: {
+	            	equalTo: "#cpassword_edit"
+	            }
+	        },
+	        submitHandler: function(){
+	        	$form.submit()
+	        }
+	    });
+	}
+	function on_cancel_new()
+    {
+        $('#modal-form-new').modal('hide');
+    }
+
+	function on_edit(source, user_id)
+	{
+		var $modal = $('#modal-form-edit');
+		var $form = $modal.find("form:first")
+		
+		var $row = $(source).parent().parent()
+		var $id = $row.find("td:first")
+		console.log( $.trim($id.text()) )
+		
+		var eventuser_name = $.trim($id.next().text());
+		var $row = $("#user_id_"+ user_id)
+		$modal.find("input[name='username']").val(eventuser_name)
+		$modal.find("input[name='first_name']").val($row.data('first_name'));
+		$modal.find("input[name='last_name']").val($row.data('last_name'));
+		$modal.find("input[name='phone']").val($row.data('phone'));
+		$modal.find("input[name='email']").val($row.data('email'));
+		
+		var url = "{% url 'user_edit' 0 %}"
+		url = url.replace('0', $.trim($id.text()));
+		$form.attr("action", url)
+
+		// Show the modal
+		$modal.modal('show')
+	}
+	
+	function on_edit_done()
+	{
+		var $modal = $('#modal-form-edit');
+		var $form = $modal.find("form:first")
+	    $form.validate({
+	        errorPlacement: function (error, element) {
+	            element.before(error);
+	        },
+	        rules: {
+	            eusername: {
+	            	required: true
+	            },
+	        },
+	
+	        submitHandler: function() {
+	        	$form.submit()
+	        }
+	    });
+	}
+	
+	function on_cancel_edit()
+	{
+	    $('#modal-form-edit').modal('hide');
+	}
+    function on_delete($userid)
+    {
+    	if(confirm("Do you want to delete?"))
+        {
+    		var url_delete = "{% url 'ajax-event-user' %}" + $userid 
+        	$.ajax({
+                async: true,
+				url: url_delete,
+                dataType: "json",
+                type: "DELETE",
+                data: {
+                    mode: "DELETE_USER",
+                    userid: $userid,
+                },
+                success: function(json) {
+                    location.reload()
+                    return
+                },
+                error: function(xhr, errStr) {
+                 	console.log(errStr);
+                }
+            });
+        }
+    }
+</script>
+
+
+{% endblock %}
