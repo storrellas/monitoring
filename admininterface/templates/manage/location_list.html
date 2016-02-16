@@ -206,7 +206,7 @@ $('document').ready(function(){
 							<div class="col-md-6">
 								<label class="control-label">Search:</label>
 								<input type="search" class="form-control" name="search_data"
-													id="search_data" placeholder="Search Username"
+													id="search_data" placeholder="Search Name"
 													value="{{ search_data }}">
 							</div>
 							<div class="col-md-3">
@@ -264,6 +264,7 @@ $('document').ready(function(){
 										<th class="textleft">Address</th>
 										<th class="textleft">Latitude</th>
 										<th class="textleft">Longitude</th>
+										<th class="textleft">Event</th>
 										<th class="textright">Actions</th>
 									</tr>
 									{% for location in location_list %}
@@ -285,6 +286,9 @@ $('document').ready(function(){
 										</td>
 										<td  class="textleft">
 											{{ location.longitude }}
+										</td>
+										<td  class="textleft">
+											{{ location.event.title }}
 										</td>
 
 										<td class="actions">

@@ -279,7 +279,7 @@
   "model": "admininterface.location",
   "pk": 2,
   "fields": {
-    "event": null,
+    "event": 1,
     "name": "SecondLocation",
     "city": "Aberdeed",
     "address": "Ramon Albo",

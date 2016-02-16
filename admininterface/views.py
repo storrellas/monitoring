@@ -639,5 +639,19 @@ class LocationView( LoginRequiredMixin, ListView ):
     context_object_name = 'location_list'
     queryset = Location.objects.all().order_by('id')
     
+    def get_queryset(self):
+                    
+        try:
+            order_field = self.request.GET['order_field']
+            search_data = self.request.GET['search_data']
+        except:
+            return self.queryset.order_by('id')
+
+        # Filter by search_data
+        queryset = self.queryset.filter(name__startswith=search_data).order_by('id')
+        if order_field == 'ASC':
+            return queryset.order_by('name').order_by('id')
+        else:
+            return queryset.order_by('name').order_by('id') 
     
     
