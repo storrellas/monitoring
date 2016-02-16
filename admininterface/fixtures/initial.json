@@ -276,6 +276,18 @@
   }
 },
 {
+  "model": "admininterface.location",
+  "pk": 2,
+  "fields": {
+    "event": null,
+    "name": "SecondLocation",
+    "city": "Aberdeed",
+    "address": "Ramon Albo",
+    "latitude": 33.0,
+    "longitude": 45.0
+  }
+},
+{
   "model": "admininterface.eventcheck",
   "pk": 1,
   "fields": {

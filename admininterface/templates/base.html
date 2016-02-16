@@ -76,6 +76,8 @@
 {% url 'events' as events_url %}
 {% url 'add_event' as add_event_url %}
 {% url 'edit_event' as edit_event_url %}
+{% url 'location' as location_url %}
+
 
 {# Users section #}
 {% url 'company_list' as company_url %}
@@ -99,70 +101,7 @@
 	</div>
 </div>
 
-<!--nav class="navbar-default navbar-static-side" role="navigation">
-<div class="sidebar-collapse">
-<ul class="nav" id="side-menu">
-	<li class="nav-header">
 
-	<div class="profile-element"><img
-		src="{% static 'inspinia_admin/img/logo/apptoplogo.png' %}">
-	</div>
-	<div class="logo-element">FSA</div>
-	</li>
-
-	<li	
-	{% if home_url in request.path %}
-	class="active"	
-	{% endif%} 	
-	>
-		<a href="#"><i class="fa fa-home"></i> <span class="nav-label">Dashboard</span><span class="fa arrow"></span> </a>
-		<ul class="nav nav-second-level">
-			<li {% if home_url == request.path %} class="active" {% endif %}>
-				<a href="{{ home_url }}">Analysis</a></li>
-			<li {% if analysis_url in request.path %} class="active" {% endif %}>
-				<a href="{{ analysis_url }}">Result</a></li>
-		</ul>
-	</li>
-	
-	{% if request.user.is_superuser %}
-	
-		<li
-		{% if request.path == events_url or request.path == add_event_url or request.path == edit_event_url %}
-		class="active"	
-		{% endif%}  
-		>
-			<a href="{% url 'event' %}"><i class="fa fa-clipboard"></i>
-			<span class="nav-label">Events {{ request.user }}</span></a>
-		</li>
-	
-		<li
-		{% if company_url in request.path or users_url in request.path %}
-		class="active"		
-		{% endif%} 	
-		>
-			<a href="#"><i class="fa fa-users"></i> <span class="nav-label">Users</span><span class="fa arrow"></span> </a>
-			<ul class="nav nav-second-level">
-				<li {% ifequal company_url request.path %} class="active" {% endifequal %}><a
-					href="{% url 'company_list' %}">Admin Users</a></li>
-				<li {% ifequal users_url request.path %} class="active" {% endifequal %}><a
-					href="{% url 'user_list' %}">Event Users</a></li>
-			</ul>
-		</li>
-	
-		
-	{% endif %}
-	<li
-	{% if request.path == changepwd_url  %}
-	class="active"	
-	{% endif%} 	
-	>
-		<a href="{{ changepwd_url }}"><i class="fa fa-cogs"></i>
-		<span class="nav-label">Change Password</span></a>
-	</li>
-</ul>
-
-</div>
-</nav-->
 {% endifnotequal %}
 
 {% ifnotequal request.path login_url %}

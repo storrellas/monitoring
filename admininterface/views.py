@@ -632,6 +632,12 @@ class ProductView( LoginRequiredMixin, ListView ):
         context['company_list'] = User.objects.filter(role=User.COMPANY)
         return context
     
+class LocationView( LoginRequiredMixin, ListView ):
+    template_name='manage/location_list.html'
+    model = Location
+    paginate_by = 10
+    context_object_name = 'location_list'
+    queryset = Location.objects.all().order_by('id')
     
     
     
