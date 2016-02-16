@@ -78,7 +78,8 @@ class EventAppSerializer(serializers.ModelSerializer):
             user = self.context['request'].user
             total_dict=EventCheck.objects.filter(event=obj, user=user) \
                             .aggregate(total=Sum('quantity'))
-            return total_dict['total']
+            total = int(bad_quantity or 0)
+            return total
         except:
             return 0
        
