@@ -30,20 +30,25 @@ class AdminSerializer(serializers.ModelSerializer):
 
 class CompanyUserSerializer(serializers.ModelSerializer):
     
-    def create(self, validated_data):                        
-        obj = super(CompanyUserSerializer, self).create(validated_data)       
-        obj.set_password(self.data['password'])
+    def create(self, validated_data):
+        
+        print "In here company"
+        print validated_data
+                                
+        obj = super(CompanyUserSerializer, self).create(validated_data)
+               
+        obj.set_password(validated_data['password'])
         obj.role = User.COMPANY       
         obj.save()
-                        
+        
         try:
             event = Event.objects.get(id=self.initial_data['event'])
+            event.user.clear()
             event.user.add(obj)
         except:
             log.info("Not able to find the event")
             pass
-        
-        
+                
         return obj        
     
     def update(self, instance, validated_data):
@@ -60,10 +65,8 @@ class CompanyUserSerializer(serializers.ModelSerializer):
         instance.event.clear()
         # Assign new user        
         try:
-            event = Event.objects.get(id=self.initial_data['event'])
-            # Check if there is space for user in event
-            if event.user.filter(role=User.COMPANY).count() == 0:    
-                instance.event.add(event)
+            event = Event.objects.get(id=self.initial_data['event'])  
+            instance.event.add(event)
         except:
             log.info("Not able to find the event")
             pass
