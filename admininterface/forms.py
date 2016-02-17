@@ -1,5 +1,4 @@
 from django import forms
-
 from models import *
 
 # Configure logger
@@ -31,14 +30,21 @@ class EventModelForm(forms.ModelForm):
 
 class EventUserModelForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, required=False)
+    password_confirm = forms.CharField(widget=forms.PasswordInput, required=False)
     class Meta:
         model = User
         fields = ['username', 'password', 'first_name', 'last_name',
                   'phone', 'email', 'gender', 'picture', 'eventuser']
+
+    #called on validation of the form
+    def clean(self):
+        #run the standard clean method first
+        cleaned_data=super(EventUserModelForm, self).clean()
+        if cleaned_data['password'] != cleaned_data['password_confirm']:
+            raise forms.ValidationError('Passwords mismatch')
 
 class LocationModelForm(forms.ModelForm):
 
     class Meta:
         model = Location
         fields = '__all__'
-
