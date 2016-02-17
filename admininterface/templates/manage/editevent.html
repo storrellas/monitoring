@@ -146,6 +146,8 @@ $('document').ready(function(){
 	                                            <td>{{ eventuser.id }}</td>
 	                                            <td>{{ eventuser.username }}</td>
 	                                        </tr>
+											{% empty %}
+                                    		<tr><td colspan="3">No Data</td></tr>
 											{% endfor %}											
 											{% for user in user_list %}
 	                                        <tr>

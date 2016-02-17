@@ -77,8 +77,7 @@ class EventAppSerializer(serializers.ModelSerializer):
         
         # Return total samplings for the given user and event
         try:
-            user = self.context['request'].user 
-            list = EventCheck.objects.filter(event=obj, user=user,trackdate=datetime.now())   
+            user = self.context['request'].user    
             total_dict=EventCheck.objects.filter(event=obj, user=user,trackdate=datetime.now()) \
                             .aggregate(total=Sum('quantity'))
             total = int(total_dict['total'] or 0)
@@ -105,10 +104,23 @@ class EventCheckAppSerializer(serializers.ModelSerializer):
     checkintime = serializers.DateTimeField(format="%d/%m/%y %H:%M %p",input_formats=["%d/%m/%y %H:%M %p"], required=False)       
     checkouttime = serializers.DateTimeField(format="%d/%m/%y %H:%M %p",input_formats=["%d/%m/%y %H:%M %p"], required=False)
     
+    total = serializers.SerializerMethodField('total_field')        
+    def total_field(self, obj):
+        
+        # Return total samplings for the given user and event
+        try:
+            user = self.context['request'].user    
+            total_dict=EventCheck.objects.filter(event=obj.event, user=user,trackdate=datetime.now()) \
+                            .aggregate(total=Sum('quantity'))
+            total = int(total_dict['total'] or 0)
+            return total
+        except:
+            return 0
+    
     class Meta:
         model = EventCheck
         fields = ('id', 'user', 'event', 'quantity', 'target', 'type', 'note', 'lastsubmit',\
-                  'completeflag','brief_opened', 'checkintime', 'checkouttime', 'product', 'location')
+                  'completeflag','brief_opened', 'checkintime', 'checkouttime', 'product', 'location', 'total')
 
 class UploadFileSerializer(serializers.Serializer):
     file = FileField()

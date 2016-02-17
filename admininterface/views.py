@@ -57,7 +57,7 @@ class LoginView(View):
         user = authenticate(username=user_form.data['username'], 
                             password=user_form.data['password'])
         if user is not None:
-            if user.is_active and (user.is_superuser or user.role == User.COMPANY):
+            if user.is_active and (user.is_superuser or user.role == User.COMPANY or user.role == User.SUPERVISOR):
                 login(request, user)                
                 return JsonResponse( user_form.data )
 
@@ -419,7 +419,8 @@ class EventResultView( LoginRequiredMixin, ListView ):
     context_object_name = 'eventcheck_list'
     event = None
     
-    def get_queryset(self):                
+    def get_queryset(self):
+           
         # An event was selected
         if 'eventid' in self.request.GET.keys():
             event_id = self.request.GET['eventid']
@@ -429,7 +430,7 @@ class EventResultView( LoginRequiredMixin, ListView ):
                 self.event = Event.objects.first()
             else:
                 self.event = Event.objects.filter(user=self.request.user).first()          
-        return self.model.objects.filter(event=self.event).order_by('id')
+        return self.model.objects.filter(event=self.event, completeflag=True).order_by('id')
     
     def get_context_data(self, **kwargs):
         context = super(EventResultView, self).get_context_data(**kwargs)
@@ -440,7 +441,7 @@ class EventResultView( LoginRequiredMixin, ListView ):
             context['event_list'] = Event.objects.filter(user=self.request.user)
         
 
-        analytics = EventCheck.objects.filter(event=self.event) \
+        analytics = EventCheck.objects.filter(event=self.event, completeflag=True) \
                         .aggregate(Sum('quantity'), Sum('target'))
         try:
             context['sampling']    = analytics['quantity__sum']
@@ -450,8 +451,11 @@ class EventResultView( LoginRequiredMixin, ListView ):
             context['sampling']    = '0'
             context['target']      = '0'
             context['percentage']  = '0%'
-        context['eventid_selected'] = self.event.id
+
+        if self.event is not None:
+            context['eventid_selected'] = self.event.id
         context['user_view_feedback'] = self.request.user in self.event.getSupervisors()
+
 
         return context
 
@@ -482,7 +486,7 @@ class EventAnalysisView( LoginRequiredMixin, TemplateView ):
 
 
         # Capture data for event_header.html
-        eventcheck_list = EventCheck.objects.filter(event=event) 
+        eventcheck_list = EventCheck.objects.filter(event=event, completeflag=True) 
         analytics = eventcheck_list.aggregate(Sum('quantity'), Sum('target'))
         try:
             context['sampling']    = analytics['quantity__sum']
@@ -503,6 +507,7 @@ class EventAnalysisView( LoginRequiredMixin, TemplateView ):
         good_quantity    = int(good_quantity or 0)
         neutral_quantity = int(neutral_quantity or 0)
         bad_quantity     = int(bad_quantity or 0)
+        total_quantity   = int(total_quantity or 1)
 
         
         # Add data for feedback graph
@@ -571,7 +576,7 @@ class EventPicturesView( LoginRequiredMixin, ListView ):
                 self.event = Event.objects.first()
             else:
                 self.event = Event.objects.filter(user=self.request.user).first()          
-        return self.model.objects.filter(eventcheck__event=self.event).order_by('id')
+        return self.model.objects.filter(eventcheck__event=self.event, completeflag=True).order_by('id')
 
     
     def get_context_data(self, **kwargs):
@@ -591,7 +596,7 @@ class EventPicturesView( LoginRequiredMixin, ListView ):
             else:
                 event = Event.objects.filter(user=self.request.user).first()
 
-        analytics = EventCheck.objects.filter(event=event) \
+        analytics = EventCheck.objects.filter(event=event, completeflag=True) \
                         .aggregate(Sum('quantity'), Sum('target'))
         try:
             context['sampling']    = analytics['quantity__sum']
@@ -601,7 +606,8 @@ class EventPicturesView( LoginRequiredMixin, ListView ):
             context['sampling']    = '0'
             context['target']      = '0'
             context['percentage']  = '0%'
-        context['eventid_selected'] = event.id
+        if event is not None:
+            context['eventid_selected'] = self.event.id
 
         return context
 

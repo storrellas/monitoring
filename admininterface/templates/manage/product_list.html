@@ -347,6 +347,8 @@
 									</a>
 									</td>
 								</tr>
+							{% empty %}
+								<tr><td colspan="6">No Data</td></tr>
 							{% endfor %}
 							</tbody>
 						</table>
@@ -480,8 +482,7 @@
     	if(confirm("Do you want to delete?"))
         {
     		
-    		//var url_delete = "{% url 'ajax-product-list' %}" + id
-    		var url_delete = "{% url 'location_delete' %}"
+    		var url_delete = "{% url 'ajax-product-list' %}" + id
         	$.ajax({
                 async: true,
 				url: url_delete,
