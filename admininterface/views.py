@@ -8,6 +8,7 @@ from django.views.generic import View
 from django.http import Http404, HttpResponseBadRequest, HttpResponseNotFound,HttpResponse,JsonResponse
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
+from django.forms.utils import ErrorList
 
 from django.utils.decorators import method_decorator
 from django.db.models import Sum, Q
@@ -28,6 +29,8 @@ from feedback.models import FeedbackList
 # Configure logger
 import logging
 log = logging.getLogger(__name__)
+
+
 
 
 class LoginView(View):
@@ -126,7 +129,7 @@ class EventUserView( CompanyView ):
         except:
             context['search_data'] = ''
         context['list_supervisors'] = User.objects.filter(role=User.SUPERVISOR)
-
+        context['form'] = EventUserModelForm()
         return context
 
 class EventSupervisorView(CompanyView):
@@ -158,6 +161,7 @@ class EventSupervisorView(CompanyView):
             context['search_data'] = self.request.GET['search_data']
         except:
             context['search_data'] = ''
+        context['form'] = EventUserModelForm()
         return context
 
 class EventUserAddView( LoginRequiredMixin, SuperuserRequiredMixin, CreateView ):
@@ -200,7 +204,7 @@ class EventUserAddView( LoginRequiredMixin, SuperuserRequiredMixin, CreateView )
         else:
             log.debug("Form is invalid")
             log.debug(form.errors)
-            r = "1"
+            r = "1&m={}".format(form.errors.as_text())
 
         return redirect("{}?r={}".format(reverse('user_list'), r))
 
@@ -240,7 +244,7 @@ class EventSupervisorAddView( LoginRequiredMixin, SuperuserRequiredMixin, Templa
         else:
             log.debug("Form is invalid")
             log.debug(form.errors)
-            r = "1"
+            r = "1&m={}".format(form.errors.as_text())
 
         return redirect("{}?r={}".format(reverse('super_url'), r))
 
@@ -281,7 +285,7 @@ class EventUserEditView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateVie
         else:
             log.debug("Form is invalid")
             log.debug(form.errors)
-            r = "1"
+            r = "1&m={}".format(form.errors.as_text())
 
         return redirect("{}?r={}".format(reverse('user_list'), r))
 
@@ -294,7 +298,8 @@ class EventSupervisorEditView( LoginRequiredMixin, SuperuserRequiredMixin, Templ
         """
         context_data = dict()
         user = User.objects.get(id=pk)
-        form = EventUserModelForm(request.POST, instance=user)
+        form = EventUserModelForm(request.POST, instance=user,
+                                  error_class=DivErrorList)
         if form.is_valid():
             log.debug("Form is valid")
             form.save()
@@ -320,8 +325,7 @@ class EventSupervisorEditView( LoginRequiredMixin, SuperuserRequiredMixin, Templ
         else:
             log.debug("Form is invalid")
             log.debug(form.errors)
-            r = "1"
-
+            r = "1&m={}".format(form.errors.as_text())
         return redirect("{}?r={}".format(reverse('super_url'), r))
 
 class EventView( LoginRequiredMixin, SuperuserRequiredMixin, ListView ):

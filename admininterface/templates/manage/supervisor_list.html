@@ -2,6 +2,7 @@
 
 {% load staticfiles %}
 {% load tags %}
+{% load widget_tweaks %}
 
 {% block contents %}
 
@@ -28,8 +29,8 @@ $('document').ready(function(){
 								Total Users:
 								{{ event_user_list|length }}
 							</h5>
-							<a data-toggle="modal" class="btn btn-primary"
-								style="float: right; margin-right: 10px" href="#modal-form-new"
+							<a class="btn btn-primary" onclick="show_form();"
+								style="float: right; margin-right: 10px" 
 								{% if notrequest.user.is_superuser %}
 								disabled
 								{% endif %}
@@ -38,80 +39,10 @@ $('document').ready(function(){
 						</div>
 					</div>
 				</div>
+				{% include "manage/includes/messages_form.html" %}
 				<div class="ibox-content">
-
-					<!-- modal form 'new' -->
-					<div id="modal-form-new" class="modal fade" aria-hidden="true">
-						<div class="modal-dialog">
-							<div class="modal-content">
-								<div class="modal-body" style="max-height: 600px;overflow-y: auto;">
-									<div class="row">
-										<div class="col-sm-12">
-											<h3 class="m-t-none m-b">Create User</h3>
-											<form role="form" id="createNewUser" method="post" action="{% url 'supervisor_add' %}" enctype="multipart/form-data">
-												{% csrf_token %}
-												<div class="form-group">
-													<label><b class="required">*</b>Username:</label> <input
-														type="text" placeholder="" class="form-control required"
-														name="username" id="username">
-												</div>
-												<div class="form-group">
-													<label><b class="required">*</b>Password:</label> <input
-														type="password" placeholder=""
-														class="form-control required" name="password"
-														id="password">
-												</div>
-												<div class="form-group">
-													<label><b class="required">*</b>Confirm Password:</label> <input
-														type="password" placeholder=""
-														class="form-control required" name="password_confirm"
-														id="password_confirm">
-												</div>
-												<div class="form-group">
-													<label>First Name:</label>
-													<input type="text" placeholder="First Name"
-														class="form-control required" name="first_name"
-														id="first_name">
-												</div>
-												<div class="form-group">
-													<label>Last Name:</label>
-													<input type="text" placeholder="Last Name"
-														class="form-control required" name="last_name"
-														id="last_name">
-												</div>
-												<div class="form-group">
-													<label>Phone:</label>
-													<input type="text" placeholder="Phone"
-														class="form-control" name="phone"
-														id="phone">
-												</div>
-												<div class="form-group">
-													<label>Email:</label>
-													<input type="text" placeholder="Email"
-														class="form-control" name="email"
-														id="email">
-												</div>
-												<div>
-													<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
-														type="submit" onclick="on_create()">
-														<strong>Create</strong>
-													</button>
-													<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
-														style="margin-right: 20px;" type="button"
-														onclick="on_cancel_new()">
-														<strong>Cancel</strong>
-													</button>
-												</div>
-											</form>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
 					<!-- modal form 'Edit' -->
-					<div id="modal-form-edit" class="modal fade" aria-hidden="true">
+					<div id="modal-form" class="modal fade" aria-hidden="true">
 						<div class="modal-dialog">
 							<div class="modal-content">
 								<div class="modal-body" style="max-height: 600px;overflow-y: auto;">
@@ -121,54 +52,41 @@ $('document').ready(function(){
 											<form role="form" id="editUser" method="post" action="{% url 'supervisor_edit' 0 %}" enctype="multipart/form-data">
 												{% csrf_token %}
 												<div class="form-group">
-													<label><b class="required">*</b>Username:</label> <input
-														type="text" placeholder="" class="form-control required"
-														name="username" id="username">
+													<label><b class="required">*</b>Username:</label>
+														{% render_field form.username type="text" placeholder="" class="form-control required"%}
 												</div>
 												<div class="form-group">
-													<label>Password:</label> <input
-														type="password" placeholder=""
-														class="form-control" name="password"
-														id="password">
+													<label><b class="required" id="reqasqp1">*</b>Password:</label> 
+														{% render_field form.password type="password" placeholder="" class="form-control required"%}
 												</div>
 												<div class="form-group">
-													<label>Confirm Password:</label> <input
-														type="password" placeholder=""
-														class="form-control" name="password_confirm"
-														id="password_confirm">
+													<label><b class="required" id="reqasqp2">*</b>Confirm Password:</label> 
+														{% render_field form.password_confirm type="password" placeholder="" class="form-control required"%}
 												</div>
 												<div class="form-group">
 													<label><b class="required">*</b>First Name:</label>
-													<input type="text" placeholder="First Name"
-														class="form-control required" name="first_name"
-														id="first_name">
+														{% render_field form.first_name type="text" placeholder="First Name" class="form-control required"%}
 												</div>
 												<div class="form-group">
 													<label><b class="required">*</b>Last Name:</label>
-													<input type="text" placeholder="Last Name"
-														class="form-control required" name="last_name"
-														id="last_name">
+														{% render_field form.last_name type="text" placeholder="Last Name" class="form-control required"%}
 												</div>
 												<div class="form-group">
 													<label>Phone:</label>
-													<input type="text" placeholder="Phone"
-														class="form-control" name="phone"
-														id="phone">
+														{% render_field form.phone type="text" placeholder="Phone" class="form-control"%}
 												</div>
 												<div class="form-group">
 													<label>Email:</label>
-													<input type="text" placeholder="Email"
-														class="form-control" name="email"
-														id="email">
+														{% render_field form.email type="text" placeholder="Email" class="form-control"%}
 												</div>
 												<div>
 													<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
-														type="submit" onclick="on_edit_done()">
+														type="submit" onclick="on_done()">
 														<strong>Save</strong>
 													</button>
 													<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
 														style="margin-right: 20px;" type="button"
-														onclick="on_cancel_edit()">
+														onclick="on_cancel()">
 														<strong>Cancel</strong>
 													</button>
 												</div>
@@ -267,7 +185,7 @@ $('document').ready(function(){
 										</td>
 										<td class="actions">
 										<a class="btn btn-sm btn-white btn-action"
-											onclick="on_edit(this, '{{ user.id }}');"
+											onclick="show_form(this, '{{ user.id }}');"
 											data-toggle="tooltip" data-placement="bottom" title="Edit"
 											{% if not request.user.is_superuser %}
 											disabled
@@ -295,13 +213,6 @@ $('document').ready(function(){
 								{% endfor %}
 								</tbody>
 							</table>
-							{% if request.GET.r == "0" %}
-							<div style="margin-left: 15px">Information saved successfully</div>
-							{% elif request.GET.r == "1" %}
-							<div style="margin-left: 15px">There are errors in the form</div>
-							{% elif request.GET.r == "2" %}
-							<div style="margin-left: 15px">Password mismatch. Try again</div>
-							{% endif %}
 						</div>
 					</div>
 					<div class="table-responsive tooltip-demo"
@@ -318,64 +229,54 @@ $('document').ready(function(){
 </div>
 
 <script type="text/javascript">
-	function on_create()
-	{		
-		var $modal = $('#modal-form-new');
-		var $form = $modal.find("form:first")
-		$form.validate({
-	        errorPlacement: function (error, element) {
-	            element.before(error);
-	        },
-	        rules: {
-	            username: {
-	            	required: true
-	            },
-	            cpassword_edit: {
-	            	required: true
-	            },
-	            
-	            ccpassword_edit: {
-	            	equalTo: "#cpassword_edit"
-	            }
-	        },
-	        submitHandler: function(){
-	        	$form.submit()
-	        }
-	    });
-	}
-	function on_cancel_new()
-    {
-        $('#modal-form-new').modal('hide');
-    }
 
-	function on_edit(source, user_id)
+	function show_form(source, user_id)
 	{
-		var $modal = $('#modal-form-edit');
+		var $modal = $('#modal-form');
 		var $form = $modal.find("form:first")
-		
-		var $row = $(source).parent().parent()
-		var $id = $row.find("td:first")
-		console.log( $.trim($id.text()) )
-		
-		var eventuser_name = $.trim($id.next().text());
-		var $row = $("#user_id_"+ user_id)
-		$modal.find("input[name='username']").val(eventuser_name)
-		$modal.find("input[name='first_name']").val($row.data('first_name'));
-		$modal.find("input[name='last_name']").val($row.data('last_name'));
-		$modal.find("input[name='phone']").val($row.data('phone'));
-		$modal.find("input[name='email']").val($row.data('email'));
-		
-		var url = "{% url 'user_edit' 0 %}"
-		url = url.replace('0', $.trim($id.text()));
-		$form.attr("action", url)
+		$form[0].reset();
+		if (source != undefined){
+			//Editing data
+			var $row = $(source).parent().parent()
+			var $id = $row.find("td:first")
+			console.log( $.trim($id.text()) )
+			
+			var eventuser_name = $.trim($id.next().text());
+			var $row = $("#user_id_"+ user_id)
+			var a = eventuser_name;
+			var b = $row.data('first_name');
+			var c = $row.data('last_name');
+			var d = $row.data('phone');
+			var e = $row.data('email');
 
+			var url = "{% url 'supervisor_edit' 0 %}"
+			url = url.replace('0', $.trim($id.text()));
+			$("#reqasqp1").hide();
+			$("#reqasqp2").hide();
+			$modal.find("input[name='password']").removeClass("required");
+			$modal.find("input[name='password_confirm']").removeClass("required");
+		}
+		else{ // New item
+			var a = b = c = d = e = "";
+			var url = "{% url 'supervisor_add' %}"
+			$("#reqasqp1").show();
+			$("#reqasqp2").show();
+			$modal.find("input[name='password']").addClass("required");
+			$modal.find("input[name='password_confirm']").addClass("required");
+		}
+		$modal.find("input[name='username']").val(a)
+		$modal.find("input[name='first_name']").val(b);
+		$modal.find("input[name='last_name']").val(c);
+		$modal.find("input[name='phone']").val(d);
+		$modal.find("input[name='email']").val(e);
+		$form.attr("action", url)
 		// Show the modal
 		$modal.modal('show')
 	}
 	
-	function on_edit_done()
+	function on_done()
 	{
-		var $modal = $('#modal-form-edit');
+		var $modal = $('#modal-form');
 		var $form = $modal.find("form:first")
 	    $form.validate({
 	        errorPlacement: function (error, element) {
@@ -393,9 +294,12 @@ $('document').ready(function(){
 	    });
 	}
 	
-	function on_cancel_edit()
+	function on_cancel()
 	{
-	    $('#modal-form-edit').modal('hide');
+		var $modal = $('#modal-form');
+		var $form = $modal.find("form:first")
+		$form[0].reset();
+	    $('#modal-form').modal('hide');
 	}
     function on_delete($userid)
     {
