@@ -186,6 +186,9 @@ class EventCheck(models.Model):
 class EventCheckImage(models.Model):
     photo         = models.ImageField(upload_to='event/photo/',blank=True,null=True)
     eventcheck    = models.ForeignKey(EventCheck)
+    
+    def __unicode__(self):
+        return self.photo.name
 
 
     
