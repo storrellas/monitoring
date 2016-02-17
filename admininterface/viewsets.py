@@ -126,7 +126,7 @@ class EventCheckGraphViewset( ViewSet ):
 
     def generate_graph_data(self, request, *args, **kwargs):
         event = Event.objects.get( id=kwargs['pk'] )
-        eventcheck_list = EventCheck.objects.filter(event=event)
+        eventcheck_list = EventCheck.objects.filter(event=event, completeflag=True)
          
         # Generate graph data
         graph_data = eventcheck_list.values('trackdate') \

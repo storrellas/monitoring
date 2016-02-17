@@ -480,8 +480,7 @@
     	if(confirm("Do you want to delete?"))
         {
     		
-    		//var url_delete = "{% url 'ajax-product-list' %}" + id
-    		var url_delete = "{% url 'location_delete' %}"
+    		var url_delete = "{% url 'ajax-product-list' %}" + id
         	$.ajax({
                 async: true,
 				url: url_delete,
