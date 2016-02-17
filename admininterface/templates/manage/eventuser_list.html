@@ -172,7 +172,7 @@ $('document').ready(function(){
 													<label>Supervisor:</label>
 													<select class="form-control" name="eventuser" id="eventuser">
 														{% for supervisor in list_supervisors %}
-														<option value="{{ supervisor.id }}">{{ supervisor.get_full_name }}</option>
+														<option value="{{ supervisor.id }}">{{ supervisor.username }}</option>
 														{% endfor %}
 													</select>
 												</div>
@@ -283,6 +283,7 @@ $('document').ready(function(){
 										<th class="textleft">Email</th>
 										<th class="textleft">Gender</th>
 										<th class="textleft">Score</th>
+										<th class="textleft">Supervisor</th>
 										<th class="textleft">Picture</th>
 										<th class="textright">Actions</th>
 									</tr>
@@ -311,6 +312,9 @@ $('document').ready(function(){
 										</td>
 										<td  class="textleft">
 											{{ user.score }}
+										</td>
+										<td  class="textleft">
+											{{ user.eventuser.username }}
 										</td>
 										<td  class="textleft">										
 											 <a style="width:100%"

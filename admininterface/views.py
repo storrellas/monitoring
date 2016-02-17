@@ -54,7 +54,7 @@ class LoginView(View):
         user = authenticate(username=user_form.data['username'], 
                             password=user_form.data['password'])
         if user is not None:
-            if user.is_active and (user.is_superuser or user.role == User.COMPANY):
+            if user.is_active and (user.is_superuser or user.role == User.COMPANY or user.role == User.SUPERVISOR):
                 login(request, user)                
                 return JsonResponse( user_form.data )
 
@@ -504,6 +504,7 @@ class EventAnalysisView( LoginRequiredMixin, TemplateView ):
         good_quantity    = int(good_quantity or 0)
         neutral_quantity = int(neutral_quantity or 0)
         bad_quantity     = int(bad_quantity or 0)
+        total_quantity   = int(total_quantity or 1)
 
         
         # Add data for feedback graph
