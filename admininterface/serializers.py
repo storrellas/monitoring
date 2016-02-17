@@ -3,8 +3,10 @@ import traceback
 
 from rest_framework import serializers
 from django.db.models import Sum
+from datetime import datetime
 
 from models import *
+
 
 # Configure logger
 import logging
@@ -30,14 +32,13 @@ class AdminSerializer(serializers.ModelSerializer):
 
 class CompanyUserSerializer(serializers.ModelSerializer):
     
-    def create(self, validated_data):
-        
-        print "In here company"
-        print validated_data
-                                
+    def create(self, validated_data):                                
         obj = super(CompanyUserSerializer, self).create(validated_data)
                
         obj.set_password(validated_data['password'])
+        obj.is_staff = True
+        obj.is_active = True
+        obj.date_joined=datetime.now()
         obj.role = User.COMPANY       
         obj.save()
         
@@ -79,7 +80,7 @@ class CompanyUserSerializer(serializers.ModelSerializer):
         
 class EventUserSerializer(serializers.ModelSerializer):
     
-    def create(self, validated_data):                
+    def create(self, validated_data):              
         obj = self.Meta.model.objects.create_user(username = self.data['username'],                                             
                                             password=self.data['password'])
         obj.role = User.EVENTUSER 
