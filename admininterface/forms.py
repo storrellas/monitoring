@@ -16,7 +16,7 @@ class EventModelForm(forms.ModelForm):
                                  input_formats=('%d/%m/%Y',), required=True)
     end_date = forms.DateField(widget=forms.DateInput(format='%d/%m/%Y'),
                                input_formats=('%d/%m/%Y',), required=True)
-
+    description = forms.CharField(widget=forms.Textarea())
     class Meta:
         model = Event
         fields = ['title', 'description', 'pdfdocument', 'videourl',
