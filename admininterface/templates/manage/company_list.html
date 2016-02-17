@@ -98,7 +98,7 @@
 												<div class="form-group">
 													<label>Event:</label> 
 													<select class="form-control" name="event" id="event">
-														<option value="0" selected>All</option>
+														<option value="0" selected>None</option>
 														{% for event in event_list %}
 															<option value='{{ event.id }}'>{{ event.title }}</option>
 														{% endfor %}
@@ -199,7 +199,7 @@
 												<div class="form-group">
 													<label>Event:</label> 
 													<select class="form-control" name="event" id="event">
-														<option value="0" selected>All</option>
+														<option value="0" selected>None</option>
 														{% for event in event_list %}
 															<option value='{{ event.id }}'>{{ event.title }}</option>
 														{% endfor %}
@@ -323,7 +323,7 @@
 											</a> 
 											{% if request.user != user %}
 											<a class="btn btn-sm btn-white btn-action"
-												onclick="on_delete('{{ user.id }}');"
+												onclick="on_delete('{{ user.username }}','{{ user.id }}');"
 												data-toggle="tooltip" data-placement="bottom" title="Delete">
 													<img
 													src="{% static 'inspinia_admin/img/icon/delete.png' %}">
@@ -427,9 +427,9 @@
             }
         });	
     }
-    function on_delete(username)
+    function on_delete(username, id)
     {
-        open_confirm('delete', "Please confirm if you would like to remove \"" + username + "\" for a Sampling Admin account?", 'do_delete', username);
+        open_confirm('delete', "Please confirm if you would like to remove \"" + username + "\" for a Sampling Admin account?", 'do_delete', id);
     }
     function do_delete(username)
     {
