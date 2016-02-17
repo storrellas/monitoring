@@ -343,14 +343,14 @@ class EventAddView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateView ):
         context = super(EventAddView, self).get_context_data(**kwargs)
       
         context['user_list'] = User.objects.filter(event__isnull=True, role=User.EVENTUSER,
-                                                   is_superuser=False).order_by('id')     
+                                                   is_superuser=False).order_by('id')
+        context['form'] = EventModelForm()
         return context
     
     def post(self,request,*args,**kwargs):        
         form = EventModelForm(request.POST, request.FILES)        
         if not form.is_valid():
             #raise Http404()          
-            print form.errors
             return HttpResponseBadRequest(form.errors)
                 
         # Save the form        
@@ -382,7 +382,8 @@ class EventEditView( LoginRequiredMixin, SuperuserRequiredMixin, DetailView ):
         context['eventuser_list'] = eventuser_list
         context['user_list'] = User.objects.filter(event__isnull=True, role=User.EVENTUSER,
                                                    is_superuser=False).order_by('id')                
-        context['selno'] = str(eventuser_list.values_list('id', flat=True))[1:-1]      
+        context['selno'] = str(eventuser_list.values_list('id', flat=True))[1:-1]
+        context['form'] = EventModelForm() 
         return context
     
     def post(self,request,*args,**kwargs):
@@ -496,6 +497,7 @@ class EventAnalysisView( LoginRequiredMixin, TemplateView ):
             context['sampling']    = '0'
             context['target']      = '0'
             context['percentage']  = '0%'
+        print self.request.user, event.getSupervisors()
         context['user_view_feedback'] = self.request.user in event.getSupervisors()
         context['eventid_selected'] = event.id
 
