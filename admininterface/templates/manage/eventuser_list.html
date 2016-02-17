@@ -286,7 +286,7 @@ $('document').ready(function(){
 										<th class="textright">Actions</th>
 									</tr>
 									{% for user in event_user_list %}
-									<tr id="user_id_{{ user.id }}" data-username="{{ user.username }}" data-first_name="{{ user.first_name }}" data-last_name="{{ user.last_name }}" data-phone="{{ user.phone }}" data-email="{{ user.email }}" data-gender="{{ user.gender }}" data-picture="user.picture.url">
+									<tr id="user_id_{{ user.id }}" data-username="{{ user.username }}" data-first_name="{{ user.first_name }}" data-last_name="{{ user.last_name }}" data-phone="{{ user.phone }}" data-email="{{ user.email }}" data-gender="{{ user.gender }}" data-picture="user.picture.url" data-supervisorid="{{ user.eventuser.id }}">
 										<td>
 											{{ user.id }}
 										</td>
@@ -355,7 +355,7 @@ $('document').ready(function(){
 							{% elif request.GET.r == "1" %}
 							<div style="margin-left: 15px">
 								There are errors in the form:
-								{{ request.GET.error }}
+								{{ request. }}
 							</div>
 							{% elif request.GET.r == "2" %}
 							<div style="margin-left: 15px">Password mismatch. Try again</div>
@@ -423,6 +423,7 @@ $('document').ready(function(){
 		$modal.find("input[name='phone']").val($row.data('phone'));
 		$modal.find("input[name='email']").val($row.data('email'));
 		$modal.find("#gendera").val($row.data('gender'));
+		$modal.find("#eventuser").val($row.data('supervisorid'));
 		
 		var url = "{% url 'user_edit' 0 %}"
 		url = url.replace('0', $.trim($id.text()));
@@ -431,6 +432,7 @@ $('document').ready(function(){
 		// Show the modal
 		$modal.modal('show')
 	}
+
 	
 	function on_edit_done()
 	{

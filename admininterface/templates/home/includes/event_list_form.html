@@ -15,7 +15,7 @@
 {% ifequal export_to_csv True %}
 <button class="btn btn-sm btn-primary pull-right" style="margin-top: 2px; " onclick="on_export()">Export to CSV</button>
 {% endifequal %}
-{% if request.user.is_superuser and eventid_selected != None %}
+{% if user_view_feedback and eventid_selected != None  %}
 <a href="{% url 'viewFeedbackForm' eventid_selected %}">
 	<button class="btn btn-sm btn-primary pull-right" style="margin-top: 2px; margin-right: 10px;">Feedback</button>
 </a>

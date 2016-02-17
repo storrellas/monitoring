@@ -148,15 +148,19 @@ class QuestionsUser(models.Model):
         If no answer, the line returned is of the format `,Question,No answer`
         """
         out = ""
-        for question in QuestionsUser.objects.filter(enabled=True):
-            for user in event.user.all():
-                if user.eventuser == author:
-                    answer = self.get_answer(event, user, author)
-                    answer = answer if answer is not None else "No answer"
-                    out = u"{}{},{},{},{}\r\n".format(out, event.title,
-                                                      author.get_full_name(),
-                                                      question.full_sentence(user),
-                                                      answer)
+        #for question in QuestionsUser.objects.filter(enabled=True):
+        for user in event.user.all().filter(eventuser=author):
+            answer = self.get_answer(event, user, author)
+            answer = answer if answer is not None else "No answer"
+            out = u"{}{},{},{},{}\r\n".format(out, event.title,
+                                              author.get_full_name(),
+                                              self.full_sentence(user),
+                                              answer)
+                # answer = answer if answer is not None else "No answer"
+                # out = u"{}{},{},{},{}\r\n".format(out, event.title,
+                #                                   author.get_full_name(),
+                #                                   question.full_sentence(user),
+                #                                   answer)
         return out
 
     def __unicode__(self):
@@ -243,11 +247,9 @@ class FeedbackManager(models.Manager):
 
         """
         out = "Event,Supervisor,Question,Answer\r\n"
-        # Generating content for AnswersUsers
         for event in events:
             # Getting supervisors assigned to the event. It means, retrieving
             # supervisors of users assigned to the event.
-            #authors = [User.objects.get(id=el.eventuser.id) for el in event.user.all()]
             authors = event.getSupervisors()
             questions = event.getQuestions()
             if len(questions) == 0:
@@ -255,7 +257,9 @@ class FeedbackManager(models.Manager):
             else:
                 for question in questions:
                     for user in authors:
-                        out = u"{}{}".format(out, question.getCSVLine(event, user))
+                        print event, question, user
+                        out = u"{}{}".format(out, question.getCSVLine(event,
+                                                                      user))
         return out
 
 
@@ -299,9 +303,10 @@ def userHasAssigned(self, event):
 
 
 def getEventSupervisors(self):
+    # TODO: Inefficient. Cost is O(N*NLogN) when it should be N
     supervisors = []
     for user in self.user.all():
-        if user.eventuser is not None:
+        if user.eventuser is not None and user.eventuser not in supervisors:
             supervisors.append(user.eventuser)
     return supervisors
 

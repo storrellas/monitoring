@@ -96,7 +96,7 @@ class CompanyView( LoginRequiredMixin, SuperuserRequiredMixin, ListView ):
         return context
 
 class EventUserView( CompanyView ):    
-    template_name='manage/eventuser_list.html'
+    template_name = 'manage/eventuser_list.html'
     queryset = User.objects.filter(role=User.EVENTUSER)
     context_object_name = 'event_user_list'
 
@@ -127,7 +127,7 @@ class EventUserView( CompanyView ):
             context['search_data'] = ''
         context['list_supervisors'] = User.objects.filter(role=User.SUPERVISOR)
 
-        return context    
+        return context
 
 class EventSupervisorView(CompanyView):
     template_name='manage/supervisor_list.html'
@@ -447,6 +447,7 @@ class EventResultView( LoginRequiredMixin, ListView ):
             context['target']      = '0'
             context['percentage']  = '0%'
         context['eventid_selected'] = self.event.id
+        context['user_view_feedback'] = self.request.user in self.event.getSupervisors()
 
         return context
 
@@ -487,6 +488,7 @@ class EventAnalysisView( LoginRequiredMixin, TemplateView ):
             context['sampling']    = '0'
             context['target']      = '0'
             context['percentage']  = '0%'
+        context['user_view_feedback'] = self.request.user in event.getSupervisors()
         context['eventid_selected'] = event.id
 
 
