@@ -275,6 +275,27 @@ form#viewResult{
 		padding: 0em 2em 0em 2em;
 	}
 }
+.messagesDIV{
+	height: 50px;
+	line-height: 50px;
+	color: #ffffff;
+}
+.messagesDIV.ok{
+	background-color: #179817;
+}
+.messagesDIV.ko{
+	background-color: #C73600;
+}
+.messagesDIV div, .messagesDIV i{
+	display: inline-block;
+}
+.messagesDIV i{
+	float: right;
+	font-size: 20px;
+	margin-top: 15px;
+	margin-right: 20px;
+	cursor: pointer;
+}
 
 .nodatesDIV{
 	margin-top: 100px;

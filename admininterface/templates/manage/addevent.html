@@ -3,6 +3,13 @@
 {% load staticfiles %}
 {% load tags %}
 
+{% block extra %}
+
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
+<script src="{% static 'inspinia_admin/js/jquery-ui-1.10.4.min.js' %}"></script>
+
+{% endblock %}
+
 {% block contents %}
 
 
@@ -36,6 +43,9 @@ $('document').ready(function(){
 	{
 		calculate_selno();
 	});
+	//Starting datepicker
+	$("#start_date").datepicker({dateFormat: "dd/mm/yy"});
+	$("#end_date").datepicker({dateFormat: "dd/mm/yy"});
 });
 </script>
 
@@ -62,7 +72,24 @@ $('document').ready(function(){
 										<input type="text" placeholder="" class="form-control required" name="title" id="title">
 									</div>
 							</div>
-
+							<div class="form-group">
+								<label class="col-sm-2 control-label" style="text-align: right;">
+									<b class="required">*</b><b>Start date:</b>
+								</label>
+								<div class="col-sm-9">
+									<input type="text" placeholder="" class="form-control" name="start_date" id="start_date"
+									value="{% if event.start_date %}{{ event.start_date|date:"d/m/Y" }}{% endif %}" style="width: 200px">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label" style="text-align: right;">
+									<b class="required">*</b><b>End date:</b>
+								</label>
+								<div class="col-sm-9">
+									<input type="text" placeholder="" class="form-control" name="end_date" id="end_date"
+									value="{% if event.end_date %}{{ event.end_date|date:"d/m/Y" }}{% endif %}" style="width: 200px">
+								</div>
+							</div>
  							<div class="form-group">
 								<label class="col-sm-2 control-label" style="text-align: right;">
 									<b class="required">*</b>PDF:</label>

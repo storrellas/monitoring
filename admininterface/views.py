@@ -8,6 +8,7 @@ from django.views.generic import View
 from django.http import Http404, HttpResponseBadRequest, HttpResponseNotFound,HttpResponse,JsonResponse
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
+from django.forms.utils import ErrorList
 
 from django.utils.decorators import method_decorator
 from django.db.models import Sum, Q
@@ -28,6 +29,8 @@ from feedback.models import FeedbackList
 # Configure logger
 import logging
 log = logging.getLogger(__name__)
+
+
 
 
 class LoginView(View):
@@ -61,7 +64,6 @@ class LoginView(View):
                 
         return HttpResponseBadRequest()
 
-
 class LogoutView(RedirectView):
     """
     Provides users the ability to logout
@@ -83,9 +85,6 @@ class BaseView( LoginRequiredMixin, TemplateView ):
         log.info( "Calling BaseView :" + str(request.user.username) + ":" )    
         return super(BaseView, self).render_to_response(context)
     
-
-
-
 class CompanyView( LoginRequiredMixin, SuperuserRequiredMixin, ListView ):
     template_name='manage/company_list.html'  
     model = User
@@ -98,13 +97,12 @@ class CompanyView( LoginRequiredMixin, SuperuserRequiredMixin, ListView ):
         context = super(CompanyView, self).get_context_data(**kwargs)        
         context['event_list'] = Event.objects.all()        
         return context
-   
 
 class EventUserView( CompanyView ):    
-    template_name='manage/eventuser_list.html'  
+    template_name = 'manage/eventuser_list.html'
     queryset = User.objects.filter(role=User.EVENTUSER)
     context_object_name = 'event_user_list'
-    
+
     def get_queryset(self):
 
         try:
@@ -119,21 +117,20 @@ class EventUserView( CompanyView ):
             return queryset.order_by('username')
         else:
             return queryset.order_by('username')       
-    
+
     def get_context_data(self, **kwargs):
-        context = super(EventUserView, self).get_context_data(**kwargs)                        
+        context = super(EventUserView, self).get_context_data(**kwargs)
         try:
             context['sortMode'] = self.request.GET['order_field']
-        except: 
+        except:
             context['sortMode'] = 'ASC'
         try:
             context['search_data'] = self.request.GET['search_data']
-        except: 
+        except:
             context['search_data'] = ''
         context['list_supervisors'] = User.objects.filter(role=User.SUPERVISOR)
-        
-        return context    
-
+        context['form'] = EventUserModelForm()
+        return context
 
 class EventSupervisorView(CompanyView):
     template_name='manage/supervisor_list.html'
@@ -164,6 +161,7 @@ class EventSupervisorView(CompanyView):
             context['search_data'] = self.request.GET['search_data']
         except:
             context['search_data'] = ''
+        context['form'] = EventUserModelForm()
         return context
 
 class EventUserAddView( LoginRequiredMixin, SuperuserRequiredMixin, CreateView ):
@@ -206,7 +204,7 @@ class EventUserAddView( LoginRequiredMixin, SuperuserRequiredMixin, CreateView )
         else:
             log.debug("Form is invalid")
             log.debug(form.errors)
-            r = "1"
+            r = "1&m={}".format(form.errors.as_text())
 
         return redirect("{}?r={}".format(reverse('user_list'), r))
 
@@ -246,7 +244,7 @@ class EventSupervisorAddView( LoginRequiredMixin, SuperuserRequiredMixin, Templa
         else:
             log.debug("Form is invalid")
             log.debug(form.errors)
-            r = "1"
+            r = "1&m={}".format(form.errors.as_text())
 
         return redirect("{}?r={}".format(reverse('super_url'), r))
 
@@ -287,10 +285,9 @@ class EventUserEditView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateVie
         else:
             log.debug("Form is invalid")
             log.debug(form.errors)
-            r = "1"
+            r = "1&m={}".format(form.errors.as_text())
 
         return redirect("{}?r={}".format(reverse('user_list'), r))
-
 
 class EventSupervisorEditView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateView ):
     template_name = "manage/supervisor_list.html"
@@ -301,7 +298,8 @@ class EventSupervisorEditView( LoginRequiredMixin, SuperuserRequiredMixin, Templ
         """
         context_data = dict()
         user = User.objects.get(id=pk)
-        form = EventUserModelForm(request.POST, instance=user)
+        form = EventUserModelForm(request.POST, instance=user,
+                                  error_class=DivErrorList)
         if form.is_valid():
             log.debug("Form is valid")
             form.save()
@@ -327,8 +325,7 @@ class EventSupervisorEditView( LoginRequiredMixin, SuperuserRequiredMixin, Templ
         else:
             log.debug("Form is invalid")
             log.debug(form.errors)
-            r = "1"
-
+            r = "1&m={}".format(form.errors.as_text())
         return redirect("{}?r={}".format(reverse('super_url'), r))
 
 class EventView( LoginRequiredMixin, SuperuserRequiredMixin, ListView ):
@@ -454,8 +451,11 @@ class EventResultView( LoginRequiredMixin, ListView ):
             context['sampling']    = '0'
             context['target']      = '0'
             context['percentage']  = '0%'
+
         if self.event is not None:
             context['eventid_selected'] = self.event.id
+        context['user_view_feedback'] = self.request.user in self.event.getSupervisors()
+
 
         return context
 
@@ -496,6 +496,7 @@ class EventAnalysisView( LoginRequiredMixin, TemplateView ):
             context['sampling']    = '0'
             context['target']      = '0'
             context['percentage']  = '0%'
+        context['user_view_feedback'] = self.request.user in event.getSupervisors()
         context['eventid_selected'] = event.id
 
 
@@ -511,9 +512,14 @@ class EventAnalysisView( LoginRequiredMixin, TemplateView ):
         
         # Add data for feedback graph
         feedback = {}
-        feedback['Good']    = (good_quantity*100)/total_quantity
-        feedback['Neutral'] = (neutral_quantity*100)/total_quantity
-        feedback['Bad']     = (bad_quantity*100)/total_quantity        
+        try: #bug
+            feedback['Good']    = (good_quantity*100)/total_quantity
+            feedback['Neutral'] = (neutral_quantity*100)/total_quantity
+            feedback['Bad']     = (bad_quantity*100)/total_quantity        
+        except:
+            feedback['Good']    = 99
+            feedback['Neutral'] = 999
+            feedback['Bad']     = 999
         context['feedback'] = feedback
 
         # Generate graph data
@@ -543,7 +549,6 @@ class ExportToCSV(LoginRequiredMixin, View):
         response['Content-Length']      = file_to_send.size    
         response['Content-Disposition'] = 'attachment; filename="%s.csv"' % filename
         return response
-
 
 class EventResultCSVView(ExportToCSV):
 
@@ -605,7 +610,6 @@ class EventPicturesView( LoginRequiredMixin, ListView ):
             context['eventid_selected'] = self.event.id
 
         return context
-    
 
 class ChangePwdView(LoginRequiredMixin, TemplateView):
     template_name='settings/changepwd.html'
