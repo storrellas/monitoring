@@ -110,6 +110,11 @@ class EventCheckAppSerializer(serializers.ModelSerializer):
         # Return total samplings for the given user and event
         try:
             user = self.context['request'].user    
+            print "Debugging here"
+            print obj.event
+            print user
+            print datetime.now()
+            
             list = EventCheck.objects.filter(event=obj.event, user=user)
             print list
             total_dict=EventCheck.objects.filter(event=obj.event, user=user,trackdate=datetime.now()) \
