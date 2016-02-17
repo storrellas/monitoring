@@ -16,7 +16,6 @@ from django.core.files.base import ContentFile
 
 # Thrid-party libs
 from braces.views import LoginRequiredMixin, SuperuserRequiredMixin
-#from admininterface.utils import save_file
 from rest_framework.authtoken.models import Token
 
 # Project imports
