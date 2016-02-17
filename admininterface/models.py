@@ -76,7 +76,7 @@ class User(AbstractBaseUser,PermissionsMixin):
     picture    = models.ImageField(upload_to='event/user/',blank=True,null=True)
 
     # Supervisor
-    eventuser = models.ForeignKey("self",blank=True,null=True)
+    eventuser = models.ForeignKey("self",blank=True,null=True, on_delete=models.SET_NULL)
 
     objects = UserManager()
 
