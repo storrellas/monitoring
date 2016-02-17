@@ -1,0 +1,15 @@
+{% comment %}
+	Used On Supervisor and EventUser forms
+{% endcomment %}
+{% if request.GET.r != None %}
+	<div id="messages" class="messagesDIV {% if request.GET.r == "0"%}ok{%else%}ko{% endif %}">
+	{% if request.GET.r == "0" %}
+	<div style="margin-left: 15px">Information saved successfully</div>
+	{% elif request.GET.r == "1" %}
+	<div style="margin-left: 15px">There are errors in the form: {{ request.GET.m }}</div>
+	{% elif request.GET.r == "2" %}
+	<div style="margin-left: 15px">Password mismatch. Try again</div>
+	{% endif %}
+	<i class="fa fa-times" onclick="console.log('delete');$('#messages').remove();"></i>
+</div>
+{% endif %}
