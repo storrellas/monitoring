@@ -196,6 +196,34 @@
   }
 },
 {
+  "model": "admininterface.user",
+  "pk": 8,
+  "fields": {
+    "password": "pbkdf2_sha256$24000$gXIc9k25troW$/DLD/f8au3TmIWHOBBpQQH1sbAxZhZgGqI2BuLME+AI=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "supervisor",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2016-02-17T07:50:32.207Z",
+    "phone": "",
+    "email": "",
+    "role": "SUPEVISOR",
+    "name": "",
+    "cif": "",
+    "address": "",
+    "contactname": "",
+    "gender": "UNKNOWN",
+    "score": "",
+    "picture": "",
+    "eventuser": null,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
   "model": "admininterface.event",
   "pk": 1,
   "fields": {
@@ -338,7 +366,7 @@
     "type": 2,
     "note": "",
     "brief_opened": false,
-    "trackdate": "2016-02-02",
+    "trackdate": "2016-02-16",
     "tracktime": "12:18:59.883",
     "checkintime": "2016-01-22T14:04:43.517Z",
     "checkouttime": "2016-01-22T14:04:43.517Z",
@@ -361,6 +389,26 @@
     "trackdate": "2016-02-15",
     "tracktime": "12:52:12.076",
     "checkintime": "2016-02-15T12:46:58.581Z",
+    "checkouttime": null,
+    "completeflag": false,
+    "product": null,
+    "location": 1
+  }
+},
+{
+  "model": "admininterface.eventcheck",
+  "pk": 6,
+  "fields": {
+    "user": 2,
+    "event": 1,
+    "quantity": 0,
+    "target": 0,
+    "type": 0,
+    "note": "",
+    "brief_opened": false,
+    "trackdate": "2016-02-17",
+    "tracktime": "07:45:04.590",
+    "checkintime": "2016-02-17T07:45:00.167Z",
     "checkouttime": null,
     "completeflag": false,
     "product": null,
