@@ -61,7 +61,6 @@ class LoginView(View):
                 
         return HttpResponseBadRequest()
 
-
 class LogoutView(RedirectView):
     """
     Provides users the ability to logout
@@ -83,9 +82,6 @@ class BaseView( LoginRequiredMixin, TemplateView ):
         log.info( "Calling BaseView :" + str(request.user.username) + ":" )    
         return super(BaseView, self).render_to_response(context)
     
-
-
-
 class CompanyView( LoginRequiredMixin, SuperuserRequiredMixin, ListView ):
     template_name='manage/company_list.html'  
     model = User
@@ -98,13 +94,12 @@ class CompanyView( LoginRequiredMixin, SuperuserRequiredMixin, ListView ):
         context = super(CompanyView, self).get_context_data(**kwargs)        
         context['event_list'] = Event.objects.all()        
         return context
-   
 
 class EventUserView( CompanyView ):    
-    template_name='manage/eventuser_list.html'  
+    template_name='manage/eventuser_list.html'
     queryset = User.objects.filter(role=User.EVENTUSER)
     context_object_name = 'event_user_list'
-    
+
     def get_queryset(self):
 
         try:
@@ -119,21 +114,20 @@ class EventUserView( CompanyView ):
             return queryset.order_by('username')
         else:
             return queryset.order_by('username')       
-    
+
     def get_context_data(self, **kwargs):
-        context = super(EventUserView, self).get_context_data(**kwargs)                        
+        context = super(EventUserView, self).get_context_data(**kwargs)
         try:
             context['sortMode'] = self.request.GET['order_field']
-        except: 
+        except:
             context['sortMode'] = 'ASC'
         try:
             context['search_data'] = self.request.GET['search_data']
-        except: 
+        except:
             context['search_data'] = ''
         context['list_supervisors'] = User.objects.filter(role=User.SUPERVISOR)
-        
-        return context    
 
+        return context    
 
 class EventSupervisorView(CompanyView):
     template_name='manage/supervisor_list.html'
@@ -290,7 +284,6 @@ class EventUserEditView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateVie
             r = "1"
 
         return redirect("{}?r={}".format(reverse('user_list'), r))
-
 
 class EventSupervisorEditView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateView ):
     template_name = "manage/supervisor_list.html"
@@ -508,9 +501,14 @@ class EventAnalysisView( LoginRequiredMixin, TemplateView ):
         
         # Add data for feedback graph
         feedback = {}
-        feedback['Good']    = (good_quantity*100)/total_quantity
-        feedback['Neutral'] = (neutral_quantity*100)/total_quantity
-        feedback['Bad']     = (bad_quantity*100)/total_quantity        
+        try: #bug
+            feedback['Good']    = (good_quantity*100)/total_quantity
+            feedback['Neutral'] = (neutral_quantity*100)/total_quantity
+            feedback['Bad']     = (bad_quantity*100)/total_quantity        
+        except:
+            feedback['Good']    = 99
+            feedback['Neutral'] = 999
+            feedback['Bad']     = 999
         context['feedback'] = feedback
 
         # Generate graph data
@@ -540,7 +538,6 @@ class ExportToCSV(LoginRequiredMixin, View):
         response['Content-Length']      = file_to_send.size    
         response['Content-Disposition'] = 'attachment; filename="%s.csv"' % filename
         return response
-
 
 class EventResultCSVView(ExportToCSV):
 
@@ -601,7 +598,6 @@ class EventPicturesView( LoginRequiredMixin, ListView ):
         context['eventid_selected'] = event.id
 
         return context
-    
 
 class ChangePwdView(LoginRequiredMixin, TemplateView):
     template_name='settings/changepwd.html'
