@@ -97,6 +97,9 @@ class QuestionsDay(models.Model):
     def __unicode__(self):
         return unicode(self.text)
 
+    @property
+    def type(self):
+        return "Day"
 
 class AnswersDay(models.Model):
     """ Answers for a specific day on a campaign
@@ -166,6 +169,9 @@ class QuestionsUser(models.Model):
     def __unicode__(self):
         return self.text
 
+    @property
+    def type(self):
+        return "User"
 
 class AnswersUser(models.Model):
     """ Answers for a user
@@ -221,6 +227,9 @@ class QuestionsEvent(models.Model):
     def __unicode__(self):
         return self.text
 
+    @property
+    def type(self):
+        return "Event"
 
 class AnswersEvent(models.Model):
     """ Answers on a campaign
@@ -315,3 +324,11 @@ Event.getQuestions = eventGetQuestions
 Event.getDays = getDaysCampaign
 Event.getSupervisors = getEventSupervisors
 User.has_assigned = userHasAssigned
+
+def getAllQuestions():
+    """ Returns all enabled questions
+    """
+    q1 = QuestionsEvent.objects.filter(enabled=True)
+    q2 = QuestionsDay.objects.filter(enabled=True)
+    q3 = QuestionsUser.objects.filter(enabled=True)
+    return list(chain(q1, q2, q3))
