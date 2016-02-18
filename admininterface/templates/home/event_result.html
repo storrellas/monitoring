@@ -3,7 +3,7 @@
 {% load static %}
 {% load staticfiles %}
 {% load tags %}
-
+{% load tz %}
 {% block contents %}
 
 	
@@ -42,6 +42,7 @@
 										<th>Address</th>
 									</tr>											
 										{% for eventcheck in eventcheck_list %}
+										{% timezone "Europe/Paris" %}
                                        <tr>
                                            <td>{{ eventcheck.id }}</td>
                                            <td>{{ eventcheck.trackdate |date:"d/m/Y" }}</td>
@@ -71,6 +72,7 @@
 <!--	                                                <a class="btn btn-sm btn-white btn-action" onclick="on_delete('<?php echo $item['eventid']?>');" data-toggle="tooltip" data-placement="bottom" title="Delete"><img src="<?php echo base_url();?>inspinia_admin/img/icon/delete.png"></a>-->
 <!--	                                            </td>-->
                                        </tr>
+                                       {% endtimezone %}
                                        {% empty %}
                                        <tr><td colspan="10">No Data</td></tr>
 									   {% endfor %}											

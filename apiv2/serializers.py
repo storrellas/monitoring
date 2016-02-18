@@ -120,6 +120,7 @@ class EventCheckAppSerializer(serializers.ModelSerializer):
         except:
             return 0
     
+    note = serializers.CharField(allow_blank=True, required=False)
     class Meta:
         model = EventCheck
         fields = ('id', 'user', 'event', 'quantity', 'target', 'type', 'note', 'lastsubmit',\

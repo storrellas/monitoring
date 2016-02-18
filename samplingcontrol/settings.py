@@ -25,9 +25,9 @@ SECRET_KEY = "v5)389x0%so^it+fi0-!y#r1ty-zl(c=x&u-bc9s5jv(fvh8d)"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+USE_TZ = True
 
 # Application definition
-
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
