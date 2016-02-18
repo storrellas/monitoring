@@ -200,6 +200,7 @@ class EventUserAddView( LoginRequiredMixin, SuperuserRequiredMixin, CreateView )
             else:
                 r = "0"
             user.save()
+            Token.objects.create(user=user)
         else:
             log.debug("Form is invalid")
             log.debug(form.errors)

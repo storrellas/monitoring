@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
 from django.core.exceptions import ValidationError
+from rest_framework.authtoken.models import Token
 
 class UserManager(BaseUserManager):
 
@@ -23,6 +24,7 @@ class UserManager(BaseUserManager):
                           date_joined=now, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
+        Token.objects.create(user=user)
         return user
 
     def create_user(self, username, password=None, **extra_fields):
