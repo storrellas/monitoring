@@ -116,6 +116,8 @@ class EventCheckInAppViewset(generics.CreateAPIView):
         obj.checkintime = timezone.now()
         print "Checkin time"
         print obj.checkintime
+        obj.save()
+        
         
         return obj
 
