@@ -45,8 +45,18 @@ $('document').ready(function(){
 		calculate_selno();
 	});
 	//Starting datepicker
-	$("#start_date").datepicker({dateFormat: "dd/mm/yy"});
-	$("#end_date").datepicker({dateFormat: "dd/mm/yy"});
+	$("#start_date").datepicker({
+		dateFormat: "dd/mm/yy",
+		onSelect: function(selected) {
+        	$("#end_date").datepicker("option","minDate", selected)
+      	}	
+	});
+	$("#end_date").datepicker({
+		dateFormat: "dd/mm/yy",
+		onSelect: function(selected) {
+        	$("#start_date").datepicker("option","maxDate", selected)
+      	}	
+	});
 });
 </script>
 
