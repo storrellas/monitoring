@@ -11,7 +11,7 @@ from rest_framework.authtoken.models import Token
 from datetime import datetime
 
 
-user= User.objects.get(id=2)
-event=Event.objects.first()
+user= User.objects.get(id=7)
+event=Event.objects.get(id=2)
 #eventcheck = EventCheck.objects.first()
 

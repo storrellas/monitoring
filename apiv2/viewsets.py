@@ -93,6 +93,7 @@ class EventCheckAppViewset(generics.ListAPIView):
     serializer_class = EventCheckAppSerializer
     permission_classes = [IsAuthenticated]
 
+from django.utils import timezone
 class EventCheckInAppViewset(generics.CreateAPIView):
     model = EventCheck
     queryset = EventCheck.objects.all()
@@ -111,7 +112,12 @@ class EventCheckInAppViewset(generics.CreateAPIView):
                 raise APIException("You already made checkin")
         
         # Continue with flow
-        return super(EventCheckInAppViewset,self).create(request, *args, **kwargs)
+        obj = super(EventCheckInAppViewset,self).create(request, *args, **kwargs)
+        obj.checkintime = timezone.now()
+        print "Checkin time"
+        print obj.checkintime
+        
+        return obj
 
     
     

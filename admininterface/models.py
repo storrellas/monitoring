@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+from datetime import datetime
+
 from django.db import models
 from django.utils import timezone
 
@@ -179,7 +181,7 @@ class EventCheck(models.Model):
    
     def __unicode__(self):
         if self.trackdate is not None and self.tracktime is not None:
-            return self.user.username + "," + self.event.title + "," + self.trackdate.strftime("%d/%m/%y") + "," + self.tracktime.strftime("%d/%m/%y")
+            return self.user.username + "," + self.event.title + "," + self.trackdate.strftime("%d/%m/%y") + "," + self.tracktime.strftime("%H:%M:%S")
         else: 
             return self.user.username + "," + self.event.title
 
