@@ -57,12 +57,14 @@
 		// Procedure to perform the selection of the event
 		var $modal = $( "#modal-form-new" )		
 		$modal.find("#companyid").change(function() {
+			var $modal = $( "#modal-form-new" )	
 			loading_event_list_manage($modal, $(this).val() )			
 		});
 		
 		// Procedure to perform the selection of the event
 		var $modal = $( "#modal-form-edit" )		
 		$modal.find("#companyid").change(function() {
+			var $modal = $( "#modal-form-edit" )
 			loading_event_list_manage($modal, $(this).val() )			
 		});
 		
