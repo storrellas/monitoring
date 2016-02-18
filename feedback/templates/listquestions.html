@@ -3,6 +3,10 @@
 {% load tags %}
 {% load widget_tweaks %}
 
+{% block extra %}
+<script src="{% static 'inspinia_admin/js/jquery.cookie.js' %}"></script>
+{% endblock %}
+
 {% block contents %}
 
 
@@ -42,10 +46,10 @@
 												{% csrf_token %}
 												<div class="form-group">
 													<label><b class="required">*</b>Text:</label>
-													{% render_field form.id type="text" placeholder="" class=""%}
+													{% render_field form.id type="text" placeholder="" class="hidden"%}
 														{% render_field form.text type="text" placeholder="" class="form-control required"%}
 												</div>
-												<div class="form-group">
+												<div class="form-group" id="QuestionType">
 													<label><b class="required" id="reqasqp1">*</b>Type:</label>
 														{% render_field form.type type="select" placeholder="" class="form-control required"%}
 												</div>
@@ -124,7 +128,7 @@
 											<img src="{% static 'inspinia_admin/img/icon/change-account.png' %}">
 										</a> 
 										<a class="btn btn-sm btn-white btn-action"
-											onclick="on_delete('{{ question.id }}');"
+											onclick="on_delete('{{ question.id }}', '{{ question.type }}');"
 											data-toggle="tooltip" data-placement="bottom" title="Delete"
 											{% if not request.user.is_superuser %}
 											disabled
@@ -160,6 +164,21 @@
 
 <script type="text/javascript">
 
+// using jQuery
+
+	var csrftoken = $.cookie('csrftoken');
+	function csrfSafeMethod(method) {
+	    // these HTTP methods do not require CSRF protection
+	    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	}
+	$.ajaxSetup({
+	    beforeSend: function(xhr, settings) {
+	        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+	            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+	        }
+	    }
+	});
+
 	function show_form(source, question_id, type)
 	{
 
@@ -180,9 +199,13 @@
 			var c = $row.data('type');
 			var d = question_id;
 
+			$form.find("#QuestionType").hide();
+			$form.find("#QuestionType_msg").show();
 		}
 		else{ // New item
 			var a = b = c = d = "";
+			$form.find("#QuestionType").show();
+			$form.find("#QuestionType_msg").hide();
 		}
 		$modal.find("input[name='text']").val(b)
 		$modal.find("input[name='type']").val(c);
@@ -216,43 +239,19 @@
 		$form[0].reset();
 	    $('#modal-form').modal('hide');
 	}
-	// function on_edit_done()
-	// {
-	// 	var $modal = $('#modal-form-edit');
-	// 	var $form = $modal.find("form:first")
-	//     $form.validate({
-	//         errorPlacement: function (error, element) {
-	//             element.before(error);
-	//         },
-	//         rules: {
-	//             eusername: {
-	//             	required: true
-	//             },
-	//         },
-	
-	//         submitHandler: function() {
-	//         	$form.submit()
-	//         }
-	//     });
-	// }
-	
-	// function on_cancel_edit()
-	// {
-	//     $('#modal-form-edit').modal('hide');
-	// }
-    function on_delete($userid)
+
+    function on_delete(question_id, type_name)
     {
     	if(confirm("Do you want to delete?"))
         {
-    		var url_delete = "{% url 'ajax-event-user' %}" + $userid 
+    		var url_delete = "{% url 'delete_question' %}"
         	$.ajax({
                 async: true,
 				url: url_delete,
-                dataType: "json",
-                type: "DELETE",
+                type: "POST",
                 data: {
-                    mode: "DELETE_USER",
-                    userid: $userid,
+                    question_id: question_id,
+                    type: type_name,
                 },
                 success: function(json) {
                     location.reload()

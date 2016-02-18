@@ -70,6 +70,9 @@
 	        </li>
 	     {% endif %}
         <li class="{% if request.path == changepwd_url %}active{% endif %}"><a href="{% url 'changepwd' %}">Change password</a></li>
+        {% if request.user.is_superuser %}
+        <li class="{% if request.path == list_questions %}active{% endif %}"><a href="{% url 'list_questions' %}">Manage feedback</a></li>
+        {%  endif %}
       </ul>
       <ul class="nav navbar-nav logout" >
       	<li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i>Logout</a></li>

@@ -214,41 +214,32 @@ class QuestionDayForm(forms.Form):
     def save(self, *args, **kwargs):
         """ Saving the form
         """
-        print self.cleaned_data
+        print self.cleaned_data, "<---cleaned data-"
         id = self.cleaned_data['id']
         text=self.cleaned_data["text"]
-        type=self.cleaned_data["type"]
-        print type, "<--"
+        typef=self.cleaned_data["type"]
         if id is None:
             logger.debug("Saving new question")
-            if type == "day":
+            if typef == "day":
                 q = models.QuestionsDay()
-            elif type == "user":
+            elif typef == "user":
                 q = models.QuestionsUser()
-            elif type == "event":
+            elif typef == "event":
                 q = models.QuestionsEvent()
             q.text = text
             q.enabled = True
             q.save()
         else:
             logger.debug("Editing question")
-            if type == "day":
+            if typef == "day":
                 q = models.QuestionsDay.objects.get(id=id)
                 p = models.QuestionsDay
-            elif type == "user":
+            elif typef == "user":
                 q = models.QuestionsUser.objects.get(id=id)
                 p = models.QuestionsUser
-            elif type == "event":
+            elif typef == "event":
                 q = models.QuestionsEvent.objects.get(id=id)
                 p = models.QuestionsEvent
             q.text = text
-            
-            if q.type.lower() != type:
-                logger.debug("We are changing a question from one type to another")
-                # We create a new question, and we set enabled=False for the old question
-                q.enabled = False  # Disable the old question
-                q.save()
-                q = p()  # Create new question
-                p.text = text
-                p.enabled = True
+
             q.save()

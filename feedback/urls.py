@@ -9,5 +9,6 @@ urlpatterns = [
         name='viewFeedbackForm'),
     url(r'^list/$', views.ListQuestions.as_view(),
         name='list_questions'),
-
+    url(r'^delete_question/$', views.DeleteQuestion.as_view(),
+        name='delete_question'),
 ]
