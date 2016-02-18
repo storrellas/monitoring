@@ -111,10 +111,24 @@ class EventCheckInAppViewset(generics.CreateAPIView):
             if eventcheck.completeflag == False:
                 raise APIException("You already made checkin")
         
+
+        serializer = EventCheckAppSerializer(data=request.data)
+        if serializer.is_valid():
+            obj = serializer.save()
+            print timezone.now()
+            obj.checkintime = timezone.now()
+            obj.save()
+        else:
+            log.info(serializer.errors)
+            raise APIException("Error in serilizer")
+            
+        return JsonResponse(serializer.data)
+        """
         # Continue with flow
         print "Checkin time"
         print timezone.now()
         return super(EventCheckInAppViewset,self).create(request, *args, **kwargs)
+        """
     
     
 class EventCheckOutAppViewset(generics.UpdateAPIView):
