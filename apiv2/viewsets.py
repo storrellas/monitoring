@@ -180,6 +180,7 @@ class EventCheckReportAppViewset(generics.UpdateAPIView):
         else:
             raise APIException(serializer.errors)
         
+        serializer = EventCheckAppSerializer(obj,context={'request':request}).data
         return JsonResponse(serializer.data)
         
         # NOTE: This is avoided to get multiple report available
