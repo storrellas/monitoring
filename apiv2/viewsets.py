@@ -7,6 +7,7 @@ from django.http import HttpResponseBadRequest, HttpResponse, JsonResponse
 from django.utils.six import BytesIO
 from django.db.models import Sum
 from django.contrib.auth import authenticate
+from django.utils import timezone
 
 # Rest framework imports
 from rest_framework.viewsets import ModelViewSet, ViewSet
@@ -93,7 +94,6 @@ class EventCheckAppViewset(generics.ListAPIView):
     serializer_class = EventCheckAppSerializer
     permission_classes = [IsAuthenticated]
 
-from django.utils import timezone
 class EventCheckInAppViewset(generics.CreateAPIView):
     model = EventCheck
     queryset = EventCheck.objects.all()
@@ -110,25 +110,25 @@ class EventCheckInAppViewset(generics.CreateAPIView):
         if eventcheck is not None:
             if eventcheck.completeflag == False:
                 raise APIException("You already made checkin")
-        
-
+        """
+        # Create object
         serializer = EventCheckAppSerializer(data=request.data)
         if serializer.is_valid():
-            obj = serializer.save()
-            print timezone.now()
-            obj.checkintime = timezone.now()
+            obj = serializer.save()        
+            obj.checkintime = timezone.now() # It does not work in Heroku 
             obj.save()
         else:
             log.info(serializer.errors)
-            raise APIException("Error in serilizer")
+            raise APIException("Error in serializer")
             
         return JsonResponse(serializer.data)
         """
+        # NOTE: ST This should be the normal flow but for some unknown reason
+        # the timezone.now() feature does not work properly in Heroku deploy
         # Continue with flow
-        print "Checkin time"
-        print timezone.now()
         return super(EventCheckInAppViewset,self).create(request, *args, **kwargs)
-        """
+        
+        
     
     
 class EventCheckOutAppViewset(generics.UpdateAPIView):

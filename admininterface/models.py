@@ -114,7 +114,7 @@ class Event(models.Model):
     title         = models.CharField(max_length=30, default='')
     description   = models.CharField(max_length=400, default= '')
     brief         = models.CharField(max_length=400, default='')
-    register_date = models.DateTimeField(default=timezone.now())
+    register_date = models.DateTimeField(default=timezone.now)
     start_date    = models.DateField(blank=False, null=True)
     end_date      = models.DateField(blank=False, null=True)
     eventuser_objective_day = models.IntegerField(default=0)    
@@ -172,7 +172,7 @@ class EventCheck(models.Model):
     trackdate    = models.DateField(auto_now=True)
     tracktime    = models.TimeField(auto_now=True)
 
-    checkintime  = models.DateTimeField(default=timezone.now())
+    checkintime  = models.DateTimeField(default=timezone.now)
     checkouttime = models.DateTimeField(null=True, blank=True)
     completeflag = models.BooleanField(default=False)
 
