@@ -139,8 +139,8 @@ $('document').ready(function(){
 							<div class="form-group">
 								<label class="col-sm-2 control-label" style="text-align: right;"> </label>
 								<div class="col-sm-9">
-									<div class="btn btn-sm btn-default pull-center m-t-n-xs" style="margin-right: 10px;" type="button" onclick="on_reset()"><strong>Reset</strong> </div>
-									<div class="btn btn-sm btn-success pull-center m-t-n-xs" onclick="on_create()"><strong> Add </strong></div>
+									<button class="btn btn-sm btn-default pull-center m-t-n-xs" style="margin-right: 10px;" type="button" onclick="on_reset()"><strong>Reset</strong> </button>
+									<button class="btn btn-sm btn-success pull-center m-t-n-xs" onclick="on_create()"><strong> Add </strong></button>
 								</div>
 							</div>
 							<div style="clear: both;"></div>
@@ -161,7 +161,23 @@ function on_create()
         errorPlacement: function (error, element) {
             element.before(error);
         },
-        
+        rules: {
+            title: {
+            	required: true
+            },
+			start_date: {
+            	required: true
+            },
+			end_date: {
+            	required: true
+            },
+			videourl: {
+            	required: true
+            },
+			description: {
+            	required: true
+            },
+        },
         submitHandler: function() {
 			$("#addNewEventForm").submit();
 			return;
