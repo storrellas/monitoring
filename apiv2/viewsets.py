@@ -110,21 +110,7 @@ class EventCheckInAppViewset(generics.CreateAPIView):
         if eventcheck is not None:
             if eventcheck.completeflag == False:
                 raise APIException("You already made checkin")
-        """
-        # Create object
-        serializer = EventCheckAppSerializer(data=request.data)
-        if serializer.is_valid():
-            obj = serializer.save()        
-            obj.checkintime = timezone.now() # It does not work in Heroku 
-            obj.save()
-        else:
-            log.info(serializer.errors)
-            raise APIException("Error in serializer")
-            
-        return JsonResponse(serializer.data)
-        """
-        # NOTE: ST This should be the normal flow but for some unknown reason
-        # the timezone.now() feature does not work properly in Heroku deploy
+
         # Continue with flow
         return super(EventCheckInAppViewset,self).create(request, *args, **kwargs)
         
@@ -168,7 +154,7 @@ class EventCheckReportAppViewset(generics.UpdateAPIView):
     permission_classes = [IsAuthenticated]
     
     def update(self,request, *args, **kwargs):        
-        
+                
         # Check if not checkin
         event=Event.objects.get(id=request.data['event'])
         user=User.objects.get(id=request.data['user'])
@@ -178,7 +164,26 @@ class EventCheckReportAppViewset(generics.UpdateAPIView):
             if eventcheck.completeflag == True:
                 raise APIException("You did not check in")
         
-        return super(EventCheckReportAppViewset,self).update(request, *args, **kwargs)
+        obj = self.get_object()
+        quantity = obj.quantity
+        target = obj.target
+        note = obj.note
+        
+        # Apply serializer
+        serializer = EventCheckAppSerializer(instance=obj, data=request.data) 
+        if serializer.is_valid():
+            obj = serializer.save()
+            obj.quantity += quantity
+            obj.target += target
+            obj.note   = note + ";" + obj.note
+            obj.save()
+        else:
+            raise APIException(serializer.errors)
+        
+        return JsonResponse(serializer.data)
+        
+        # NOTE: This is avoided to get multiple report available
+        #return super(EventCheckReportAppViewset,self).update(request, *args, **kwargs)
     
  
 class EventCheckPhotoAppViewset(ViewSet):
