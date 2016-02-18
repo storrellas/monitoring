@@ -137,7 +137,7 @@
 											<h3 class="m-t-none m-b">Edit Company</h3>
 											<p>Change company</p>
 											<form role="form" id="modalform_edit">
-												<input type="hidden" id="euserid" value="">
+												<input type="hidden" id="ecompanyid" value="">
 												<div class="form-group">
 													<label>Username*</label> <input type="text"
 														placeholder="Username" class="form-control required"
@@ -452,12 +452,16 @@
         
 
     }
-    //function on_edit(userid, username, eventid)
+
     function on_edit(item)
     {
     	var $tr = $(item).parent().parent()
     	var $modal = $("#modal-form-edit");
     	var $form = $modal.find("form:first")
+    	
+    	    	
+    	var value = $.trim($tr.find(".id").text())
+    	$form.find("#ecompanyid").val( value );
     	
     	var value = $.trim($tr.find(".username").text())
     	$form.find("input[name='username']").val( value );
@@ -523,7 +527,7 @@
             },
             /**/
             submitHandler: function() {
-            	var url_put = "{% url 'ajax-company' %}" +  $form.find('#euserid').val() + "/"   
+            	var url_put = "{% url 'ajax-company' %}" +  $form.find('#ecompanyid').val() + "/"   
                 $.ajax({
                     async: true,
                     url: url_put,
