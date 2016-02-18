@@ -6,5 +6,8 @@ from feedback import views
 urlpatterns = [
 
     url(r'^(?P<id>[0-9]+)$', views.FeedBack.as_view(),
-        name='viewFeedbackForm')
+        name='viewFeedbackForm'),
+    url(r'^list/$', views.ListQuestions.as_view(),
+        name='list_questions'),
+
 ]
