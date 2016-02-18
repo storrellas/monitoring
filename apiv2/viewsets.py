@@ -67,10 +67,10 @@ class LoginAppViewset( ViewSet ):
         password = serializer.validated_data['password']        
         user = authenticate (username=username, password=password)
         if user is None:
-            raise ValidationError("Credentials were not valid" )
+            raise APIException("Credentials were not valid" )
         
         if user.role != User.EVENTUSER:
-            raise ValidationError( "User is not EventUser" )
+            raise APIException( "User is not EventUser" )
             
         # Return userdata            
         serializer = UserAppSerializer(user)            
