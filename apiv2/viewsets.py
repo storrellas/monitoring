@@ -135,8 +135,10 @@ class EventCheckOutAppViewset(generics.UpdateAPIView):
                 raise APIException("You did not check in or you already checkout")
             if eventcheck.type == EventCheck.UNDEFINED:
                 raise APIException("You did not report")
+            """
             if eventcheck.eventcheckimage_set.count() < 3:
                 raise APIException("You are missing some pictures to checkout")
+            """
               
         # Mark as completed
         instance=self.get_object()
