@@ -112,15 +112,9 @@ class EventCheckInAppViewset(generics.CreateAPIView):
                 raise APIException("You already made checkin")
         
         # Continue with flow
-        obj = super(EventCheckInAppViewset,self).create(request, *args, **kwargs)
-        obj.checkintime = timezone.now()
         print "Checkin time"
-        print obj.checkintime
-        obj.save()
-        
-        
-        return obj
-
+        print timezone.now()
+        return super(EventCheckInAppViewset,self).create(request, *args, **kwargs)
     
     
 class EventCheckOutAppViewset(generics.UpdateAPIView):
