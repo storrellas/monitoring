@@ -109,10 +109,7 @@ class EventCheckAppSerializer(serializers.ModelSerializer):
         
         # Return total samplings for the given user and event
         try:
-            user = self.context['request'].user    
-            list = EventCheck.objects.filter(event=obj.event, user=user,trackdate=datetime.now())
-            print list
-            
+            user = self.context['request'].user                
             total_dict=EventCheck.objects.filter(event=obj.event, user=user,trackdate=datetime.now()) \
                             .aggregate(total=Sum('quantity'))
             total = int(total_dict['total'] or 0)

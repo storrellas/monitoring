@@ -59,8 +59,7 @@ class LoginAppViewset( ViewSet ):
 
         serializer = UserInputAppSerializer(data=request.data)
         if not serializer.is_valid():
-            print serializer.errors
-            raise ValidationError("Credentials were not correct")
+            raise APIException( serializer.errors )
                 
         # Authenticate user
         username = serializer.validated_data['username']
