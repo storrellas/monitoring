@@ -578,7 +578,7 @@ class EventPicturesView( LoginRequiredMixin, ListView ):
                 self.event = Event.objects.first()
             else:
                 self.event = Event.objects.filter(user=self.request.user).first()          
-        return self.model.objects.filter(eventcheck__event=self.event, completeflag=True).order_by('id')
+        return self.model.objects.filter(eventcheck__event=self.event).order_by('id')
 
     
     def get_context_data(self, **kwargs):
