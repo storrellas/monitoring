@@ -36,6 +36,7 @@
     <div class="form-group"><input type="password" id="password"
     	name="password" class="form-control" placeholder="Password"
     	style="width: 100%" required></div>
+	<div class="form-group login-result" style="display:none">Login incorrect</div>
     <button type="submit" class="btn btn-primary block full-width m-b"
     	onclick="login(); return false;">Login</button>
     </form>
@@ -83,9 +84,9 @@
                 	/**/
                 },
                 error: function(xhr, errStr) {
-                    //    alert(errStr);
-                	location.href = location.href;
-                	console.log("Fail")
+					$('input[name="username"]').val('')
+					$('input[name="password"]').val('')
+					$('.login-result').show()
                 }
             });
         }
