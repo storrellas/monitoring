@@ -246,7 +246,7 @@ form#viewResult{
 }
 
 .navbar{
-	height: 50px;
+	/*height: 50px; breaks responsive menu*/
 }
 .navbar-header{
 	text-align: center;
