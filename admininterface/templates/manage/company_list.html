@@ -491,22 +491,6 @@
             },
             
             rules: {
-            	/*
-            	username_edit: {
-                    remote: {
-                        url : "{% url 'ajax-admin-check-name' %}",
-                        type: "post",
-                        data: {
-                            username: function() {
-                                return $('#username_edit').val();
-                            },
-                            username_old: function() {
-                                return $('#username_old').val();
-                            }
-                        }
-                    }
-                },
-                /**/
                 password_edit: {
                     required: true,
                     minlength : 6,
@@ -520,7 +504,6 @@
                 	required : true,
                 }
             },
-            /**/
             submitHandler: function() {
             	var url_put = "{% url 'ajax-company' %}" +  $form.find('#ecompanyid').val() + "/"   
                 $.ajax({

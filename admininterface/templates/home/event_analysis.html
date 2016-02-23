@@ -101,15 +101,27 @@ $(function() {
     };
 
     //creates area chart with dotted
-    Dashboard1.prototype.createAreaChartDotted = function(element, pointSize, lineWidth, data, xkey, ykeys, labels, Pfillcolor, Pstockcolor, lineColors) {
+    Dashboard1.prototype.createLineChartDotted = function(element, pointSize, lineWidth, data, xkey, ykeys, labels, Pfillcolor, Pstockcolor, lineColors) {
+    	console.log( labels )
+    	
         Morris.Line({
             element: element,
             pointSize: 3,
             lineWidth: 4,
             data: data,
             xkey: xkey,
-            xLabels: "day",
+            xLabelFormat: function (x) { 
+            	  var year = x.getFullYear();
+            	  var month = (1 + x.getMonth()).toString();
+            	  month = month.length > 1 ? month : '0' + month;
+            	  var day = x.getDate().toString();
+            	  day = day.length > 1 ? day : '0' + day;
+            	  return day + '/' + month + '/' + year;
+            },
             ykeys: ykeys,
+            yLabelFormat: function (y) {
+            	return y.toString().replace('.','\'	'); 
+            },
             labels: labels,
             hideHover: 'auto',
             pointFillColors: Pfillcolor,
@@ -141,9 +153,8 @@ $(function() {
             dataType: "json",
             type: "GET",
             success: function(json) {
-				console.log("Success!!" + json)
-		        graph.createAreaChartDotted('morris-area-with-dotted', 0, 0, json, 
-		        							'trackdate', ['target', 'quantity'], 
+		        graph.createLineChartDotted('morris-area-with-dotted', 0, 0, json, 
+		        							'trackdate', ['quantity', 'target'], 
 		        							['Sampling', 'Target'],
 		        							['#ffffff'],['#999999'], 
 		        							['#5fbeaa', '#5d9cec']);
@@ -152,7 +163,7 @@ $(function() {
                 alert(errStr);
             }
         });
-        /**/
+
         
       	// Creating donut chart      
 		var $donutData = [
