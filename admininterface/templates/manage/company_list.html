@@ -322,12 +322,12 @@
 												<img src="{% static 'inspinia_admin/img/icon/change-account.png' %}">
 											</a> 
 											{% if request.user != user %}
-											<a class="btn btn-sm btn-white btn-action"
-												onclick="on_delete('{{ user.username }}','{{ user.id }}');"
+ 											<a class="btn btn-sm btn-white btn-action"
+												onclick="on_delete('{{user.username}}', '{{ user.id }}');"
 												data-toggle="tooltip" data-placement="bottom" title="Delete">
 													<img
 													src="{% static 'inspinia_admin/img/icon/delete.png' %}">
-											</a>
+											</a>											
 											{% endif %}
 										</td>
 									</tr>
@@ -346,6 +346,10 @@
 		</div>
 	</div>
 </div>
+<form id="delete_form" action="" method="post" style="display:none;">
+	{% csrf_token %}
+	<input type="submit"></input>
+</form>
 
 <script type="text/javascript">
 
@@ -430,26 +434,17 @@
             }
         });	
     }
-    function on_delete(username, id)
+    function on_delete(username, param)
     {
-        open_confirm('delete', "Please confirm if you would like to remove \"" + username + "\" for a Sampling Admin account?", 'do_delete', id);
+        open_confirm('delete', "Please confirm if you would like to remove \"" + username + "\" for a Sampling Admin account?", 'do_delete', param);
     }
-    function do_delete(username)
+    function do_delete(param)
     {
-    	$.ajax({
-            async: true,
-            url: "{% url 'ajax-company' %}" + username + "/",
-            dataType: "json",
-            type: "DELETE",
-            success: function(json) {
-            	location.reload()
-            },
-            error: function(xhr, errStr) {
-                alert(errStr);
-            }
-        });
-        
-        
+    	var url_delete = "{% url 'company_delete' 0 %}"
+		url_delete = url_delete.replace('0', param);    	
+    	var $form = $('#delete_form').attr('action',url_delete )
+    	$form.submit()
+    	return
 
     }
 

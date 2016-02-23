@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^product/$',             ProductView.as_view(),  name='product'),
     
     url(r'^manage/company/$',      CompanyView.as_view(),              name='company_list'),
+    url(r'^manage/company/delete/(?P<pk>[0-9]+)/$',   UserDeleteView.as_view(success_url = reverse_lazy('company_list')),        name='company_delete'),
     url(r'^manage/users/$',        EventUserView.as_view(),            name='user_list'),
     url(r'^manage/users/add/$',    EventUserAddView.as_view(),         name='user_add'),
     url(r'^manage/users/edit/(?P<pk>[0-9]+)/$',   EventUserEditView.as_view(),        name='user_edit'),
@@ -56,7 +57,7 @@ urlpatterns = [
     url(r'^ajax/company/$',                      CompanyListViewset.as_view(),                    name='ajax-company'),
     url(r'^ajax/company/(?P<pk>[0-9]+)/$',       CompanyDetailViewset.as_view(),                  name='ajax-company-detail'),
     
-    url(r'^ajax/eventuser/(?P<pk>[0-9]+)/$',   EventUserDetailViewset.as_view(),              name='ajax-event-user-edit-pk'),
+    url(r'^ajax/eventuser/(?P<pk>[0-9]+)/$',     EventUserDetailViewset.as_view(),              name='ajax-event-user-edit-pk'),
 
     url(r'^ajax/company/(?P<pk>[0-9]+)/event/$', CompanyUserEventViewset.as_view({'get': 'event_list'}), name='ajax-company-event'),
             
