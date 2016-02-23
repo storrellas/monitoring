@@ -66,17 +66,8 @@ class CompanyUserEventViewset( ViewSet ):
         serializer = EventCompanySerializer( user.event.all(), many=True )                
         return JsonResponse(serializer.data, safe=False )
 
-class EventUserListViewset( generics.ListCreateAPIView ):
 
-    #A simple ViewSet for viewing and editing accounts.
-    model = User
-    queryset = User.objects.filter(is_superuser=False)
-    serializer_class = EventUserSerializer      
-    permission_classes = [IsAuthenticated]
-    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
-               
-
-class EventUserDetailViewset( generics.RetrieveUpdateDestroyAPIView ):
+class EventUserDetailViewset( generics.UpdateAPIView ):
     model = User
     queryset = User.objects.filter()
     serializer_class = EventUserSerializer   

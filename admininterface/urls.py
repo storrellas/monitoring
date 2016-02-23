@@ -56,7 +56,6 @@ urlpatterns = [
     url(r'^ajax/company/$',                      CompanyListViewset.as_view(),                    name='ajax-company'),
     url(r'^ajax/company/(?P<pk>[0-9]+)/$',       CompanyDetailViewset.as_view(),                  name='ajax-company-detail'),
     
-    url(r'^ajax/eventuser/$',                  EventUserListViewset.as_view(),                name='ajax-event-user'),
     url(r'^ajax/eventuser/(?P<pk>[0-9]+)/$',   EventUserDetailViewset.as_view(),              name='ajax-event-user-edit-pk'),
 
     url(r'^ajax/company/(?P<pk>[0-9]+)/event/$', CompanyUserEventViewset.as_view({'get': 'event_list'}), name='ajax-company-event'),
