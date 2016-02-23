@@ -269,62 +269,9 @@ $('document').ready(function(){
 </div>
 
 <script type="text/javascript">
-	// function on_create()
-	// {		
-	// 	var $modal = $('#modal-form-new');
-	// 	var $form = $modal.find("form:first")
-	// 	$form.validate({
-	//         errorPlacement: function (error, element) {
-	//             element.before(error);
-	//         },
-	//         rules: {
-	//             username: {
-	//             	required: true
-	//             },
-	//             cpassword_edit: {
-	//             	required: true
-	//             },
-	            
-	//             ccpassword_edit: {
-	//             	equalTo: "#cpassword_edit"
-	//             }
-	//         },
-	//         submitHandler: function(){
-	//         	$form.submit()
-	//         }
-	//     });
-	// }
-	// function on_cancel_new()
- //    {
- //        $('#modal-form-new').modal('hide');
- //    }
 
 	function show_form(source, user_id)
 	{
-
-		// var $modal = $('#modal-form-edit');
-		// var $form = $modal.find("form:first")
-		
-		// var $row = $(source).parent().parent()
-		// var $id = $row.find("td:first")
-		// console.log( $.trim($id.text()) )
-		
-		// var eventuser_name = $.trim($id.next().text());
-		// $modal.find("input[name='username']").val(eventuser_name)
-		// var $row = $("#user_id_"+ user_id)
-		// $modal.find("input[name='first_name']").val($row.data('first_name'));
-		// $modal.find("input[name='last_name']").val($row.data('last_name'));
-		// $modal.find("input[name='phone']").val($row.data('phone'));
-		// $modal.find("input[name='email']").val($row.data('email'));
-		// $modal.find("#gendera").val($row.data('gender'));
-		// $modal.find("#eventuser").val($row.data('supervisorid'));
-		
-		// var url = "{% url 'user_edit' 0 %}"
-		// url = url.replace('0', $.trim($id.text()));
-		// $form.attr("action", url)
-
-		// // Show the modal
-		// $modal.modal('show')
 
 		var $modal = $('#modal-form');
 		var $form = $modal.find("form:first")
@@ -399,43 +346,19 @@ $('document').ready(function(){
 		$form[0].reset();
 	    $('#modal-form').modal('hide');
 	}
-	// function on_edit_done()
-	// {
-	// 	var $modal = $('#modal-form-edit');
-	// 	var $form = $modal.find("form:first")
-	//     $form.validate({
-	//         errorPlacement: function (error, element) {
-	//             element.before(error);
-	//         },
-	//         rules: {
-	//             eusername: {
-	//             	required: true
-	//             },
-	//         },
-	
-	//         submitHandler: function() {
-	//         	$form.submit()
-	//         }
-	//     });
-	// }
-	
-	// function on_cancel_edit()
-	// {
-	//     $('#modal-form-edit').modal('hide');
-	// }
-    function on_delete($userid)
+
+    function on_delete(id)
     {
     	if(confirm("Do you want to delete?"))
         {
-    		var url_delete = "{% url 'ajax-event-user' %}" + $userid 
+    		var url_delete = "{% url 'user_delete' 0 %}"
+    		url_delete = url_delete.replace('0', id);
         	$.ajax({
                 async: true,
 				url: url_delete,
-                dataType: "json",
-                type: "DELETE",
-                data: {
-                    mode: "DELETE_USER",
-                    userid: $userid,
+                type: "POST",
+                data:{
+                	csrfmiddlewaretoken : $('input[name="csrfmiddlewaretoken"]').val()
                 },
                 success: function(json) {
                     location.reload()
@@ -445,6 +368,7 @@ $('document').ready(function(){
                  	console.log(errStr);
                 }
             });
+    		
         }
     }
 </script>

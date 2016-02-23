@@ -38,6 +38,7 @@ urlpatterns = [
     url(r'^manage/users/$',        EventUserView.as_view(),            name='user_list'),
     url(r'^manage/users/add/$',    EventUserAddView.as_view(),         name='user_add'),
     url(r'^manage/users/edit/(?P<pk>[0-9]+)/$',   EventUserEditView.as_view(),        name='user_edit'),
+    url(r'^manage/users/delete/(?P<pk>[0-9]+)/$',   EventUserDeleteView.as_view(),        name='user_delete'),
     url(r'^manage/supervisor/$',        EventSupervisorView.as_view(),            name='super_url'),
     url(r'^manage/supervisor/add/$',    EventSupervisorAddView.as_view(),         name='supervisor_add'),
     url(r'^manage/supervisor/edit/(?P<pk>[0-9]+)/$',   EventSupervisorEditView.as_view(),        name='supervisor_edit'),
