@@ -233,15 +233,18 @@ $('document').ready(function(){
 											> 
 											<img src="{% static 'inspinia_admin/img/icon/change-account.png' %}">
 										</a> 
-										<a class="btn btn-sm btn-white btn-action"
-											onclick="on_delete('{{ user.id }}');"
-											data-toggle="tooltip" data-placement="bottom" title="Delete"
-											{% if not request.user.is_superuser %}
-											disabled
-											{% endif %}
-											> 
-											<img src="{% static 'inspinia_admin/img/icon/delete.png' %}">
-										</a>
+										
+										<form action="{% url 'user_delete' user.id %}" method="post" style="display:inline;">{% csrf_token %}
+											<button class="btn btn-sm btn-white btn-action"
+												data-toggle="tooltip" data-placement="bottom" title="Delete"
+												{% if not request.user.is_superuser %}
+												disabled
+												{% endif %}
+												> 
+												<img src="{% static 'inspinia_admin/img/icon/delete.png' %}">
+											</button>											
+										</form>
+																				
 										</td>
 									</tr>
 								{% empty %}
@@ -347,30 +350,6 @@ $('document').ready(function(){
 	    $('#modal-form').modal('hide');
 	}
 
-    function on_delete(id)
-    {
-    	if(confirm("Do you want to delete?"))
-        {
-    		var url_delete = "{% url 'user_delete' 0 %}"
-    		url_delete = url_delete.replace('0', id);
-        	$.ajax({
-                async: true,
-				url: url_delete,
-                type: "POST",
-                data:{
-                	csrfmiddlewaretoken : $('input[name="csrfmiddlewaretoken"]').val()
-                },
-                success: function(json) {
-                    location.reload()
-                    return
-                },
-                error: function(xhr, errStr) {
-                 	console.log(errStr);
-                }
-            });
-    		
-        }
-    }
 </script>
 
 

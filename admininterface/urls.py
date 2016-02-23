@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-
+from django.core.urlresolvers import reverse,reverse_lazy
 
 # rest_framework imports
 from rest_framework.routers import SimpleRouter
@@ -38,10 +38,11 @@ urlpatterns = [
     url(r'^manage/users/$',        EventUserView.as_view(),            name='user_list'),
     url(r'^manage/users/add/$',    EventUserAddView.as_view(),         name='user_add'),
     url(r'^manage/users/edit/(?P<pk>[0-9]+)/$',   EventUserEditView.as_view(),        name='user_edit'),
-    url(r'^manage/users/delete/(?P<pk>[0-9]+)/$',   EventUserDeleteView.as_view(),        name='user_delete'),
+    url(r'^manage/users/delete/(?P<pk>[0-9]+)/$',   UserDeleteView.as_view(success_url = reverse_lazy('user_list')),        name='user_delete'),
     url(r'^manage/supervisor/$',        EventSupervisorView.as_view(),            name='super_url'),
     url(r'^manage/supervisor/add/$',    EventSupervisorAddView.as_view(),         name='supervisor_add'),
     url(r'^manage/supervisor/edit/(?P<pk>[0-9]+)/$',   EventSupervisorEditView.as_view(),        name='supervisor_edit'),
+    url(r'^manage/supervisor/delete/(?P<pk>[0-9]+)/$',   UserDeleteView.as_view(success_url = reverse_lazy('super_url')),        name='supervisor_delete'),
     
     
     url(r'^settings/changepwd/$',  ChangePwdView.as_view(),            name='changepwd'),    

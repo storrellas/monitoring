@@ -289,9 +289,9 @@ class EventUserEditView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateVie
 
         return redirect("{}?r={}".format(reverse('user_list'), r))
 
-class EventUserDeleteView( LoginRequiredMixin, SuperuserRequiredMixin, DeleteView ):
+class UserDeleteView( LoginRequiredMixin, SuperuserRequiredMixin, DeleteView ):
     model = User
-    success_url = reverse_lazy('user_list')
+    success_url = reverse_lazy('home')
 
 class EventSupervisorEditView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateView ):
     template_name = "manage/supervisor_list.html"

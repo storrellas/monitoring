@@ -193,15 +193,18 @@ $('document').ready(function(){
 											> 
 											<img src="{% static 'inspinia_admin/img/icon/change-account.png' %}">
 										</a> 
-										<a class="btn btn-sm btn-white btn-action"
-											onclick="on_delete('{{ user.id }}');"
-											data-toggle="tooltip" data-placement="bottom" title="Delete"
-											{% if not request.user.is_superuser %}
-											disabled
-											{% endif %}
-											> 
-											<img src="{% static 'inspinia_admin/img/icon/delete.png' %}">
-										</a>
+										
+										<form action="{% url 'supervisor_delete' user.id %}" method="post" style="display:inline;">{% csrf_token %}
+											<button class="btn btn-sm btn-white btn-action"
+												data-toggle="tooltip" data-placement="bottom" title="Delete"
+												{% if not request.user.is_superuser %}
+												disabled
+												{% endif %}
+												> 
+												<img src="{% static 'inspinia_admin/img/icon/delete.png' %}">
+											</button>											
+										</form>
+										
 										</td>
 									</tr>
 								{% empty %}
@@ -301,30 +304,7 @@ $('document').ready(function(){
 		$form[0].reset();
 	    $('#modal-form').modal('hide');
 	}
-    function on_delete($userid)
-    {
-    	if(confirm("Do you want to delete?"))
-        {
-    		var url_delete = "{% url 'ajax-event-user' %}" + $userid 
-        	$.ajax({
-                async: true,
-				url: url_delete,
-                dataType: "json",
-                type: "DELETE",
-                data: {
-                    mode: "DELETE_USER",
-                    userid: $userid,
-                },
-                success: function(json) {
-                    location.reload()
-                    return
-                },
-                error: function(xhr, errStr) {
-                 	console.log(errStr);
-                }
-            });
-        }
-    }
+
 </script>
 
 
