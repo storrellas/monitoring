@@ -1,5 +1,5 @@
+import datetime
 from itertools import chain
-from datetime import timedelta
 from admininterface.models import Event, User
 from django.db import models
 
@@ -173,6 +173,7 @@ class QuestionsUser(models.Model):
     def type(self):
         return "User"
 
+
 class AnswersUser(models.Model):
     """ Answers for a user
     """
@@ -231,6 +232,7 @@ class QuestionsEvent(models.Model):
     def type(self):
         return "Event"
 
+
 class AnswersEvent(models.Model):
     """ Answers on a campaign
     """
@@ -266,7 +268,6 @@ class FeedbackManager(models.Manager):
             else:
                 for question in questions:
                     for user in authors:
-                        print event, question, user
                         out = u"{}{}".format(out, question.getCSVLine(event,
                                                                       user))
         return out
@@ -298,10 +299,31 @@ def eventGetQuestions(self):
 
 
 def getDaysCampaign(self):
-    if self.end_date is not None and self.start_date is not None:
-        num_days = (self.end_date.date() - self.start_date.date()).days+1
-        for da in range(0, num_days):
-            yield (self.start_date + timedelta(days=da)).date()
+    """ Method extension for Event, Date generator for event.
+    Example:
+      >>> a = Event(start_date='01/01/2015', end_date='03/01/03'):
+      >>> for day in a.getDays():
+      ...     print day
+      ...
+      datetime.date(2015,1,1)
+      datetime.date(2015,1,2)
+      datetime.date(2015,1,3)
+    """
+    if self.start_date is None or self.end_date is None:
+        yield iter([])
+    # Strange bug workaround:
+    # Bug: Sometimes self.end_date is datetime.datetime and sometimes is
+    # datetime.date. We convert the value to datetime.date if it is
+    # datetime.datetime. This is weird...
+    start_date = self.start_date if isinstance(self.start_date, datetime.date)\
+                                 else self.start_date.date()
+    end_date = self.end_date if isinstance(self.end_date, datetime.date)\
+                                 else self.end_date.date()
+    # start_end and end_date are always datetime.date now
+    if end_date is not None and start_date is not None:
+        num_days = (end_date - start_date).days+1
+        for j in range(0, num_days):
+            yield (start_date + datetime.timedelta(days=j))
 
 
 def userHasAssigned(self, event):
