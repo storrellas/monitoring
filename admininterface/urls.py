@@ -21,7 +21,7 @@ urlpatterns = [
     url(r'^base/$',                BaseView.as_view(template_name='base.html'),        name='base'),
     url(r'^home/$',                EventAnalysisView.as_view(),        name='home'),
     url(r'^home/result/$',         EventResultView.as_view(),          name='home_results'),
-    url(r'^home/result/csv/$',     EventResultCSVView.as_view(),       name='event_analysis_csv'),
+    url(r'^home/result/csv/(?P<pk>[0-9]+)/$$',     EventResultCSVView.as_view(),       name='event_analysis_csv'),
     url(r'^home/pictures/$',       EventPicturesView.as_view(),        name='home_pictures'),
         
     url(r'^event/$',               EventView.as_view(),                name='event'),

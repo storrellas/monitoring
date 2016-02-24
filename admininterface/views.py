@@ -459,7 +459,7 @@ class EventResultView( LoginRequiredMixin, ListView ):
 
         if self.event is not None:
             context['eventid_selected'] = self.event.id
-        context['user_view_feedback'] = self.request.user in self.event.getSupervisors()
+            context['user_view_feedback'] = self.request.user in self.event.getSupervisors()
 
 
         return context
@@ -501,9 +501,9 @@ class EventAnalysisView( LoginRequiredMixin, TemplateView ):
             context['sampling']    = '0'
             context['target']      = '0'
             context['percentage']  = '0%'
-        print self.request.user, event.getSupervisors()
+
         context['user_view_feedback'] = self.request.user in event.getSupervisors()
-        context['eventid_selected'] = event.id
+        context['eventid_selected']   = event.id
 
 
         good_quantity    = eventcheck_list.filter(type=EventCheck.GOOD).aggregate(good=Sum('quantity'))['good']
@@ -558,8 +558,10 @@ class ExportToCSV(LoginRequiredMixin, View):
 
 class EventResultCSVView(ExportToCSV):
 
-    def get(self,request,*args,**kwargs):
-        return self.getResponseCSV(EventCheckResource(), 'event')
+    def get(self,request, pk, *args,**kwargs):
+        event = Event.objects.get(id=pk)
+        filename = event.title.strip()
+        return self.getResponseCSV(EventCheckResource(), filename)
 
 class FeedbackCSVView(ExportToCSV):
     

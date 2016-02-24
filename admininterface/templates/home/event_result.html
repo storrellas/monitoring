@@ -94,8 +94,10 @@
 
 <script type="text/javascript">
 function on_export()
-{
-    location.href="{% url 'event_analysis_csv' %}";
+{	
+	var url = "{% url 'event_analysis_csv' 0 %}";
+	url = url.replace('0', $('#eventid').val())
+    location.href=url
 }
 function on_change()
 {
