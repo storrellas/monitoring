@@ -45,10 +45,10 @@
 										{% timezone "Europe/Paris" %}
                                        <tr>
                                            <td>{{ eventcheck.id }}</td>
-                                           <td>{{ eventcheck.trackdate |date:"d/m/Y" }}</td>
+                                           <td>{{ eventcheck.trackdate |date:"d/m/Y" }} {{ eventcheck.tracktime|date:"h:i:s" }}</td>
                                            <td>{{ eventcheck.user.username }}</td>
-                                           <td>{{ eventcheck.checkintime|date:"H:i" }}</td>
-                                           <td>{{ eventcheck.checkouttime|date:"H:i" }}</td>
+                                           <td>{{ eventcheck.checkintime|date:"d/m/Y H:i" }}</td>
+                                           <td>{{ eventcheck.checkouttime|date:"d/m/Y H:i" }}</td>
                                            <td>{{ eventcheck.quantity }}</td>
                                            <td>{{ eventcheck.target }}</td>
                                            <td>{{ eventcheck.target|percentage:eventcheck.quantity }}</td>
