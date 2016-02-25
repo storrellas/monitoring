@@ -103,9 +103,11 @@ $('document').ready(function(){
 								<tr>
 									<th><input type="checkbox" id="selecttag"></th>
 									<th>No</th>
+									
 									<th>Title</th>
 									<th>Pdf URL</th>
 									<th>Video URL</th>
+									<th>Company</th>
 									<th>Event Users</th>
 									<th>Actions</th>
 								</tr>
@@ -121,6 +123,9 @@ $('document').ready(function(){
                                           <td>{{ request.scheme }}://{{ request.get_host }}{{ event.pdfdocument.url }}</td>
                                           {% endif %}
                                           <td>{{ event.videourl }}</td>
+										  <td>
+                                          {{ event|company_extract }}                                       
+                                          </td>
                                           <td>
                                           {{ event|eventuser_list }}                                       
                                           </td>

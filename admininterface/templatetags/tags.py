@@ -31,6 +31,16 @@ def percentage(quantity, target):
         return 0
     return str(quantity*100/target) + '%'
 
+@register.filter(name='company_extract')
+def company_extract(event):
+    company =""
+    for user in event.user.all():
+        if user.role == User.COMPANY:
+            company += user.username
+    
+    # Remove the last comma 
+    return company
+
 @register.filter(name='eventuser_list')
 def eventuser_list(event):
     userlist_str = ""

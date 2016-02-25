@@ -115,12 +115,23 @@ $('document').ready(function(){
 									<input type="text" placeholder="" class="form-control required" name="videourl" id="videourl">
 								</div>
 							</div>
-							<div class="form-group"><label class="col-sm-2 control-label" style="text-align: right;"><b class="required">*</b>Description:</label>
+							<div class="form-group">
+								<label class="col-sm-2 control-label" style="text-align: right;"><b class="required">*</b>Description:</label>
 								<div class="col-sm-9">
 									<textarea class="form-control required" name="description" id="description" style="width:100%; height:80px;"></textarea>
 								</div>
 							</div>
-					 		
+							<div class="form-group">
+								<label class="col-sm-2 control-label" style="text-align: right;"><b class="required">*</b>Company:</label>
+								<div class="col-sm-9">
+									<select class="form-control" name="event" id="event">
+										<option value="0" selected>None</option>
+										{% for company in company_list %}
+										<option value='{{ company.id }}'>{{ company.username }}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
 							<div style="clear: both;"></div>
 							<div class="form-group">
 								<label class="col-sm-2 control-label" style="text-align: right;">Users:</label>

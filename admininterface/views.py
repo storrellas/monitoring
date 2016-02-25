@@ -348,6 +348,7 @@ class EventAddView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateView ):
       
         context['user_list'] = User.objects.filter(event__isnull=True, role=User.EVENTUSER,
                                                    is_superuser=False).order_by('id')
+        context['company_list'] = User.objects.filter(role=User.COMPANY).order_by('id')
         context['form'] = EventModelForm()
         return context
     
