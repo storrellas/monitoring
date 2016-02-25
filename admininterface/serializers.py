@@ -41,15 +41,7 @@ class CompanyUserSerializer(serializers.ModelSerializer):
         obj.date_joined=datetime.now()
         obj.role = User.COMPANY       
         obj.save()
-        
-        try:
-            event = Event.objects.get(id=self.initial_data['event'])
-            event.user.clear()
-            event.user.add(obj)
-        except:
-            log.info("Not able to find the event")
-            pass
-                
+                        
         return obj        
     
     def update(self, instance, validated_data):
@@ -61,17 +53,7 @@ class CompanyUserSerializer(serializers.ModelSerializer):
         except:
             print "No password provided"
             pass
-        
-        # Remove assigned user
-        instance.event.clear()
-        # Assign new user        
-        try:
-            event = Event.objects.get(id=self.initial_data['event'])  
-            instance.event.add(event)
-        except:
-            log.info("Not able to find the event")
-            pass
-              
+                      
         return instance
                        
     password = serializers.CharField(required=False)

@@ -124,7 +124,7 @@ $('document').ready(function(){
 							<div class="form-group">
 								<label class="col-sm-2 control-label" style="text-align: right;"><b class="required">*</b>Company:</label>
 								<div class="col-sm-9">
-									<select class="form-control" name="event" id="event">
+									<select class="form-control" name="company" id="company">
 										<option value="0" selected>None</option>
 										{% for company in company_list %}
 										<option value='{{ company.id }}'>{{ company.username }}</option>

@@ -353,19 +353,18 @@ class EventAddView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateView ):
         return context
     
     def post(self,request,*args,**kwargs):        
+
         form = EventModelForm(request.POST, request.FILES)        
         if not form.is_valid():
-            #raise Http404()          
             return HttpResponseBadRequest(form.errors)
                 
         # Save the form        
         event = form.save()  
         
-        # Add users to event        
-        company_owner = event.user.filter(role=User.COMPANY).first()
+        # Add users to event                
         event.user.clear()
-        if company_owner is not None:
-            event.user.add(company_owner)             
+        company = User.objects.get(id=request.POST['company'])
+        event.user.add(company)
         if request.POST['selno'] != '':            
             selno_list = str(request.POST['selno']).split(',')
             for id in selno_list:
@@ -388,6 +387,7 @@ class EventEditView( LoginRequiredMixin, SuperuserRequiredMixin, DetailView ):
         context['user_list'] = User.objects.filter(event__isnull=True, role=User.EVENTUSER,
                                                    is_superuser=False).order_by('id')                
         context['selno'] = str(eventuser_list.values_list('id', flat=True))[1:-1]
+        context['company_list'] = User.objects.filter(role=User.COMPANY).order_by('id')
         context['form'] = EventModelForm() 
         return context
     
@@ -405,10 +405,9 @@ class EventEditView( LoginRequiredMixin, SuperuserRequiredMixin, DetailView ):
 
 
         # Add users to event
-        company_owner = event.user.filter(role=User.COMPANY).first()
         event.user.clear()
-        if company_owner is not None:
-            event.user.add(company_owner)
+        company = User.objects.get(id=request.POST['company'])
+        event.user.add(company)
         if request.POST['selno'] != '':            
             selno_list = str(request.POST['selno']).split(',')
             for id in selno_list:

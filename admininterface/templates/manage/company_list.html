@@ -95,15 +95,6 @@
 														class="form-control" name="email"
 														id="email" maxlength="100">
 												</div>												
-												<div class="form-group">
-													<label>Event:</label> 
-													<select class="form-control" name="event" id="event">
-														<option value="0" selected>None</option>
-														{% for event in event_list %}
-															<option value='{{ event.id }}'>{{ event.title }}</option>
-														{% endfor %}
-													</select>
-												</div>
 
 												<div>
 													<button
@@ -196,15 +187,7 @@
 														class="form-control" name="email"
 														id="email">
 												</div>												
-												<div class="form-group">
-													<label>Event:</label> 
-													<select class="form-control" name="event" id="event">
-														<option value="0" selected>None</option>
-														{% for event in event_list %}
-															<option value='{{ event.id }}'>{{ event.title }}</option>
-														{% endfor %}
-													</select>
-												</div>
+
 												<div>
 													<button
 														class="btn btn-sm btn-primary pull-right m-t-n-xs"
