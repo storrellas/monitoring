@@ -48,7 +48,7 @@
     "address": "",
     "contactname": "",
     "gender": "",
-    "score": "100",
+    "score": "68",
     "picture": "event/user/Koala.jpg",
     "eventuser": 8,
     "groups": [],
@@ -321,7 +321,10 @@
       1,
       2
     ],
-    "product": [1,2]
+    "product": [
+      1,
+      2
+    ]
   }
 },
 {
@@ -344,7 +347,35 @@
     "location": [
       1
     ],
-    "product": [1]
+    "product": [
+      1
+    ]
+  }
+},
+{
+  "model": "admininterface.event",
+  "pk": 4,
+  "fields": {
+    "title": "mMyTiel",
+    "description": "dafs",
+    "brief": "",
+    "register_date": "2016-02-26T09:16:11.388Z",
+    "start_date": "2016-02-08",
+    "end_date": "2016-02-24",
+    "eventuser_objective_day": 0,
+    "videourl": "http://abc.es",
+    "pdfdocument": "event/curl_dimitry_9YL1Yak.txt",
+    "user": [
+      4,
+      6
+    ],
+    "location": [
+      1
+    ],
+    "product": [
+      1,
+      2
+    ]
   }
 },
 {
@@ -364,7 +395,10 @@
     "checkouttime": "2016-01-22T14:04:43.517Z",
     "completeflag": true,
     "product": 3,
-    "location": 1
+    "location": 1,
+    "address": "Marina 299",
+    "latitude": 42.0,
+    "longitude": 1.0
   }
 },
 {
@@ -384,7 +418,10 @@
     "checkouttime": "2016-01-22T14:04:43.517Z",
     "completeflag": true,
     "product": 2,
-    "location": 1
+    "location": 1,
+    "address": "Pla\u00e7a Espanya",
+    "latitude": 42.0,
+    "longitude": 1.0
   }
 },
 {
@@ -404,7 +441,10 @@
     "checkouttime": "2016-01-22T14:04:43.517Z",
     "completeflag": true,
     "product": 1,
-    "location": 1
+    "location": 1,
+    "address": "Portal del Angel",
+    "latitude": 41.0,
+    "longitude": 2.0
   }
 },
 {
@@ -424,7 +464,10 @@
     "checkouttime": null,
     "completeflag": false,
     "product": null,
-    "location": 1
+    "location": 1,
+    "address": "",
+    "latitude": 0.0,
+    "longitude": 0.0
   }
 },
 {
@@ -444,7 +487,10 @@
     "checkouttime": null,
     "completeflag": false,
     "product": null,
-    "location": 1
+    "location": 1,
+    "address": "Marina 299",
+    "latitude": 0.0,
+    "longitude": 0.0
   }
 },
 {
@@ -464,7 +510,10 @@
     "checkouttime": "2016-02-18T13:07:18.661Z",
     "completeflag": true,
     "product": 1,
-    "location": 1
+    "location": 1,
+    "address": "Marina 299",
+    "latitude": 0.0,
+    "longitude": 0.0
   }
 },
 {
@@ -484,7 +533,10 @@
     "checkouttime": "2016-02-18T16:28:45.339Z",
     "completeflag": true,
     "product": 1,
-    "location": 1
+    "location": 1,
+    "address": "Marina 299",
+    "latitude": 0.0,
+    "longitude": 0.0
   }
 },
 {
@@ -504,7 +556,10 @@
     "checkouttime": "2016-02-19T06:36:29.551Z",
     "completeflag": true,
     "product": 1,
-    "location": 1
+    "location": 1,
+    "address": "Marina 299",
+    "latitude": 0.0,
+    "longitude": 0.0
   }
 },
 {

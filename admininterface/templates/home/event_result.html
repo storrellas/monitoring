@@ -39,6 +39,7 @@
 										<th>Target</th>
 										<th>Percent(%)</th>
 										<th>Feedback</th>
+										<th>Location</th>
 										<th>Address</th>
 									</tr>											
 										{% for eventcheck in eventcheck_list %}
@@ -66,7 +67,8 @@
 												{% endifequal %}
 												" style="width: 30px; height: 30px">
 											</td>
-                                           <td>{{ eventcheck.location.name }} <br> {{ eventcheck.location.address }}, {{ eventcheck.location.city }}</td>
+                                           <td>{{ eventcheck.location.name }}</td>
+                                           <td>{{ eventcheck.address }}</td>
 <!--	                                            <td>-->
 <!--	                                            	<a class="btn btn-sm btn-white btn-action" href="<?php echo site_url("event/edit/".$item['eventid'])?>" data-toggle="tooltip" data-placement="bottom" title="Edit"><img src="<?php echo base_url();?>inspinia_admin/img/icon/edit-1.png"></a>-->
 <!--	                                                <a class="btn btn-sm btn-white btn-action" onclick="on_delete('<?php echo $item['eventid']?>');" data-toggle="tooltip" data-placement="bottom" title="Delete"><img src="<?php echo base_url();?>inspinia_admin/img/icon/delete.png"></a>-->

@@ -186,6 +186,10 @@ class EventCheck(models.Model):
     product      = models.ForeignKey(Product,null=True, blank=True, related_name='eventcheck')
     location     = models.ForeignKey(Location,null=True, blank=True, related_name='eventcheck')
    
+    address      = models.CharField(default='',max_length=400)
+    latitude     = models.FloatField(default=0.0)
+    longitude    = models.FloatField(default=0.0)
+   
     def __unicode__(self):
         if self.trackdate is not None and self.tracktime is not None:
             return self.user.username + "," + self.event.title + "," + self.trackdate.strftime("%d/%m/%y") + "," + self.tracktime.strftime("%H:%M:%S")

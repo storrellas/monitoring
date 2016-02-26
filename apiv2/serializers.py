@@ -121,7 +121,8 @@ class EventCheckAppSerializer(serializers.ModelSerializer):
     class Meta:
         model = EventCheck
         fields = ('id', 'user', 'event', 'quantity', 'target', 'type', 'note', 'lastsubmit',\
-                  'completeflag','brief_opened', 'checkintime', 'checkouttime', 'product', 'location', 'total')
+                  'completeflag','brief_opened', 'checkintime', 'checkouttime', 'product', 'location', 'total',\
+                  'address','latitude','longitude')
 
 class UploadFileSerializer(serializers.Serializer):
     file = FileField()
