@@ -30,9 +30,7 @@ urlpatterns = [
     url(r'^export_feedback/$',     FeedbackCSVView.as_view(),   name='event_feedback_csv'),
     url(r'^event/location/$',      LocationView.as_view(),             name='location'),
     url(r'^event/location/delete/(?P<pk>[0-9]+)/$',      LocationDeleteView.as_view(),             name='location_delete'),
-
-
-    url(r'^product/$',             ProductView.as_view(),  name='product'),
+    url(r'^event/product/$',             ProductView.as_view(),  name='product'),
     
     url(r'^manage/company/$',      CompanyView.as_view(),              name='company_list'),
     url(r'^manage/company/delete/(?P<pk>[0-9]+)/$',   UserDeleteView.as_view(success_url = reverse_lazy('company_list')),        name='company_delete'),

@@ -36,11 +36,6 @@
 			</ul>
         </li>
         {% if request.user.is_superuser %}
-	        <li class="dropdown visible-sm {% if request.path == company_url or request.path == users_url  %}active{% endif %}">
-	        <li class="{% if request.path == product_url %}active{% endif %}"><a href="{% url 'product' %}">
-	        		<i class="fa fa-folder"></i> Products
-	        	</a>
-	        </li>
 	        
 			<li class="dropdown visible-sm">
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Events<span class="caret"></span></a>
