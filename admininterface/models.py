@@ -123,11 +123,11 @@ class Location(models.Model):
     def __unicode__(self):
        return self.name
 
-class Product(models.Model):    
+class Product(models.Model):
     name     = models.CharField(default='', max_length=400) 
     brand    = models.CharField(default='', max_length=400)
     format   = models.CharField(default='', max_length=400)
-    
+
     def __unicode__(self):
        return self.name
    

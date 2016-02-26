@@ -81,3 +81,9 @@ def product_list(event):
     productlist_str = productlist_str[:-2] 
     return productlist_str
 
+@register.filter
+def check_product(event,product):
+    if event.product.filter(id=product.id).exists():
+        return "checked"
+    else:
+        return ""

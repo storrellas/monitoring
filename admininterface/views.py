@@ -431,6 +431,14 @@ class EventEditView( LoginRequiredMixin, SuperuserRequiredMixin, DetailView ):
                 location = Location.objects.get(id=int(id))
                 event.location.add(location)
 
+        # Add products to event
+        event.product.clear()
+        if request.POST['selproduct'] != '':            
+            selproduct_list = str(request.POST['selproduct']).split(',')
+            for id in selproduct_list:
+                product = Product.objects.get(id=int(id))
+                event.product.add(product)
+
         # Add users to event
         event.user.clear()
         company = User.objects.get(id=request.POST['company'])

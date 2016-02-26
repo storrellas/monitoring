@@ -34,7 +34,7 @@ class EventUserModelForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'password', 'first_name', 'last_name',
-                  'phone', 'email', 'gender', 'picture', 'eventuser']
+                  'phone', 'email', 'gender', 'picture', 'eventuser','score']
 
     #called on validation of the form
     def clean(self):

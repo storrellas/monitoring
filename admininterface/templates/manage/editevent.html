@@ -16,7 +16,8 @@
 
 <script type="text/javascript">
 $('document').ready(function(){
-
+	// Function select location
+	// -----------------------
 	function calculate_selno(){
 		var $temp = '';
 		$('.selecttag').each(function(){
@@ -65,9 +66,37 @@ $('document').ready(function(){
 		calculate_sellocation();
 	});	
 	
+	// Function select product
+	// -----------------------
+	function calculate_selproduct(){
+		var $temp = '';
+		$('.selproduct').each(function(){
+			if( $(this).prop("checked")){
+				$temp += $(this).val() + ',';
+			}
+		});		
+		$temp = $temp.slice(0,-1)
+		$("#selproduct").val($temp);
+		
+		console.log( $("#selproduct").val(	) )
+		
+	}
+	$('#selproduct_all').on('click', function(){		
+		$('.selproduct').each(function(){
+			if( $('#selproduct_all').prop("checked") ){
+				$(this).prop("checked", true);	
+			}			
+		});			
+		calculate_selproduct()
+	});		
+	$('.selproduct').on('click', function(){
+		calculate_selproduct();
+	});	
+	
 	// Initialise value
 	calculate_selno();
 	calculate_sellocation();
+	calculate_selproduct();
 
 	//Starting datepicker
 	$("#start_date").datepicker({
@@ -109,6 +138,7 @@ $('document').ready(function(){
 							{% csrf_token %}
 							<input type="hidden" id="selno" name="selno" value="">
 							<input type="hidden" id="sellocation" name="sellocation" value="">
+							<input type="hidden" id="selproduct" name="selproduct" value="">
 							<input type="hidden" id="eventid" name="eventid" value="{{ event.id }}"> 
 							<div class="form-group"><label class="col-sm-2 control-label" style="text-align: right;">
 								<b class="required">*</b>Title:</label>
@@ -166,13 +196,36 @@ $('document').ready(function(){
 								<label class="col-sm-2 control-label" style="text-align: right;"><b class="required">*</b>Company:</label>
 								<div class="col-sm-9">
 									<select class="form-control" name="company" id="company">
-										<option value="0" selected>None</option>
 										{% for company in company_list %}
 										<option value='{{ company.id }}'>{{ company.username }}</option>
 										{% endfor %}
 									</select>
 								</div>
 							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label" style="text-align: right;">Product:</label>
+								<div class="col-sm-9">
+									<table class="table table-bordered" style="margin-bottom: 10px;" id="product_table">
+										<thead>
+										<tbody id="product_body" style="height: 200px; overflow-y: auto; overflow-x: hidden; display: block;">
+											<tr>
+												<th style="width: 70px"><input type="checkbox" id="selproduct_all"></th>
+												<th style="width: 70px">No</th>
+												<th style="width: 200px">Name</th>
+											</tr>
+											<tr>
+											{% for product in product_list %}
+	                                        <tr>
+	                                        	<td><input {{ event|check_product:product }} type="checkbox" class="selproduct" id="selproduct{{ product.id }}" value="{{ product.id }}"></td>
+	                                            <td>{{ product.id }}</td>
+	                                            <td>{{ product.name }}</td>
+	                                        </tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>
+							</div>
+							
 							<div class="form-group">
 								<label class="col-sm-2 control-label" style="text-align: right;">Location:</label>
 								<div class="col-sm-9">

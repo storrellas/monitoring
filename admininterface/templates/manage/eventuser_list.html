@@ -71,6 +71,10 @@ $('document').ready(function(){
 														{% render_field form.last_name type="text" placeholder="Last Name" class="form-control required"%}
 												</div>
 												<div class="form-group">
+													<label><b class="required">*</b>Score:</label>
+														{% render_field form.score type="text" placeholder="Score" class="form-control required"%}
+												</div>
+												<div class="form-group">
 													<label><b class="required">*</b>Supervisor:</label>
 													<select class="form-control required" name="eventuser" id="eventusera">
 														{% for supervisor in list_supervisors %}
@@ -98,7 +102,7 @@ $('document').ready(function(){
 													<input type="file" class="form-control" name="picture" id="picture">
 												</div>
 												<div>
-													<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
+													<button class="btn btn-sm btn-primary pull-right m-t-n-xs btn-done"
 														type="submit" onclick="on_done()">
 														<strong>Create</strong>
 													</button>
@@ -276,14 +280,21 @@ $('document').ready(function(){
 	function show_form(source, user_id)
 	{
 
+		
+		
 		var $modal = $('#modal-form');
 		var $form = $modal.find("form:first")
 		$form[0].reset();
+		
+
+		
 		if (source != undefined){
 			//Editing data
 			var $row = $(source).parent().parent()
 			var $id = $row.find("td:first")
 			console.log( $.trim($id.text()) )
+			
+			$form.find(".btn-done").html("<b>Save</b>")
 			
 			var eventuser_name = $.trim($id.next().text());
 			var $row = $("#user_id_"+ user_id)
@@ -303,6 +314,8 @@ $('document').ready(function(){
 			$modal.find("input[name='password_confirm']").removeClass("required");
 		}
 		else{ // New item
+			$form.find(".btn-done").html("<b>Create</b>")
+			
 			var a = b = c = d = e = "", f = "", g = "";
 			var url = "{% url 'user_add' %}"
 			$("#reqasqp1").show();
