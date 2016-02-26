@@ -351,6 +351,7 @@ class EventAddView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateView ):
         context['company_list'] = User.objects.filter(role=User.COMPANY).order_by('id')
         context['form'] = EventModelForm()
         context['location_list'] = Location.objects.all()
+        context['product_list']  = Product.objects.all()
         return context
     
     def post(self,request,*args,**kwargs):        
@@ -369,6 +370,14 @@ class EventAddView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateView ):
             for id in sellocation_list:
                 location = Location.objects.get(id=int(id))
                 event.location.add(location)
+        
+        # Add products to event
+        event.product.clear()
+        if request.POST['selproduct'] != '':            
+            selproduct_list = str(request.POST['selproduct']).split(',')
+            for id in selproduct_list:
+                product = Product.objects.get(id=int(id))
+                event.product.add(product)
         
         # Add users to event
         event.user.clear()
@@ -399,6 +408,7 @@ class EventEditView( LoginRequiredMixin, SuperuserRequiredMixin, DetailView ):
         context['company_list'] = User.objects.filter(role=User.COMPANY).order_by('id')
         context['form'] = EventModelForm()
         context['location_list'] = Location.objects.all()
+        context['product_list']  = Product.objects.all()
         return context
     
     def post(self,request,*args,**kwargs):

@@ -65,7 +65,7 @@ $('document').ready(function(){
 				<div class="ibox-title">
 					<h5>Total Event : {{ event_list| length }}</h5>
 				</div>
-				<div class="ibox-content">
+				<div class="ibox-content" style="padding-left:0">
 					<input type="hidden" id="selno" name="selno" value="">
 					<div class="col-lg-12">
 						<form class="form-horizontal" action="" method="get">
@@ -91,14 +91,7 @@ $('document').ready(function(){
 
                           <div style="clear:both;"></div>
                           <div class="tooltip-demo photo_table_wrapper">
-						<table class="tabledata" style="" id="photo_table">
-							<!--col width="50px"/>
-							<col width="50px"/>
-							<col width="150px"/>
-							<col width="100px"/>
-							<col width="100px"/>
-							<col width="100px"/>
-							<col width="100px"/-->
+						<table class="tabledata" style="margin:0;padding:0" id="photo_table">
 							<tbody id="users_body">
 								<tr>
 									<th><input type="checkbox" id="selecttag"></th>
