@@ -415,7 +415,7 @@ class EventEditView( LoginRequiredMixin, SuperuserRequiredMixin, DetailView ):
 
         # Add locations to event
         event.location.clear()
-        if request.POST['sellocation'] != '':            
+        if request.POST['sellocation'] !=  '':            
             sellocation_list = str(request.POST['sellocation']).split(',')
             for id in sellocation_list:
                 location = Location.objects.get(id=int(id))
