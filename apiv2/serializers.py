@@ -86,7 +86,7 @@ class EventAppSerializer(serializers.ModelSerializer):
             return 0
        
     # Include related field
-    product  = ProductSerializer(source='products',many=True)
+    product  = ProductSerializer(many=True)
     location = LocationSerializer(many=True)
     class Meta:
         model = Event

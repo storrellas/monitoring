@@ -147,7 +147,7 @@ class Event(models.Model):
     user          = models.ManyToManyField(User, related_name='event')
     
     location      = models.ManyToManyField(Location,null=True, blank=True, related_name='locations')
-    product       = models.ManyToManyField(Product,null=True, blank=True, related_name='locations')
+    product       = models.ManyToManyField(Product,null=True, blank=True, related_name='products')
     
     def __unicode__(self):
        return self.title
