@@ -64,3 +64,10 @@ def eventuser_list(event):
     locationlist_str = locationlist_str[:-2] 
     return locationlist_str
 
+@register.filter
+def check_location(event,location):
+    if event.location.filter(id=location.id).exists():
+        return "checked"
+    else:
+        return ""
+    
