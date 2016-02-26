@@ -109,6 +109,9 @@ $('document').ready(function(){
 									<th>Video URL</th>
 									<th>Company</th>
 									<th>Event Users</th>
+									<th>Location</th>
+									<th>Start Date</th>
+									<th>End Date</th>
 									<th>Actions</th>
 								</tr>
 								
@@ -128,6 +131,15 @@ $('document').ready(function(){
                                           </td>
                                           <td>
                                           {{ event|eventuser_list }}                                       
+                                          </td>
+										  <td>
+                                          {{ event|location_list }}
+                                          </td>
+										  <td>
+                                          {{ event.start_date|date:"d/M/Y" }}
+                                          </td>
+										  <td>
+                                          {{ event.end_date|date:"d/M/Y" }}
                                           </td>
                                           <td>
                                           	<a class="btn btn-sm btn-white btn-action" href="{% url 'edit_event' event.id %}" data-toggle="tooltip" 
@@ -228,25 +240,7 @@ $('document').ready(function(){
         }
     	console.log("after here")
     }
-    function on_edit($eventid)
-    {
-// 		var $imageUrl 	= $('#imageURL'+eventid).val();
-// 		var $categoryID = $('#categoryID'+eventid).val();
-// 		var $title 		= $('#title'+eventid).val();
-// 		var $content 	= $('#content'+eventid).val();
-// 		var $author 	= $('#author'+eventid).val();
-// 		var $tags 		= $('#tags'+eventid).val();
-// // console.log($imageUrl);
-// 		$("#enewsImage").attr('src', $imageUrl);
-// 		$("#etitle").val($title);
-// 		$("#econtent").val($content);
-// 		$("#eauthor").val($author);
-// 		$("#etag").val($tags);
-// 		$("#esubCateID").val($categoryID);
-// 		$("#eeventid").val(eventid);
-		
-//         $('#modal-form-edit').modal('show');
-    }
+
     function on_edit_done()
     {
         var eeventid  = $("#eeventid").val();

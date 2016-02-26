@@ -350,6 +350,7 @@ class EventAddView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateView ):
                                                    is_superuser=False).order_by('id')
         context['company_list'] = User.objects.filter(role=User.COMPANY).order_by('id')
         context['form'] = EventModelForm()
+        context['location_list'] = Location.objects.all()
         return context
     
     def post(self,request,*args,**kwargs):        
@@ -360,8 +361,16 @@ class EventAddView( LoginRequiredMixin, SuperuserRequiredMixin, TemplateView ):
                 
         # Save the form        
         event = form.save()  
+
+        # Add locations to event
+        event.location.clear()
+        if request.POST['sellocation'] != '':            
+            sellocation_list = str(request.POST['sellocation']).split(',')
+            for id in sellocation_list:
+                location = Location.objects.get(id=int(id))
+                event.location.add(location)
         
-        # Add users to event                
+        # Add users to event
         event.user.clear()
         company = User.objects.get(id=request.POST['company'])
         event.user.add(company)
@@ -388,7 +397,8 @@ class EventEditView( LoginRequiredMixin, SuperuserRequiredMixin, DetailView ):
                                                    is_superuser=False).order_by('id')                
         context['selno'] = str(eventuser_list.values_list('id', flat=True))[1:-1]
         context['company_list'] = User.objects.filter(role=User.COMPANY).order_by('id')
-        context['form'] = EventModelForm() 
+        context['form'] = EventModelForm()
+        context['location_list'] = Location.objects.all()
         return context
     
     def post(self,request,*args,**kwargs):
@@ -678,11 +688,6 @@ class LocationView( LoginRequiredMixin, ListView ):
             return queryset.order_by('name').order_by('id')
         else:
             return queryset.order_by('name').order_by('id') 
-    
-    def get_context_data(self, **kwargs):
-        context = super(LocationView, self).get_context_data(**kwargs)
-        context['event_list'] = Event.objects.all()
-        return context
 
 class LocationDeleteView(LoginRequiredMixin, DeleteView):
     model = Location

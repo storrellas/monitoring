@@ -153,6 +153,16 @@ $('document').ready(function(){
 									</select>
 								</div>
 							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label" style="text-align: right;"><b class="required">*</b>Location:</label>
+								<div class="col-sm-9">
+									<select class="form-control" name="location" id="location">
+										{% for location in location_list %}
+										<option value='{{ location.id }}'>{{ location.name }}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
 							<div style="clear: both;"></div>
 							<div class="form-group">
 								<label class="col-sm-2 control-label" style="text-align: right;">Users:</label>

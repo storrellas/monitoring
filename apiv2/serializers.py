@@ -87,7 +87,7 @@ class EventAppSerializer(serializers.ModelSerializer):
        
     # Include related field
     product  = ProductSerializer(source='products',many=True)
-    location = LocationSerializer(source='locations',many=True)
+    location = LocationSerializer(many=True)
     class Meta:
         model = Event
         fields = ('id','title','description', 'videourl', 'eventuser_objective_day',

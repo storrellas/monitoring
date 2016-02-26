@@ -111,6 +111,17 @@ class User(AbstractBaseUser,PermissionsMixin):
     def __unicode__(self):
         return self.username
 
+class Location(models.Model):
+
+    name     = models.CharField(default='', max_length=400) 
+    city     = models.CharField(default='', max_length=400)
+    address  = models.CharField(default='', max_length=400)
+
+    latitude     = models.FloatField(default=0.0)
+    longitude    = models.FloatField(default=0.0)
+    
+    def __unicode__(self):
+       return self.name
 
 class Event(models.Model):
     title         = models.CharField(max_length=30, default='')
@@ -126,6 +137,8 @@ class Event(models.Model):
     
     user          = models.ManyToManyField(User, related_name='event')
     
+    location      = models.ManyToManyField(Location,null=True, blank=True, related_name='locations')
+    
     def __unicode__(self):
        return self.title
 
@@ -138,17 +151,7 @@ class Product(models.Model):
     def __unicode__(self):
        return self.name
    
-class Location(models.Model):
-    event    = models.ForeignKey(Event,null=True, blank=True, related_name='locations')
-    name     = models.CharField(default='', max_length=400) 
-    city     = models.CharField(default='', max_length=400)
-    address  = models.CharField(default='', max_length=400)
 
-    latitude     = models.FloatField(default=0.0)
-    longitude    = models.FloatField(default=0.0)
-    
-    def __unicode__(self):
-       return self.name
     
 class EventCheck(models.Model):
     

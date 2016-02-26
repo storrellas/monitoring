@@ -74,15 +74,6 @@ $('document').ready(function(){
 													<input type="text" placeholder="Longitude"
 														class="form-control" name="longitude" id="longitude">
 												</div>												
-												<div class="form-group">
-													<label>Event:</label> 
-													<select class="form-control" name="event" id="event">
-														<option value="0" selected>None</option>
-														{% for event in event_list %}
-															<option value='{{ event.id }}'>{{ event.title }}</option>
-														{% endfor %}
-													</select>
-												</div>
 												<div>
 													<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
 														type="submit" onclick="on_create()">
@@ -136,15 +127,6 @@ $('document').ready(function(){
 													<label>Longitude:</label>
 													<input type="text" placeholder="Longitude"
 														class="form-control" name="longitude" id="longitude">
-												</div>												
-												<div class="form-group">
-													<label>Event:</label> 
-													<select class="form-control" name="event" id="event">
-														<option value="0" selected>All</option>
-														{% for event in event_list %}
-															<option value='{{ event.id }}'>{{ event.title }}</option>
-														{% endfor %}
-													</select>
 												</div>
 												<div>
 													<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
@@ -228,7 +210,6 @@ $('document').ready(function(){
 										<th class="textleft">Address</th>
 										<th class="textleft">Latitude</th>
 										<th class="textleft">Longitude</th>
-										<th class="textleft">Event</th>
 										<th class="textright">Actions</th>
 									</tr>
 									{% for location in location_list %}
@@ -251,10 +232,6 @@ $('document').ready(function(){
 										<td  class="textleft">
 											{{ location.longitude }}
 										</td>
-										<td  class="textleft">
-											{{ location.event.title }}
-										</td>
-
 										<td class="actions">
 										<a class="btn btn-sm btn-white btn-action"
 											onclick="on_edit(this);"

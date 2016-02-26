@@ -4,7 +4,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$24000$phminvGvyboZ$E+bZEc10tGELn0WLs4ymlUrUGUbptqxnLrGxGGT+v8w=",
-    "last_login": "2016-02-15T07:54:12.371Z",
+    "last_login": "2016-02-25T10:32:31.206Z",
     "is_superuser": true,
     "username": "admin",
     "first_name": "",
@@ -31,12 +31,12 @@
   "model": "admininterface.user",
   "pk": 2,
   "fields": {
-    "password": "pbkdf2_sha256$24000$z7YmzV4G1NYa$R8z/j529eiKYN5ejxpffnvRUekd1m6gZFG6lMXaYCOA=",
+    "password": "pbkdf2_sha256$24000$cyhE3IAXRjau$+E/ecpL12tSB3QkAARoiQMb+Ml2/BeRzxjLVjX7OnC0=",
     "last_login": null,
     "is_superuser": false,
     "username": "camile",
-    "first_name": "",
-    "last_name": "",
+    "first_name": "Camile",
+    "last_name": "Pelloquin",
     "is_staff": false,
     "is_active": true,
     "date_joined": "2016-02-08T09:08:18.964Z",
@@ -50,7 +50,7 @@
     "gender": "",
     "score": "100",
     "picture": "event/user/Koala.jpg",
-    "eventuser": null,
+    "eventuser": 8,
     "groups": [],
     "user_permissions": []
   }
@@ -88,7 +88,7 @@
   "pk": 4,
   "fields": {
     "password": "pbkdf2_sha256$24000$8wKOJBpHwmpw$CWUAmvdYPXmeC89ZJrdmFw+emG85ktwEeUwKRBB8CP8=",
-    "last_login": "2016-02-09T07:11:41.460Z",
+    "last_login": "2016-02-24T08:52:55.732Z",
     "is_superuser": false,
     "username": "nike",
     "first_name": "",
@@ -200,7 +200,7 @@
   "pk": 8,
   "fields": {
     "password": "pbkdf2_sha256$24000$gXIc9k25troW$/DLD/f8au3TmIWHOBBpQQH1sbAxZhZgGqI2BuLME+AI=",
-    "last_login": null,
+    "last_login": "2016-02-24T08:54:56.655Z",
     "is_superuser": false,
     "username": "supervisor",
     "first_name": "",
@@ -224,6 +224,56 @@
   }
 },
 {
+  "model": "admininterface.user",
+  "pk": 12,
+  "fields": {
+    "password": "pbkdf2_sha256$24000$vLuhVUvACjKk$oAugz+QQFrbovGaOaptNbLCgShBp9lSH3mzDYoigHtA=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "carlos",
+    "first_name": "Carlos",
+    "last_name": "Lagares",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2016-02-18T11:41:15.704Z",
+    "phone": "",
+    "email": "",
+    "role": "EVENTUSER",
+    "name": "",
+    "cif": "",
+    "address": "",
+    "contactname": "",
+    "gender": "",
+    "score": "",
+    "picture": "",
+    "eventuser": null,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "admininterface.location",
+  "pk": 1,
+  "fields": {
+    "name": "MyLocation23",
+    "city": "Barcelona",
+    "address": "Marina 299",
+    "latitude": 43.0,
+    "longitude": 2.0
+  }
+},
+{
+  "model": "admininterface.location",
+  "pk": 2,
+  "fields": {
+    "name": "SecondLocation",
+    "city": "Aberdeed",
+    "address": "Ramon Albo",
+    "latitude": 33.0,
+    "longitude": 45.0
+  }
+},
+{
   "model": "admininterface.event",
   "pk": 1,
   "fields": {
@@ -231,15 +281,16 @@
     "description": "First event",
     "brief": "",
     "register_date": "2016-01-22T14:04:43.515Z",
-    "start_date": null,
-    "end_date": null,
+    "start_date": "2016-02-01",
+    "end_date": "2016-02-10",
     "eventuser_objective_day": 25,
     "videourl": "http://www.elpais.es",
     "pdfdocument": "event/Jellyfish.jpg",
     "user": [
       2,
       5
-    ]
+    ],
+    "location": [1,2]
   }
 },
 {
@@ -250,15 +301,16 @@
     "description": "This is the second event",
     "brief": "",
     "register_date": "2016-01-27T13:39:50.695Z",
-    "start_date": null,
-    "end_date": null,
+    "start_date": "2016-02-01",
+    "end_date": "2016-02-10",
     "eventuser_objective_day": 37,
     "videourl": "http://migranne.com",
     "pdfdocument": "event/Tulips.jpg",
     "user": [
-      4,
+      5,
       7
-    ]
+    ],
+    "location": [1]
   }
 },
 {
@@ -289,30 +341,6 @@
     "name": "MyOther",
     "brand": "MyOther",
     "format": ""
-  }
-},
-{
-  "model": "admininterface.location",
-  "pk": 1,
-  "fields": {
-    "event": 2,
-    "name": "MyLocation",
-    "city": "Barcelona",
-    "address": "Marina 299",
-    "latitude": 42.0,
-    "longitude": 2.0
-  }
-},
-{
-  "model": "admininterface.location",
-  "pk": 2,
-  "fields": {
-    "event": 1,
-    "name": "SecondLocation",
-    "city": "Aberdeed",
-    "address": "Ramon Albo",
-    "latitude": 33.0,
-    "longitude": 45.0
   }
 },
 {
@@ -412,6 +440,66 @@
     "checkouttime": null,
     "completeflag": false,
     "product": null,
+    "location": 1
+  }
+},
+{
+  "model": "admininterface.eventcheck",
+  "pk": 16,
+  "fields": {
+    "user": 7,
+    "event": 2,
+    "quantity": 30,
+    "target": 26,
+    "type": 1,
+    "note": ";",
+    "brief_opened": true,
+    "trackdate": "2016-02-18",
+    "tracktime": "13:07:18.700",
+    "checkintime": "2016-02-18T13:06:51.562Z",
+    "checkouttime": "2016-02-18T13:07:18.661Z",
+    "completeflag": true,
+    "product": 1,
+    "location": 1
+  }
+},
+{
+  "model": "admininterface.eventcheck",
+  "pk": 17,
+  "fields": {
+    "user": 7,
+    "event": 2,
+    "quantity": 30,
+    "target": 26,
+    "type": 1,
+    "note": ";My feedback",
+    "brief_opened": true,
+    "trackdate": "2016-02-18",
+    "tracktime": "16:28:45.381",
+    "checkintime": "2016-02-18T16:28:31.745Z",
+    "checkouttime": "2016-02-18T16:28:45.339Z",
+    "completeflag": true,
+    "product": 1,
+    "location": 1
+  }
+},
+{
+  "model": "admininterface.eventcheck",
+  "pk": 18,
+  "fields": {
+    "user": 7,
+    "event": 2,
+    "quantity": 30,
+    "target": 26,
+    "type": 1,
+    "note": ";My feedback",
+    "brief_opened": true,
+    "trackdate": "2016-02-19",
+    "tracktime": "06:36:29.647",
+    "checkintime": "2016-02-19T06:36:07.632Z",
+    "checkouttime": "2016-02-19T06:36:29.551Z",
+    "completeflag": true,
+    "product": 1,
     "location": 1
   }
 },

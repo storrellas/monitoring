@@ -52,3 +52,15 @@ def eventuser_list(event):
     # Remove the last comma
     userlist_str = userlist_str[:-2] 
     return userlist_str
+
+@register.filter(name='location_list')
+def eventuser_list(event):
+    locationlist_str = ""
+    
+    for location in event.location.all():
+        locationlist_str += location.name +", "
+    
+    # Remove the last comma
+    locationlist_str = locationlist_str[:-2] 
+    return locationlist_str
+
