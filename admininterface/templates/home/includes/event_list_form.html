@@ -21,7 +21,8 @@
 </a>
 {% endif %}
 {% ifequal download_images True %}
-<form role="form" id="download_image" method="post" action="" style="display: inline;">
+<form role="form" id="download_image" method="post" action="{% url 'home_pictures_download' %}" style="display: inline;">
+	{% csrf_token %}
 	<input type="hidden" val="" name="image">
  	<button style="margin-top: 2px; " class="btn btn-sm btn-primary pull-right">Download Images</button>
 </form>

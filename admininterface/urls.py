@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^home/result/$',         EventResultView.as_view(),          name='home_results'),
     url(r'^home/result/csv/(?P<pk>[0-9]+)/$$',     EventResultCSVView.as_view(),       name='event_analysis_csv'),
     url(r'^home/pictures/$',       EventPicturesView.as_view(),        name='home_pictures'),
+    url(r'^home/pictures/download/$',       EventPicturesDownloadView.as_view(),        name='home_pictures_download'),
         
     url(r'^event/$',               EventView.as_view(),                name='event'),
     url(r'^event/add/$',           EventAddView.as_view(),             name='add_event'),

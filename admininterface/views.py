@@ -1,3 +1,8 @@
+import os
+import zipfile
+import StringIO
+
+# Django imports
 from django.shortcuts import render,redirect
 from django.views.generic import TemplateView, RedirectView, ListView, DetailView
 from django.views.generic import FormView, UpdateView, CreateView, DeleteView
@@ -654,6 +659,49 @@ class EventPicturesView( LoginRequiredMixin, ListView ):
 
         return context
 
+
+class EventPicturesDownloadView(LoginRequiredMixin, View):
+
+    def post(self, request, *args, **kwargs):
+        """ 
+        Generates a zip file with the requested pictures
+        """
+        image_list = [] 
+        if request.POST['image'] != '':            
+            imageid_list = str(request.POST['image']).split(',')
+            for id in imageid_list:
+                image = EventCheckImage.objects.get(id=int(id))
+                image_list.append( image.photo.path )
+                
+        print image_list
+                
+                
+        # Zip filename
+        zip_filename = "eventcheck_image.zip"
+        
+        # Open StringIO to grab in-memory ZIP contents
+        s = StringIO.StringIO()
+        
+        # The zip compressor
+        zf = zipfile.ZipFile(s, "w")
+        
+        for fpath in image_list:
+            # Calculate path for file in zip
+            fdir, fname = os.path.split(fpath)
+        
+            # Add file, at correct path
+            zf.write(fpath, fname)
+        
+        # Must close zip for all contents to be written
+        zf.close()
+        
+        # Grab ZIP file from in-memory, make response with correct MIME-type
+        resp = HttpResponse(s.getvalue(), "application/x-zip-compressed")
+        # ..and correct content-disposition
+        resp['Content-Disposition'] = 'attachment; filename=%s' % zip_filename
+        
+        return resp
+        
 class ChangePwdView(LoginRequiredMixin, TemplateView):
     template_name='settings/changepwd.html'
     form = UserForm
