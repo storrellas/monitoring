@@ -123,6 +123,15 @@ class Location(models.Model):
     def __unicode__(self):
        return self.name
 
+class Product(models.Model):    
+    name     = models.CharField(default='', max_length=400) 
+    brand    = models.CharField(default='', max_length=400)
+    format   = models.CharField(default='', max_length=400)
+    
+    def __unicode__(self):
+       return self.name
+   
+
 class Event(models.Model):
     title         = models.CharField(max_length=30, default='')
     description   = models.CharField(max_length=400, default= '')
@@ -138,19 +147,12 @@ class Event(models.Model):
     user          = models.ManyToManyField(User, related_name='event')
     
     location      = models.ManyToManyField(Location,null=True, blank=True, related_name='locations')
+    product       = models.ManyToManyField(Product,null=True, blank=True, related_name='locations')
     
     def __unicode__(self):
        return self.title
 
-class Product(models.Model):
-    event    = models.ForeignKey(Event,null=True, blank=True, related_name='products')
-    name     = models.CharField(default='', max_length=400) 
-    brand    = models.CharField(default='', max_length=400)
-    format   = models.CharField(default='', max_length=400)
-    
-    def __unicode__(self):
-       return self.name
-   
+
 
     
 class EventCheck(models.Model):

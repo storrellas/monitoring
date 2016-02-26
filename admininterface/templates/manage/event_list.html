@@ -110,6 +110,7 @@ $('document').ready(function(){
 									<th>Company</th>
 									<th>Event Users</th>
 									<th>Location</th>
+									<th>Product</th>
 									<th>Start Date</th>
 									<th>End Date</th>
 									<th>Actions</th>
@@ -134,6 +135,9 @@ $('document').ready(function(){
                                           </td>
 										  <td>
                                           {{ event|location_list }}
+                                          </td>
+										  <td>
+                                          {{ event|product_list }}
                                           </td>
 										  <td>
                                           {{ event.start_date|date:"d/M/Y" }}

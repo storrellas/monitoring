@@ -274,6 +274,33 @@
   }
 },
 {
+  "model": "admininterface.product",
+  "pk": 1,
+  "fields": {
+    "name": "MyProduct",
+    "brand": "MyBrand",
+    "format": "TheFormat"
+  }
+},
+{
+  "model": "admininterface.product",
+  "pk": 2,
+  "fields": {
+    "name": "Second",
+    "brand": "asd",
+    "format": "adfs"
+  }
+},
+{
+  "model": "admininterface.product",
+  "pk": 3,
+  "fields": {
+    "name": "MyOther",
+    "brand": "MyOther",
+    "format": ""
+  }
+},
+{
   "model": "admininterface.event",
   "pk": 1,
   "fields": {
@@ -290,7 +317,11 @@
       2,
       5
     ],
-    "location": [1,2]
+    "location": [
+      1,
+      2
+    ],
+    "product": [1,2]
   }
 },
 {
@@ -310,37 +341,10 @@
       5,
       7
     ],
-    "location": [1]
-  }
-},
-{
-  "model": "admininterface.product",
-  "pk": 1,
-  "fields": {
-    "event": 1,
-    "name": "MyProduct",
-    "brand": "MyBrand",
-    "format": "TheFormat"
-  }
-},
-{
-  "model": "admininterface.product",
-  "pk": 2,
-  "fields": {
-    "event": null,
-    "name": "Second",
-    "brand": "asd",
-    "format": "adfs"
-  }
-},
-{
-  "model": "admininterface.product",
-  "pk": 3,
-  "fields": {
-    "event": 2,
-    "name": "MyOther",
-    "brand": "MyOther",
-    "format": ""
+    "location": [
+      1
+    ],
+    "product": [1]
   }
 },
 {

@@ -54,7 +54,7 @@ def eventuser_list(event):
     return userlist_str
 
 @register.filter(name='location_list')
-def eventuser_list(event):
+def location_list(event):
     locationlist_str = ""
     
     for location in event.location.all():
@@ -71,3 +71,13 @@ def check_location(event,location):
     else:
         return ""
     
+@register.filter
+def product_list(event):
+    productlist_str = ""
+    for product in event.product.all():
+        productlist_str += product.name +", "
+    
+    # Remove the last comma
+    productlist_str = productlist_str[:-2] 
+    return productlist_str
+

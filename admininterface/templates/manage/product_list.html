@@ -5,71 +5,7 @@
 
 {% block contents %}
 
-<script type="text/javascript">
 
-	function generate_event_select($modal, companyid){		
-		var $event = $modal.find('#eventid')
-		var $event_container = $event.parent()
-		
-		var url = "{% url 'ajax-company-event' 0 %}";
-		url = url.replace('0', companyid);
-    	$.ajax({
-            async: true,
-			url: url,
-            dataType: "json",
-            type: "GET",
-            success: function(json) {
-                // Add items to select
-                $.each(json, function(index,value){
-                    $event.append($('<option>', { value : value.id }).text(value.title));                 	
-                });
-            	
-            	// Show select and hide loading
-                $event_container.find(".form-control:first").hide()
-                $event.show()
-                                
-            },
-            error: function(xhr, errStr) {
-             	console.log(errStr);
-            }
-        });
-	}
-
-	function loading_event_list_manage($modal, companyid){
-		var $event = $modal.find('#eventid')
-		var $event_container = $event.parent()
-		$event.find('option').remove()			
-		$event.append($('<option>', { value : "0" }).text("None"));
-		
-		$event.hide()
-		$event_container.hide()
-		
-		// If None was selected		
-		if( companyid == 0 ) return;
-		$event_container.find(".form-control:first").show()
-		$event_container.show()
-				
-		// Get event list
-		generate_event_select( $modal, companyid );
-	}
-	
-	$('document').ready(function(){		
-		// Procedure to perform the selection of the event
-		var $modal = $( "#modal-form-new" )		
-		$modal.find("#companyid").change(function() {
-			var $modal = $( "#modal-form-new" )	
-			loading_event_list_manage($modal, $(this).val() )			
-		});
-		
-		// Procedure to perform the selection of the event
-		var $modal = $( "#modal-form-edit" )		
-		$modal.find("#companyid").change(function() {
-			var $modal = $( "#modal-form-edit" )
-			loading_event_list_manage($modal, $(this).val() )			
-		});
-		
-	});
-</script>
 
 <div class="wrapper wrapper-content">
 	<div class="row">
@@ -118,23 +54,6 @@
 													<input type="text" placeholder=""
 														class="form-control" name="format" id="cformat">
 												</div>
-												<div class="form-group">
-													<label>Company:</label> 
-													<select class="form-control" name="company" id="companyid">
-														<option value="0" selected>None</option>
-														{% for company in company_list %}
-															<option value='{{ company.id }}'>{{ company.username }}</option>
-														{% endfor %}
-													</select>
-												</div>
-												<div class="form-group" style="display:none">
-													<label>Event:</label> 
-													<div class="form-control"> Loading ...</div>
-													<select class="form-control" name="event" id="eventid">
-														<option value="0" selected>None</option>
-													</select>
-																										
-												</div>
 												<div>
 													<div class="btn btn-sm btn-primary pull-right m-t-n-xs"
 														type="submit" onclick="on_create()">
@@ -180,23 +99,6 @@
 													<label>Format:</label>
 													<input type="text" placeholder=""
 														class="form-control" name="format" id="cformat">
-												</div>
-												<div class="form-group">
-													<label>Company:</label> 
-													<select class="form-control" name="company" id="companyid">
-														<option value="0" selected>None</option>
-														{% for company in company_list %}
-															<option value='{{ company.id }}'>{{ company.username }}</option>
-														{% endfor %}
-													</select>
-												</div>
-												<div class="form-group" style="display:none">
-													<label>Event:</label> 
-													<div class="form-control"> Loading ...</div>
-													<select class="form-control" name="event" id="eventid">
-														<option value="0" selected>None</option>
-													</select>
-																										
 												</div>
 												<div>
 													<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
@@ -308,7 +210,6 @@
 									<th style="width: 200px">Name</th>
 									<th style="width: 400px">Brand</th>
 									<th style="width: 280px">Format</th>
-									<th style="width: 280px">Event</th>
 									<th style="width: 280px">Action</th>
 								</tr>
 								{% for product in product_list %}
@@ -324,9 +225,6 @@
 									</td>
 									<td>
 										{{ product.format }}
-									</td>
-									<td>
-										{{ product.event }}
 									</td>
 									<td style="padding-top: 1px; padding-bottom: 0px; text-align: center;">										 
 									<a class="btn btn-sm btn-white btn-action"

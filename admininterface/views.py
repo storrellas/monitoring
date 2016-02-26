@@ -668,12 +668,7 @@ class ProductView( LoginRequiredMixin, ListView ):
             return queryset.order_by('name').order_by('id')
         else:
             return queryset.order_by('name').order_by('id') 
-    
-    def get_context_data(self, **kwargs):
-        context = super(ProductView, self).get_context_data(**kwargs)
-        context['company_list'] = User.objects.filter(role=User.COMPANY)
-        return context
-    
+        
 class LocationView( LoginRequiredMixin, ListView ):
     template_name='manage/location_list.html'
     model = Location
